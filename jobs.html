@@ -23,10 +23,13 @@
         }
         @layer components {
             .btn-primary {
-                @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all;
+                @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all shadow-sm;
+            }
+            .btn-outline {
+                @apply px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-all;
             }
             .card {
-                @apply bg-white rounded-xl p-6 border border-[var(--border-color)] hover:shadow-lg transition-all cursor-pointer;
+                @apply bg-white rounded-xl p-6 border border-[var(--border-color)] hover:shadow-lg transition-all cursor-pointer hover:border-[var(--primary-color)];
             }
         }
     </style>
@@ -38,32 +41,45 @@
         const JobsAPI = {
           getMockJobs(query = '') {
             const allJobs = [
-              // --- LOCAL MARKETPLACE ---
+              // --- LOCAL JOBS (EGP) ---
               { 
                 id: 'l1', 
                 title: 'Wedding Photographer Needed', 
-                company: 'Ahmed Photography Studio', 
-                budget: 'EGP 5,000 - 8,000', 
+                company: 'Ahmed Photography', 
+                budget: 'EGP 8,000', 
                 type: 'On-Site', 
-                description: 'We are looking for a professional photographer for a wedding in Maadi next Friday. Must have own equipment and previous experience with outdoor weddings. Payment will be made via Vodafone Cash or Fawry deposit upon agreement.', 
-                location: 'Cairo, Egypt', 
+                description: 'We are looking for a professional photographer for a wedding in Maadi next Friday. Must have own equipment (Sony/Canon preferred) and previous experience with outdoor weddings. Payment will be made via Vodafone Cash or Fawry deposit upon agreement.', 
+                location: 'Cairo, Maadi', 
                 skills: ['Photography', 'Photo Editing', 'Events'], 
                 source: 'NileLancers Local',
                 isLocal: true 
               },
               { 
                 id: 'l2', 
-                title: 'React Native Developer for Delivery App', 
+                title: 'React Native Dev for Delivery App', 
                 company: 'Talabat Clone Startup', 
                 budget: 'EGP 25,000', 
                 type: 'Project', 
                 description: 'Need a senior developer to build a local food delivery app. The app must track drivers in real-time using Google Maps API. Payment via Bank Transfer (CIB/NBE).', 
                 location: 'Alexandria (Hybrid)', 
-                skills: ['React Native', 'Node.js', 'Google Maps API'], 
+                skills: ['React Native', 'Node.js', 'Google Maps'], 
                 source: 'NileLancers Local',
                 isLocal: true 
               },
-              // --- GLOBAL AGGREGATOR ---
+              {
+                id: 'l3',
+                title: 'Social Media Manager (Instagram)',
+                company: 'Local Boutique',
+                budget: 'EGP 3,000 / mo',
+                type: 'Part-Time',
+                description: 'Manage our Instagram page. Post 3 times a week, create reels, and reply to DMs. Must be fluent in Arabic and English.',
+                location: 'Giza, Egypt',
+                skills: ['Social Media', 'Content Creation', 'Instagram'],
+                source: 'NileLancers Local',
+                isLocal: true
+              },
+
+              // --- GLOBAL JOBS (USD) ---
               { 
                 id: 'g1', 
                 title: 'Build E-commerce Website with React', 
@@ -75,6 +91,66 @@
                 skills: ['React', 'JavaScript', 'Stripe'], 
                 source: 'Upwork',
                 isLocal: false 
+              },
+              {
+                id: 'g2',
+                title: 'Logo Design for Tech Startup',
+                company: 'StartupX',
+                budget: '$150',
+                type: 'Fixed Price',
+                description: 'Modern, minimalist logo design needed for an AI startup. Deliverables: Vector files (AI, EPS) and PNG.',
+                location: 'Remote',
+                skills: ['Graphic Design', 'Logo Design', 'Illustrator'],
+                source: 'Fiverr',
+                isLocal: false
+              },
+              {
+                id: 'g3',
+                title: 'Python Script for Data Scraping',
+                company: 'DataCorp',
+                budget: '$500',
+                type: 'Fixed Price',
+                description: 'Need a Python script to scrape real estate data from 3 websites. Must use BeautifulSoup or Selenium and export to CSV.',
+                location: 'Remote',
+                skills: ['Python', 'Web Scraping', 'Data Mining'],
+                source: 'Freelancer',
+                isLocal: false
+              },
+              {
+                id: 'g4',
+                title: 'Senior Financial Consultant',
+                company: 'FinTech Enterprise',
+                budget: '$80 - $120 / hr',
+                type: 'Hourly',
+                description: 'Seeking a top-tier financial consultant to audit our quarterly reports. Must have CPA certification and 5+ years experience.',
+                location: 'Remote',
+                skills: ['Finance', 'Auditing', 'Accounting'],
+                source: 'Toptal',
+                isLocal: false
+              },
+              {
+                id: 'g5',
+                title: 'Video Editor for YouTube Channel',
+                company: 'Content Creator',
+                budget: '$50 / video',
+                type: 'Recurring',
+                description: 'Edit 10-minute vlogs. Add subtitles, transitions, and background music. Style similar to MrBeast.',
+                location: 'Remote',
+                skills: ['Premiere Pro', 'Video Editing', 'YouTube'],
+                source: 'Fiverr',
+                isLocal: false
+              },
+              {
+                id: 'g6',
+                title: 'Translate Legal Documents (Eng to Ar)',
+                company: 'Law Firm',
+                budget: '$200',
+                type: 'Fixed Price',
+                description: 'Translate a 10-page contract from English to Standard Arabic. Legal terminology knowledge required.',
+                location: 'Remote',
+                skills: ['Translation', 'Arabic', 'Legal'],
+                source: 'Mostaql',
+                isLocal: false
               }
             ];
             
@@ -113,110 +189,166 @@
             );
         }
 
-        // --- NEW: JOB DETAILS VIEW COMPONENT ---
+        // --- DETAILS VIEW (With Picture Space & Big Fonts) ---
         function JobDetailsView({ job, onBack }) {
             return (
-                <div className="max-w-4xl mx-auto">
+                <div className="max-w-5xl mx-auto animate-fade-in">
                     {/* Back Button */}
-                    <button onClick={onBack} className="flex items-center text-gray-500 hover:text-[var(--primary-color)] mb-6 transition-colors">
-                        <i className="icon-arrow-left mr-2"></i> Back to Jobs
+                    <button onClick={onBack} className="flex items-center text-gray-500 hover:text-[var(--primary-color)] mb-6 transition-colors font-medium">
+                        <i className="icon-arrow-left mr-2"></i> Back to Jobs List
                     </button>
 
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden p-8">
+                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden p-8">
                         
-                        {/* 1. Job Name (Big Title Above Picture) */}
-                        <h1 className="text-3xl font-bold text-gray-900 mb-8">{job.title}</h1>
+                        {/* 1. Big Title Above Picture */}
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 leading-tight">{job.title}</h1>
 
-                        <div className="flex flex-col md:flex-row gap-8 mb-8">
+                        <div className="flex flex-col md:flex-row gap-8 mb-10">
                             {/* 2. Picture Space (Left Side) */}
-                            <div className="w-full md:w-1/3 h-64 bg-gray-100 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300">
-                                <div className="text-center text-gray-400">
-                                    <i className="icon-image text-4xl mb-2 mx-auto"></i>
-                                    <p>Job Image / Logo</p>
+                            <div className="w-full md:w-5/12 h-64 bg-gray-100 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300 relative group">
+                                <i className="icon-image text-5xl text-gray-300 mb-3 group-hover:text-[var(--primary-color)] transition-colors"></i>
+                                <p className="text-gray-400 text-sm">Client / Project Image</p>
+                                {/* Badge Overlay */}
+                                <div className="absolute top-4 left-4">
+                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                                        {job.source}
+                                    </span>
                                 </div>
                             </div>
 
                             {/* 3. Freelancer/Client Name & Price (Right Side) */}
                             <div className="flex-1 flex flex-col justify-center">
-                                <div className="mb-6">
-                                    <p className="text-sm text-gray-500 uppercase tracking-wide font-semibold mb-1">Posted By</p>
+                                <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 mb-6">
+                                    <p className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-2">Budget / Price</p>
+                                    <div className="text-4xl font-bold text-green-600 mb-1">{job.budget}</div>
+                                    <p className="text-sm text-gray-500">{job.type} • {job.location}</p>
+                                </div>
+
+                                <div className="mb-6 px-2">
+                                    <p className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">Posted By</p>
                                     <h2 className="text-2xl font-bold text-[var(--primary-color)]">{job.company}</h2>
-                                    <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
-                                        <i className="icon-map-pin w-4 h-4"></i> {job.location}
-                                        {job.isLocal && <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">Verified Local</span>}
+                                    <div className="flex gap-1 mt-2">
+                                        <i className="icon-star text-yellow-400 fill-current w-4 h-4"></i>
+                                        <i className="icon-star text-yellow-400 fill-current w-4 h-4"></i>
+                                        <i className="icon-star text-yellow-400 fill-current w-4 h-4"></i>
+                                        <i className="icon-star text-yellow-400 fill-current w-4 h-4"></i>
+                                        <i className="icon-star text-yellow-400 fill-current w-4 h-4"></i>
+                                        <span className="text-xs text-gray-400 ml-1">(5.0)</span>
                                     </div>
                                 </div>
 
-                                <div className="mb-6">
-                                    <p className="text-sm text-gray-500 uppercase tracking-wide font-semibold mb-1">Budget / Price</p>
-                                    <p className="text-3xl font-bold text-green-600">{job.budget}</p>
-                                    <p className="text-sm text-gray-400">{job.type}</p>
+                                <div className="flex gap-4">
+                                    <button className="flex-1 btn-primary py-4 text-lg shadow-md hover:shadow-lg">
+                                        {job.isLocal ? 'Apply Now' : `Go to ${job.source}`}
+                                    </button>
+                                    <button className="px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                                        <i className="icon-bookmark text-gray-400 w-6 h-6"></i>
+                                    </button>
                                 </div>
-
-                                <button className="w-full md:w-auto btn-primary text-center">
-                                    {job.isLocal ? 'Apply Now (Local)' : `Apply on ${job.source}`}
-                                </button>
                             </div>
                         </div>
 
-                        {/* 4. Description (Under Everything) */}
+                        {/* 4. Description (Bottom) */}
                         <div className="border-t border-gray-100 pt-8">
                             <h3 className="text-xl font-bold text-gray-900 mb-4">Job Description</h3>
-                            <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+                            <p className="text-gray-600 leading-relaxed whitespace-pre-line text-lg">
                                 {job.description}
                             </p>
                         </div>
 
-                        {/* Skills Tags */}
-                        <div className="mt-8">
-                            <h4 className="font-semibold text-gray-900 mb-3">Required Skills</h4>
+                        {/* Skills */}
+                        <div className="mt-8 pt-6">
+                            <h4 className="font-semibold text-gray-900 mb-3">Skills Required</h4>
                             <div className="flex flex-wrap gap-2">
                                 {job.skills.map(skill => (
-                                    <span key={skill} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                                    <span key={skill} className="px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
                                         {skill}
                                     </span>
                                 ))}
                             </div>
                         </div>
-
                     </div>
                 </div>
             );
         }
 
-        // --- JOB LIST CARD COMPONENT ---
+        // --- JOB LIST CARD (Old Look with Button) ---
         function JobCard({ job, onClick }) {
+            const handleButtonClick = (e) => {
+                e.stopPropagation(); // Don't trigger the card click
+                if (!job.isLocal) {
+                    // Open external link for global jobs
+                    alert(`Redirecting to ${job.source}... (Simulation)`);
+                } else {
+                    // Open details for local jobs
+                    onClick(job);
+                }
+            };
+
             return (
-                <div onClick={() => onClick(job)} className="card flex flex-col md:flex-row gap-6 hover:border-[var(--primary-color)] transition-colors group">
+                <div onClick={() => onClick(job)} className="card flex flex-col md:flex-row gap-6 group relative">
+                    {/* Logo */}
                     <div className="flex-shrink-0">
-                        <div className={`w-16 h-16 rounded-lg flex items-center justify-center text-xl font-bold ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                        <div className={`w-16 h-16 rounded-lg flex items-center justify-center text-xl font-bold 
+                            ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
                             {job.isLocal ? 'NL' : job.source.substring(0, 2)}
                         </div>
                     </div>
+
+                    {/* Content */}
                     <div className="flex-1">
                         <div className="flex justify-between items-start">
                             <div>
                                 <h3 className="text-xl font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-color)] transition-colors">
                                     {job.title}
                                 </h3>
-                                <p className="text-[var(--text-secondary)] font-medium mt-1">{job.company}</p>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <span className="font-medium text-[var(--text-secondary)]">{job.company}</span>
+                                    {job.isLocal ? (
+                                        <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">Local</span>
+                                    ) : (
+                                        <span className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">{job.source}</span>
+                                    )}
+                                </div>
                             </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-4 mt-3 text-sm text-[var(--text-secondary)]">
                             <span className="font-bold text-green-600">{job.budget}</span>
+                            <span>• {job.type}</span>
+                            <span>• {job.location}</span>
                         </div>
+
                         <p className="mt-3 text-[var(--text-secondary)] line-clamp-2">{job.description}</p>
-                        <div className="mt-4 flex gap-2">
-                            {job.isLocal && <span className="text-xs bg-green-50 text-green-700 px-2 py-1 rounded">Local</span>}
-                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">{job.location}</span>
+                        
+                        <div className="mt-4 flex flex-wrap gap-2">
+                            {job.skills.slice(0, 3).map(skill => (
+                                <span key={skill} className="text-xs bg-gray-50 text-gray-500 px-2 py-1 rounded border border-gray-100">{skill}</span>
+                            ))}
                         </div>
+                    </div>
+
+                    {/* Action Button (Right Side - Old Look) */}
+                    <div className="flex flex-col justify-center min-w-[140px] border-l border-gray-100 pl-6 md:ml-2">
+                        {job.isLocal ? (
+                            <button onClick={handleButtonClick} className="btn-primary w-full text-sm">
+                                Apply Now
+                            </button>
+                        ) : (
+                            <button onClick={handleButtonClick} className="btn-outline w-full text-sm flex items-center justify-center gap-2">
+                                View on {job.source}
+                                <i className="icon-external-link w-3 h-3"></i>
+                            </button>
+                        )}
                     </div>
                 </div>
             );
         }
 
-        // --- MAIN APP COMPONENT ---
+        // --- MAIN APP ---
         function JobsApp() {
             const [jobs, setJobs] = React.useState([]);
-            const [selectedJob, setSelectedJob] = React.useState(null); // Track clicked job
+            const [selectedJob, setSelectedJob] = React.useState(null);
             const [searchQuery, setSearchQuery] = React.useState('');
 
             React.useEffect(() => {
@@ -228,32 +360,34 @@
                 setJobs(data);
             };
 
-            // If a job is selected, show the Details View
+            // Detail View
             if (selectedJob) {
                 return (
                     <div className="min-h-screen bg-gray-50">
                         <Header />
-                        <div className="max-w-7xl mx-auto px-4 py-12">
+                        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
                             <JobDetailsView job={selectedJob} onBack={() => setSelectedJob(null)} />
                         </div>
                     </div>
                 );
             }
 
-            // Otherwise, show the Search & List View
+            // List View
             return (
                 <div className="min-h-screen bg-gray-50">
                     <Header />
                     <div className="max-w-7xl mx-auto px-4 py-12">
                         <div className="mb-8">
                             <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-2">Browse Services</h1>
-                            <p className="text-[var(--text-secondary)] mb-6">Click on any job to view full details.</p>
+                            <p className="text-[var(--text-secondary)] mb-6">
+                                Found {jobs.length} opportunities from Upwork, Fiverr, and Local Clients.
+                            </p>
                             
                             <div className="flex gap-4">
                                 <input 
                                     type="text" 
-                                    placeholder="Search services..." 
-                                    className="flex-1 px-4 py-3 border border-[var(--border-color)] rounded-lg"
+                                    placeholder="Search by title, skill, or platform..." 
+                                    className="flex-1 px-4 py-3 border border-[var(--border-color)] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                                 <button onClick={() => loadJobs(searchQuery)} className="btn-primary">Search</button>
