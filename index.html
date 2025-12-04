@@ -23,7 +23,10 @@
         }
         @layer components {
             .btn-primary {
-                @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all;
+                @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all inline-block;
+            }
+            .btn-secondary {
+                @apply px-6 py-3 bg-white text-[var(--text-primary)] border border-gray-200 rounded-lg font-medium hover:bg-gray-50 transition-all inline-block;
             }
         }
     </style>
@@ -31,15 +34,194 @@
 <body>
     <div id="root"></div>
 
-    <script type="text/babel" src="components/Header.js"></script>
-    <script type="text/babel" src="components/Footer.js"></script>
-    
-    <script type="text/babel" src="components/Hero.js"></script>
-    <script type="text/babel" src="components/PlatformBadges.js"></script>
-    <script type="text/babel" src="components/Features.js"></script>
-    <script type="text/babel" src="components/Categories.js"></script>
-    <script type="text/babel" src="components/Stats.js"></script>
+    <script type="text/babel">
+        // --- 1. HEADER COMPONENT ---
+        function Header() {
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
-    <script type="text/babel" src="app.js"></script>
+            return (
+                <nav className="bg-white border-b border-[var(--border-color)] sticky top-0 z-50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between h-16">
+                            {/* Logo */}
+                            <div className="flex items-center">
+                                <a href="index.html" className="flex items-center gap-2">
+                                    <div className="w-8 h-8 bg-[var(--primary-color)] rounded-lg flex items-center justify-center">
+                                        <span className="text-white font-bold text-xl">N</span>
+                                    </div>
+                                    <span className="text-xl font-bold text-[var(--text-primary)]">NileLancers</span>
+                                </a>
+                            </div>
+
+                            {/* Desktop Nav */}
+                            <div className="hidden md:flex items-center space-x-8">
+                                <a href="index.html" className="text-[var(--text-primary)] font-medium">Home</a>
+                                {/* POINTS TO JOBS.HTML */}
+                                <a href="jobs.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Browse Jobs</a>
+                                <a href="saved.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Saved</a>
+                                
+                                <div className="h-6 w-px bg-gray-200"></div>
+
+                                <div className="flex items-center space-x-4">
+                                    <a href="#" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-medium">Log In</a>
+                                    <a href="post-job.html" className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:opacity-90 font-medium text-sm">
+                                        Post a Job (Local)
+                                    </a>
+                                </div>
+                            </div>
+
+                            {/* Mobile Button */}
+                            <div className="md:hidden flex items-center">
+                                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                                    <i className="icon-menu text-2xl"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {/* Mobile Menu */}
+                    {isMobileMenuOpen && (
+                        <div className="md:hidden bg-white border-t border-gray-100 py-2">
+                            <a href="index.html" className="block px-4 py-3 bg-gray-50 font-medium">Home</a>
+                            <a href="jobs.html" className="block px-4 py-3 text-[var(--text-secondary)]">Browse Jobs</a>
+                            <a href="post-job.html" className="block px-4 py-3 text-[var(--primary-color)] font-medium">Post a Local Job</a>
+                        </div>
+                    )}
+                </nav>
+            );
+        }
+
+        // --- 2. HERO COMPONENT ---
+        function Hero() {
+            return (
+                <div className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-20 px-4">
+                    <div className="max-w-4xl mx-auto text-center">
+                        <span className="inline-block py-1 px-3 rounded-full bg-indigo-100 text-indigo-700 text-sm font-semibold mb-6">
+                            🇪🇬 The First Hybrid Marketplace for Egyptians
+                        </span>
+                        <h1 className="text-5xl md:text-6xl font-bold text-[var(--text-primary)] mb-6 leading-tight">
+                            One Platform.<br/>
+                            <span className="text-[var(--primary-color)]">Global & Local</span> Opportunities.
+                        </h1>
+                        <p className="text-xl text-[var(--text-secondary)] mb-10 max-w-2xl mx-auto">
+                            Stop checking 9 different websites. We aggregate jobs from Upwork, Fiverr, and local Egyptian clients in one place.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a href="jobs.html" className="btn-primary flex items-center justify-center gap-2">
+                                <i className="icon-search w-5 h-5"></i> Browse All Jobs
+                            </a>
+                            <a href="post-job.html" className="btn-secondary flex items-center justify-center gap-2">
+                                <i className="icon-plus-circle w-5 h-5"></i> Post a Local Job
+                            </a>
+                        </div>
+                        <div className="mt-12 text-sm text-gray-500 flex justify-center gap-6">
+                            <span className="flex items-center gap-2"><i className="icon-check text-green-500"></i> No Hidden Fees</span>
+                            <span className="flex items-center gap-2"><i className="icon-check text-green-500"></i> Vodafone Cash Accepted</span>
+                            <span className="flex items-center gap-2"><i className="icon-check text-green-500"></i> Verified Freelancers</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- 3. PLATFORM BADGES ---
+        function PlatformBadges() {
+            const platforms = ['Upwork', 'Fiverr', 'Toptal', 'Freelancer', 'Mostaql', 'Khamsat'];
+            return (
+                <div className="border-y border-gray-100 bg-white py-8">
+                    <div className="max-w-7xl mx-auto px-4 text-center">
+                        <p className="text-sm text-gray-400 font-medium mb-6 uppercase tracking-wider">Aggregating Jobs From</p>
+                        <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                            {platforms.map(p => (
+                                <span key={p} className="text-xl font-bold text-gray-400 hover:text-indigo-600 cursor-default">{p}</span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- 4. FEATURES COMPONENT ---
+        function Features() {
+            const features = [
+                { icon: 'icon-globe', title: 'Global Aggregator', desc: 'We scrape listings from major platforms so you don’t have to check them one by one.' },
+                { icon: 'icon-map-pin', title: 'Local Marketplace', desc: 'Directly hire Egyptian talent or find clients in your governorate.' },
+                { icon: 'icon-credit-card', title: 'Local Payments', desc: 'Solving the payment barrier with Fawry, Instapay, and Vodafone Cash integration.' },
+                { icon: 'icon-shield', title: 'Verified Trust', desc: 'Local ID verification ensures you are working with real people, not bots.' }
+            ];
+            return (
+                <div className="py-24 bg-white">
+                    <div className="max-w-7xl mx-auto px-4">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why NileLancers?</h2>
+                            <p className="text-gray-500 max-w-2xl mx-auto">We bridge the gap between global opportunities and local accessibility.</p>
+                        </div>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {features.map((f, i) => (
+                                <div key={i} className="p-6 rounded-2xl bg-gray-50 hover:bg-indigo-50 transition-colors">
+                                    <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-indigo-600 mb-4">
+                                        <i className={f.icon}></i>
+                                    </div>
+                                    <h3 className="text-xl font-bold mb-2">{f.title}</h3>
+                                    <p className="text-gray-500 leading-relaxed">{f.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- 5. FOOTER COMPONENT ---
+        function Footer() {
+            return (
+                <footer className="bg-gray-900 text-white py-12">
+                    <div className="max-w-7xl mx-auto px-4">
+                        <div className="grid md:grid-cols-4 gap-8 mb-8">
+                            <div className="col-span-1">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center font-bold">N</div>
+                                    <span className="text-xl font-bold">NileLancers</span>
+                                </div>
+                                <p className="text-gray-400 text-sm">Graduation Project 2025<br/>Egyptian E-Learning University</p>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-4">Platform</h4>
+                                <ul className="space-y-2 text-gray-400 text-sm">
+                                    <li><a href="jobs.html" className="hover:text-white">Browse Jobs</a></li>
+                                    <li><a href="post-job.html" className="hover:text-white">Post a Job</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-4">Legal</h4>
+                                <ul className="space-y-2 text-gray-400 text-sm">
+                                    <li>Privacy Policy</li>
+                                    <li>Terms of Service</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm">
+                            © 2025 NileLancers. Built for EELU Graduation Project.
+                        </div>
+                    </div>
+                </footer>
+            );
+        }
+
+        // --- 6. MAIN APP ---
+        function App() {
+            return (
+                <div className="min-h-screen bg-white">
+                    <Header />
+                    <Hero />
+                    <PlatformBadges />
+                    <Features />
+                    <Footer />
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
