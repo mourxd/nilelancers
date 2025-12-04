@@ -3,22 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browse Services - NileLancers</title>
+    <title>NileLancers - Local & Global Freelance Marketplace</title>
+    
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://resource.trickle.so/vendor_lib/unpkg/lucide-static@0.516.0/font/lucide.css" rel="stylesheet">
+
     <style type="text/tailwindcss">
-        @layer theme { :root { --primary-color: #4F46E5; --secondary-color: #EEF2FF; --text-primary: #1F2937; --text-secondary: #6B7280; --border-color: #E5E7EB; } }
-        @layer components { .btn-primary { @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all; } .card { @apply bg-white rounded-xl p-6 border border-[var(--border-color)] hover:shadow-lg transition-all; } }
+        @layer theme {
+            :root {
+                --primary-color: #4F46E5;
+                --secondary-color: #EEF2FF;
+                --text-primary: #1F2937;
+                --text-secondary: #6B7280;
+                --border-color: #E5E7EB;
+            }
+        }
+        @layer components {
+            .btn-primary {
+                @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all;
+            }
+            .card {
+                @apply bg-white rounded-xl p-6 border border-[var(--border-color)] hover:shadow-lg transition-all;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="root"></div>
+
     <script type="text/babel" src="components/Header.js"></script>
     <script type="text/babel" src="components/Footer.js"></script>
     <script type="text/babel" src="components/JobCard.js"></script>
+
     <script src="utils/jobsAPI.js"></script>
     <script type="text/babel" src="jobs-app.js"></script>
 </body>
