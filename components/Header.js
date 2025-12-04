@@ -1,4 +1,3 @@
-// components/Header.js
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
@@ -19,8 +18,12 @@ function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
+            {/* LINK 1: Home points to index.html */}
             <a href="index.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Home</a>
-            <a href="jobs.html" className="text-[var(--text-primary)] font-medium">Browse Jobs</a>
+            
+            {/* LINK 2: Browse points to jobs.html */}
+            <a href="jobs.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Browse Jobs</a>
+            
             <a href="saved.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Saved</a>
             
             <div className="h-6 w-px bg-gray-200"></div>
