@@ -45,38 +45,44 @@
               { 
                 id: 'l1', title: 'Wedding Photographer Needed', company: 'Ahmed Photography', budget: 'EGP 8,000', type: 'On-Site', 
                 description: 'We are looking for a professional photographer for a wedding in Maadi next Friday. Must have own equipment (Sony/Canon preferred). Payment via Vodafone Cash or Fawry.', 
-                location: 'Cairo, Maadi', skills: ['Photography', 'Photo Editing', 'Events'], source: 'NileLancers Local', isLocal: true 
+                location: 'Cairo, Maadi', skills: ['Photography', 'Photo Editing', 'Events'], source: 'NileLancers Local', isLocal: true, link: '#' 
               },
               { 
                 id: 'l2', title: 'React Native Dev for Delivery App', company: 'Talabat Clone Startup', budget: 'EGP 25,000', type: 'Project', 
                 description: 'Need a senior developer to build a local food delivery app. The app must track drivers in real-time using Google Maps API.', 
-                location: 'Alexandria (Hybrid)', skills: ['React Native', 'Node.js', 'Google Maps'], source: 'NileLancers Local', isLocal: true 
+                location: 'Alexandria (Hybrid)', skills: ['React Native', 'Node.js', 'Google Maps'], source: 'NileLancers Local', isLocal: true, link: '#' 
               },
               {
                 id: 'l3', title: 'Social Media Manager (Instagram)', company: 'Local Boutique', budget: 'EGP 3,000 / mo', type: 'Part-Time',
                 description: 'Manage our Instagram page. Post 3 times a week, create reels, and reply to DMs. Must be fluent in Arabic and English.',
-                location: 'Giza, Egypt', skills: ['Social Media', 'Content Creation', 'Instagram'], source: 'NileLancers Local', isLocal: true
+                location: 'Giza, Egypt', skills: ['Social Media', 'Content Creation', 'Instagram'], source: 'NileLancers Local', isLocal: true, link: '#'
               },
-              // --- GLOBAL JOBS (USD) ---
+              
+              // --- GLOBAL JOBS (USD) - Links added ---
               { 
                 id: 'g1', title: 'Build E-commerce Website with React', company: 'Global Retail Inc.', budget: '$2,500 - $5,000', type: 'Fixed Price', 
                 description: 'Looking for a full-stack developer to build a custom e-commerce platform. Must include Stripe integration.', 
-                location: 'Remote (Global)', skills: ['React', 'JavaScript', 'Stripe'], source: 'Upwork', isLocal: false 
+                location: 'Remote (Global)', skills: ['React', 'JavaScript', 'Stripe'], source: 'Upwork', isLocal: false, link: 'https://www.upwork.com' 
               },
               {
                 id: 'g2', title: 'Logo Design for Tech Startup', company: 'StartupX', budget: '$150', type: 'Fixed Price',
                 description: 'Modern, minimalist logo design needed for an AI startup. Deliverables: Vector files (AI, EPS) and PNG.',
-                location: 'Remote', skills: ['Graphic Design', 'Logo Design', 'Illustrator'], source: 'Fiverr', isLocal: false
+                location: 'Remote', skills: ['Graphic Design', 'Logo Design', 'Illustrator'], source: 'Fiverr', isLocal: false, link: 'https://www.fiverr.com'
               },
               {
                 id: 'g3', title: 'Python Script for Data Scraping', company: 'DataCorp', budget: '$500', type: 'Fixed Price',
                 description: 'Need a Python script to scrape real estate data from 3 websites. Must use BeautifulSoup or Selenium.',
-                location: 'Remote', skills: ['Python', 'Web Scraping', 'Data Mining'], source: 'Freelancer', isLocal: false
+                location: 'Remote', skills: ['Python', 'Web Scraping', 'Data Mining'], source: 'Freelancer', isLocal: false, link: 'https://www.freelancer.com'
               },
               {
                 id: 'g4', title: 'Senior Financial Consultant', company: 'FinTech Enterprise', budget: '$80 - $120 / hr', type: 'Hourly',
                 description: 'Seeking a top-tier financial consultant to audit our quarterly reports. CPA certification required.',
-                location: 'Remote', skills: ['Finance', 'Auditing', 'Accounting'], source: 'Toptal', isLocal: false
+                location: 'Remote', skills: ['Finance', 'Auditing', 'Accounting'], source: 'Toptal', isLocal: false, link: 'https://www.toptal.com'
+              },
+              {
+                id: 'g6', title: 'Translate Legal Documents (Eng to Ar)', company: 'Law Firm', budget: '$200', type: 'Fixed Price',
+                description: 'Translate a 10-page contract from English to Standard Arabic. Legal terminology knowledge required.',
+                location: 'Remote', skills: ['Translation', 'Arabic', 'Legal'], source: 'Mostaql', isLocal: false, link: 'https://mostaql.com'
               }
             ];
             
@@ -117,6 +123,16 @@
 
         // --- JOB DETAILS VIEW ---
         function JobDetailsView({ job, onBack, onToggleSave, isSaved }) {
+            
+            const handleApplyClick = () => {
+                if (job.isLocal) {
+                    alert('Application submitted successfully to local client!'); 
+                } else {
+                    // Open link in new tab
+                    window.open(job.link, '_blank');
+                }
+            };
+
             return (
                 <div className="max-w-5xl mx-auto animate-fade-in">
                     <button onClick={onBack} className="flex items-center text-gray-500 hover:text-[var(--primary-color)] mb-6 transition-colors font-medium">
@@ -127,7 +143,6 @@
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 leading-tight">{job.title}</h1>
 
                         <div className="flex flex-col md:flex-row gap-8 mb-10">
-                            {/* Picture Space */}
                             <div className="w-full md:w-5/12 h-64 bg-gray-100 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300 relative group">
                                 <i className="icon-image text-5xl text-gray-300 mb-3 group-hover:text-[var(--primary-color)] transition-colors"></i>
                                 <p className="text-gray-400 text-sm">Client / Project Image</p>
@@ -138,7 +153,6 @@
                                 </div>
                             </div>
 
-                            {/* Info Side */}
                             <div className="flex-1 flex flex-col justify-center">
                                 <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 mb-6">
                                     <p className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-2">Budget / Price</p>
@@ -152,7 +166,7 @@
                                 </div>
 
                                 <div className="flex gap-4">
-                                    <button className="flex-1 btn-primary py-4 text-lg shadow-md hover:shadow-lg">
+                                    <button onClick={handleApplyClick} className="flex-1 btn-primary py-4 text-lg shadow-md hover:shadow-lg">
                                         {job.isLocal ? 'Apply Now' : `Go to ${job.source}`}
                                     </button>
                                     
@@ -187,9 +201,12 @@
         // --- JOB CARD (List View) ---
         function JobCard({ job, onClick, onToggleSave, isSaved }) {
             const handleButtonClick = (e) => {
-                e.stopPropagation();
-                if (!job.isLocal) alert(`Redirecting to ${job.source}...`);
-                else onClick(job);
+                e.stopPropagation(); // Stop clicking the card
+                if (job.isLocal) {
+                    onClick(job); // Open internal details for local
+                } else {
+                    window.open(job.link, '_blank'); // Open external site
+                }
             };
 
             const handleSaveClick = (e) => {
@@ -235,7 +252,7 @@
                             <i className={`icon-bookmark ${isSaved ? 'fill-current' : ''}`}></i>
                         </button>
 
-                        {/* Updated Button Logic Here */}
+                        {/* DYNAMIC BUTTON TEXT */}
                         {job.isLocal ? (
                             <button onClick={handleButtonClick} className="btn-primary w-full text-sm">Apply Now</button>
                         ) : (
@@ -314,8 +331,8 @@
                                     key={job.id} 
                                     job={job} 
                                     onClick={setSelectedJob} 
-                                    onToggleSave={toggleSave}
-                                    isSaved={isSaved(job)}
+                                    onToggleSave={toggleSave} 
+                                    isSaved={isSaved(job)} 
                                 />
                             ))}
                         </div>
