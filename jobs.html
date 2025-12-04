@@ -156,7 +156,6 @@
                                         {job.isLocal ? 'Apply Now' : `Go to ${job.source}`}
                                     </button>
                                     
-                                    {/* Big Save Button */}
                                     <button 
                                         onClick={() => onToggleSave(job)}
                                         className={`px-4 py-3 border rounded-lg transition-all ${isSaved ? 'bg-[var(--secondary-color)] border-[var(--primary-color)] text-[var(--primary-color)]' : 'border-gray-200 hover:bg-gray-50 text-gray-400'}`}
@@ -231,16 +230,17 @@
                     </div>
 
                     <div className="flex flex-col justify-between items-end min-w-[140px] pl-6 md:ml-2 border-l border-gray-100">
-                        {/* Small Save Button */}
+                        {/* Save Button */}
                         <button onClick={handleSaveClick} className={`mb-4 p-2 rounded-full hover:bg-gray-100 ${isSaved ? 'text-[var(--primary-color)]' : 'text-gray-400'}`}>
                             <i className={`icon-bookmark ${isSaved ? 'fill-current' : ''}`}></i>
                         </button>
 
+                        {/* Updated Button Logic Here */}
                         {job.isLocal ? (
                             <button onClick={handleButtonClick} className="btn-primary w-full text-sm">Apply Now</button>
                         ) : (
                             <button onClick={handleButtonClick} className="btn-outline w-full text-sm flex items-center justify-center gap-2">
-                                View Site <i className="icon-external-link w-3 h-3"></i>
+                                View on {job.source} <i className="icon-external-link w-3 h-3"></i>
                             </button>
                         )}
                     </div>
