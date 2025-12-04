@@ -26,7 +26,7 @@
                 @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all;
             }
             .card {
-                @apply bg-white rounded-xl p-6 border border-[var(--border-color)] hover:shadow-lg transition-all;
+                @apply bg-white rounded-xl p-6 border border-[var(--border-color)] hover:shadow-lg transition-all cursor-pointer;
             }
         }
     </style>
@@ -34,11 +34,244 @@
 <body>
     <div id="root"></div>
 
-    <script type="text/babel" src="components/Header.js"></script>
-    <script type="text/babel" src="components/Footer.js"></script>
-    <script type="text/babel" src="components/JobCard.js"></script>
+    <script>
+        const JobsAPI = {
+          getMockJobs(query = '') {
+            const allJobs = [
+              // --- LOCAL MARKETPLACE ---
+              { 
+                id: 'l1', 
+                title: 'Wedding Photographer Needed', 
+                company: 'Ahmed Photography Studio', 
+                budget: 'EGP 5,000 - 8,000', 
+                type: 'On-Site', 
+                description: 'We are looking for a professional photographer for a wedding in Maadi next Friday. Must have own equipment and previous experience with outdoor weddings. Payment will be made via Vodafone Cash or Fawry deposit upon agreement.', 
+                location: 'Cairo, Egypt', 
+                skills: ['Photography', 'Photo Editing', 'Events'], 
+                source: 'NileLancers Local',
+                isLocal: true 
+              },
+              { 
+                id: 'l2', 
+                title: 'React Native Developer for Delivery App', 
+                company: 'Talabat Clone Startup', 
+                budget: 'EGP 25,000', 
+                type: 'Project', 
+                description: 'Need a senior developer to build a local food delivery app. The app must track drivers in real-time using Google Maps API. Payment via Bank Transfer (CIB/NBE).', 
+                location: 'Alexandria (Hybrid)', 
+                skills: ['React Native', 'Node.js', 'Google Maps API'], 
+                source: 'NileLancers Local',
+                isLocal: true 
+              },
+              // --- GLOBAL AGGREGATOR ---
+              { 
+                id: 'g1', 
+                title: 'Build E-commerce Website with React', 
+                company: 'Global Retail Inc.', 
+                budget: '$2,500 - $5,000', 
+                type: 'Fixed Price', 
+                description: 'Looking for a full-stack developer to build a custom e-commerce platform. Must include Stripe integration, user authentication, and an admin dashboard.', 
+                location: 'Remote (Global)', 
+                skills: ['React', 'JavaScript', 'Stripe'], 
+                source: 'Upwork',
+                isLocal: false 
+              }
+            ];
+            
+            if (!query) return allJobs;
+            return allJobs.filter(job => job.title.toLowerCase().includes(query.toLowerCase()));
+          },
+          async fetchAllJobs(query = '') {
+            return new Promise(resolve => setTimeout(() => resolve(this.getMockJobs(query)), 300));
+          }
+        };
+    </script>
 
-    <script src="utils/jobsAPI.js"></script>
-    <script type="text/babel" src="jobs-app.js"></script>
+    <script type="text/babel">
+        // --- HEADER COMPONENT ---
+        function Header() {
+            return (
+                <nav className="bg-white border-b border-[var(--border-color)] sticky top-0 z-50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between h-16">
+                            <div className="flex items-center">
+                                <a href="index.html" className="flex items-center gap-2">
+                                    <div className="w-8 h-8 bg-[var(--primary-color)] rounded-lg flex items-center justify-center text-white font-bold text-xl">N</div>
+                                    <span className="text-xl font-bold text-[var(--text-primary)]">NileLancers</span>
+                                </a>
+                            </div>
+                            <div className="hidden md:flex items-center space-x-8">
+                                <a href="index.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Home</a>
+                                <a href="jobs.html" className="text-[var(--text-primary)] font-medium">Browse Jobs</a>
+                                <a href="saved.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Saved</a>
+                                <div className="h-6 w-px bg-gray-200"></div>
+                                <a href="post-job.html" className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:opacity-90 font-medium text-sm">Post a Job (Local)</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            );
+        }
+
+        // --- NEW: JOB DETAILS VIEW COMPONENT ---
+        function JobDetailsView({ job, onBack }) {
+            return (
+                <div className="max-w-4xl mx-auto">
+                    {/* Back Button */}
+                    <button onClick={onBack} className="flex items-center text-gray-500 hover:text-[var(--primary-color)] mb-6 transition-colors">
+                        <i className="icon-arrow-left mr-2"></i> Back to Jobs
+                    </button>
+
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden p-8">
+                        
+                        {/* 1. Job Name (Big Title Above Picture) */}
+                        <h1 className="text-3xl font-bold text-gray-900 mb-8">{job.title}</h1>
+
+                        <div className="flex flex-col md:flex-row gap-8 mb-8">
+                            {/* 2. Picture Space (Left Side) */}
+                            <div className="w-full md:w-1/3 h-64 bg-gray-100 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300">
+                                <div className="text-center text-gray-400">
+                                    <i className="icon-image text-4xl mb-2 mx-auto"></i>
+                                    <p>Job Image / Logo</p>
+                                </div>
+                            </div>
+
+                            {/* 3. Freelancer/Client Name & Price (Right Side) */}
+                            <div className="flex-1 flex flex-col justify-center">
+                                <div className="mb-6">
+                                    <p className="text-sm text-gray-500 uppercase tracking-wide font-semibold mb-1">Posted By</p>
+                                    <h2 className="text-2xl font-bold text-[var(--primary-color)]">{job.company}</h2>
+                                    <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
+                                        <i className="icon-map-pin w-4 h-4"></i> {job.location}
+                                        {job.isLocal && <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">Verified Local</span>}
+                                    </div>
+                                </div>
+
+                                <div className="mb-6">
+                                    <p className="text-sm text-gray-500 uppercase tracking-wide font-semibold mb-1">Budget / Price</p>
+                                    <p className="text-3xl font-bold text-green-600">{job.budget}</p>
+                                    <p className="text-sm text-gray-400">{job.type}</p>
+                                </div>
+
+                                <button className="w-full md:w-auto btn-primary text-center">
+                                    {job.isLocal ? 'Apply Now (Local)' : `Apply on ${job.source}`}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* 4. Description (Under Everything) */}
+                        <div className="border-t border-gray-100 pt-8">
+                            <h3 className="text-xl font-bold text-gray-900 mb-4">Job Description</h3>
+                            <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+                                {job.description}
+                            </p>
+                        </div>
+
+                        {/* Skills Tags */}
+                        <div className="mt-8">
+                            <h4 className="font-semibold text-gray-900 mb-3">Required Skills</h4>
+                            <div className="flex flex-wrap gap-2">
+                                {job.skills.map(skill => (
+                                    <span key={skill} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            );
+        }
+
+        // --- JOB LIST CARD COMPONENT ---
+        function JobCard({ job, onClick }) {
+            return (
+                <div onClick={() => onClick(job)} className="card flex flex-col md:flex-row gap-6 hover:border-[var(--primary-color)] transition-colors group">
+                    <div className="flex-shrink-0">
+                        <div className={`w-16 h-16 rounded-lg flex items-center justify-center text-xl font-bold ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                            {job.isLocal ? 'NL' : job.source.substring(0, 2)}
+                        </div>
+                    </div>
+                    <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <h3 className="text-xl font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-color)] transition-colors">
+                                    {job.title}
+                                </h3>
+                                <p className="text-[var(--text-secondary)] font-medium mt-1">{job.company}</p>
+                            </div>
+                            <span className="font-bold text-green-600">{job.budget}</span>
+                        </div>
+                        <p className="mt-3 text-[var(--text-secondary)] line-clamp-2">{job.description}</p>
+                        <div className="mt-4 flex gap-2">
+                            {job.isLocal && <span className="text-xs bg-green-50 text-green-700 px-2 py-1 rounded">Local</span>}
+                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">{job.location}</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- MAIN APP COMPONENT ---
+        function JobsApp() {
+            const [jobs, setJobs] = React.useState([]);
+            const [selectedJob, setSelectedJob] = React.useState(null); // Track clicked job
+            const [searchQuery, setSearchQuery] = React.useState('');
+
+            React.useEffect(() => {
+                loadJobs();
+            }, []);
+
+            const loadJobs = async (query = '') => {
+                const data = await JobsAPI.fetchAllJobs(query);
+                setJobs(data);
+            };
+
+            // If a job is selected, show the Details View
+            if (selectedJob) {
+                return (
+                    <div className="min-h-screen bg-gray-50">
+                        <Header />
+                        <div className="max-w-7xl mx-auto px-4 py-12">
+                            <JobDetailsView job={selectedJob} onBack={() => setSelectedJob(null)} />
+                        </div>
+                    </div>
+                );
+            }
+
+            // Otherwise, show the Search & List View
+            return (
+                <div className="min-h-screen bg-gray-50">
+                    <Header />
+                    <div className="max-w-7xl mx-auto px-4 py-12">
+                        <div className="mb-8">
+                            <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-2">Browse Services</h1>
+                            <p className="text-[var(--text-secondary)] mb-6">Click on any job to view full details.</p>
+                            
+                            <div className="flex gap-4">
+                                <input 
+                                    type="text" 
+                                    placeholder="Search services..." 
+                                    className="flex-1 px-4 py-3 border border-[var(--border-color)] rounded-lg"
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                                <button onClick={() => loadJobs(searchQuery)} className="btn-primary">Search</button>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            {jobs.map(job => (
+                                <JobCard key={job.id} job={job} onClick={setSelectedJob} />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<JobsApp />);
+    </script>
 </body>
 </html>
