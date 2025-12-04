@@ -43,114 +43,40 @@
             const allJobs = [
               // --- LOCAL JOBS (EGP) ---
               { 
-                id: 'l1', 
-                title: 'Wedding Photographer Needed', 
-                company: 'Ahmed Photography', 
-                budget: 'EGP 8,000', 
-                type: 'On-Site', 
-                description: 'We are looking for a professional photographer for a wedding in Maadi next Friday. Must have own equipment (Sony/Canon preferred) and previous experience with outdoor weddings. Payment will be made via Vodafone Cash or Fawry deposit upon agreement.', 
-                location: 'Cairo, Maadi', 
-                skills: ['Photography', 'Photo Editing', 'Events'], 
-                source: 'NileLancers Local',
-                isLocal: true 
+                id: 'l1', title: 'Wedding Photographer Needed', company: 'Ahmed Photography', budget: 'EGP 8,000', type: 'On-Site', 
+                description: 'We are looking for a professional photographer for a wedding in Maadi next Friday. Must have own equipment (Sony/Canon preferred). Payment via Vodafone Cash or Fawry.', 
+                location: 'Cairo, Maadi', skills: ['Photography', 'Photo Editing', 'Events'], source: 'NileLancers Local', isLocal: true 
               },
               { 
-                id: 'l2', 
-                title: 'React Native Dev for Delivery App', 
-                company: 'Talabat Clone Startup', 
-                budget: 'EGP 25,000', 
-                type: 'Project', 
-                description: 'Need a senior developer to build a local food delivery app. The app must track drivers in real-time using Google Maps API. Payment via Bank Transfer (CIB/NBE).', 
-                location: 'Alexandria (Hybrid)', 
-                skills: ['React Native', 'Node.js', 'Google Maps'], 
-                source: 'NileLancers Local',
-                isLocal: true 
+                id: 'l2', title: 'React Native Dev for Delivery App', company: 'Talabat Clone Startup', budget: 'EGP 25,000', type: 'Project', 
+                description: 'Need a senior developer to build a local food delivery app. The app must track drivers in real-time using Google Maps API.', 
+                location: 'Alexandria (Hybrid)', skills: ['React Native', 'Node.js', 'Google Maps'], source: 'NileLancers Local', isLocal: true 
               },
               {
-                id: 'l3',
-                title: 'Social Media Manager (Instagram)',
-                company: 'Local Boutique',
-                budget: 'EGP 3,000 / mo',
-                type: 'Part-Time',
+                id: 'l3', title: 'Social Media Manager (Instagram)', company: 'Local Boutique', budget: 'EGP 3,000 / mo', type: 'Part-Time',
                 description: 'Manage our Instagram page. Post 3 times a week, create reels, and reply to DMs. Must be fluent in Arabic and English.',
-                location: 'Giza, Egypt',
-                skills: ['Social Media', 'Content Creation', 'Instagram'],
-                source: 'NileLancers Local',
-                isLocal: true
+                location: 'Giza, Egypt', skills: ['Social Media', 'Content Creation', 'Instagram'], source: 'NileLancers Local', isLocal: true
               },
-
               // --- GLOBAL JOBS (USD) ---
               { 
-                id: 'g1', 
-                title: 'Build E-commerce Website with React', 
-                company: 'Global Retail Inc.', 
-                budget: '$2,500 - $5,000', 
-                type: 'Fixed Price', 
-                description: 'Looking for a full-stack developer to build a custom e-commerce platform. Must include Stripe integration, user authentication, and an admin dashboard.', 
-                location: 'Remote (Global)', 
-                skills: ['React', 'JavaScript', 'Stripe'], 
-                source: 'Upwork',
-                isLocal: false 
+                id: 'g1', title: 'Build E-commerce Website with React', company: 'Global Retail Inc.', budget: '$2,500 - $5,000', type: 'Fixed Price', 
+                description: 'Looking for a full-stack developer to build a custom e-commerce platform. Must include Stripe integration.', 
+                location: 'Remote (Global)', skills: ['React', 'JavaScript', 'Stripe'], source: 'Upwork', isLocal: false 
               },
               {
-                id: 'g2',
-                title: 'Logo Design for Tech Startup',
-                company: 'StartupX',
-                budget: '$150',
-                type: 'Fixed Price',
+                id: 'g2', title: 'Logo Design for Tech Startup', company: 'StartupX', budget: '$150', type: 'Fixed Price',
                 description: 'Modern, minimalist logo design needed for an AI startup. Deliverables: Vector files (AI, EPS) and PNG.',
-                location: 'Remote',
-                skills: ['Graphic Design', 'Logo Design', 'Illustrator'],
-                source: 'Fiverr',
-                isLocal: false
+                location: 'Remote', skills: ['Graphic Design', 'Logo Design', 'Illustrator'], source: 'Fiverr', isLocal: false
               },
               {
-                id: 'g3',
-                title: 'Python Script for Data Scraping',
-                company: 'DataCorp',
-                budget: '$500',
-                type: 'Fixed Price',
-                description: 'Need a Python script to scrape real estate data from 3 websites. Must use BeautifulSoup or Selenium and export to CSV.',
-                location: 'Remote',
-                skills: ['Python', 'Web Scraping', 'Data Mining'],
-                source: 'Freelancer',
-                isLocal: false
+                id: 'g3', title: 'Python Script for Data Scraping', company: 'DataCorp', budget: '$500', type: 'Fixed Price',
+                description: 'Need a Python script to scrape real estate data from 3 websites. Must use BeautifulSoup or Selenium.',
+                location: 'Remote', skills: ['Python', 'Web Scraping', 'Data Mining'], source: 'Freelancer', isLocal: false
               },
               {
-                id: 'g4',
-                title: 'Senior Financial Consultant',
-                company: 'FinTech Enterprise',
-                budget: '$80 - $120 / hr',
-                type: 'Hourly',
-                description: 'Seeking a top-tier financial consultant to audit our quarterly reports. Must have CPA certification and 5+ years experience.',
-                location: 'Remote',
-                skills: ['Finance', 'Auditing', 'Accounting'],
-                source: 'Toptal',
-                isLocal: false
-              },
-              {
-                id: 'g5',
-                title: 'Video Editor for YouTube Channel',
-                company: 'Content Creator',
-                budget: '$50 / video',
-                type: 'Recurring',
-                description: 'Edit 10-minute vlogs. Add subtitles, transitions, and background music. Style similar to MrBeast.',
-                location: 'Remote',
-                skills: ['Premiere Pro', 'Video Editing', 'YouTube'],
-                source: 'Fiverr',
-                isLocal: false
-              },
-              {
-                id: 'g6',
-                title: 'Translate Legal Documents (Eng to Ar)',
-                company: 'Law Firm',
-                budget: '$200',
-                type: 'Fixed Price',
-                description: 'Translate a 10-page contract from English to Standard Arabic. Legal terminology knowledge required.',
-                location: 'Remote',
-                skills: ['Translation', 'Arabic', 'Legal'],
-                source: 'Mostaql',
-                isLocal: false
+                id: 'g4', title: 'Senior Financial Consultant', company: 'FinTech Enterprise', budget: '$80 - $120 / hr', type: 'Hourly',
+                description: 'Seeking a top-tier financial consultant to audit our quarterly reports. CPA certification required.',
+                location: 'Remote', skills: ['Finance', 'Auditing', 'Accounting'], source: 'Toptal', isLocal: false
               }
             ];
             
@@ -164,7 +90,7 @@
     </script>
 
     <script type="text/babel">
-        // --- HEADER COMPONENT ---
+        // --- HEADER ---
         function Header() {
             return (
                 <nav className="bg-white border-b border-[var(--border-color)] sticky top-0 z-50">
@@ -189,26 +115,22 @@
             );
         }
 
-        // --- DETAILS VIEW (With Picture Space & Big Fonts) ---
-        function JobDetailsView({ job, onBack }) {
+        // --- JOB DETAILS VIEW ---
+        function JobDetailsView({ job, onBack, onToggleSave, isSaved }) {
             return (
                 <div className="max-w-5xl mx-auto animate-fade-in">
-                    {/* Back Button */}
                     <button onClick={onBack} className="flex items-center text-gray-500 hover:text-[var(--primary-color)] mb-6 transition-colors font-medium">
                         <i className="icon-arrow-left mr-2"></i> Back to Jobs List
                     </button>
 
                     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden p-8">
-                        
-                        {/* 1. Big Title Above Picture */}
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 leading-tight">{job.title}</h1>
 
                         <div className="flex flex-col md:flex-row gap-8 mb-10">
-                            {/* 2. Picture Space (Left Side) */}
+                            {/* Picture Space */}
                             <div className="w-full md:w-5/12 h-64 bg-gray-100 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300 relative group">
                                 <i className="icon-image text-5xl text-gray-300 mb-3 group-hover:text-[var(--primary-color)] transition-colors"></i>
                                 <p className="text-gray-400 text-sm">Client / Project Image</p>
-                                {/* Badge Overlay */}
                                 <div className="absolute top-4 left-4">
                                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
                                         {job.source}
@@ -216,7 +138,7 @@
                                 </div>
                             </div>
 
-                            {/* 3. Freelancer/Client Name & Price (Right Side) */}
+                            {/* Info Side */}
                             <div className="flex-1 flex flex-col justify-center">
                                 <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 mb-6">
                                     <p className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-2">Budget / Price</p>
@@ -227,43 +149,34 @@
                                 <div className="mb-6 px-2">
                                     <p className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">Posted By</p>
                                     <h2 className="text-2xl font-bold text-[var(--primary-color)]">{job.company}</h2>
-                                    <div className="flex gap-1 mt-2">
-                                        <i className="icon-star text-yellow-400 fill-current w-4 h-4"></i>
-                                        <i className="icon-star text-yellow-400 fill-current w-4 h-4"></i>
-                                        <i className="icon-star text-yellow-400 fill-current w-4 h-4"></i>
-                                        <i className="icon-star text-yellow-400 fill-current w-4 h-4"></i>
-                                        <i className="icon-star text-yellow-400 fill-current w-4 h-4"></i>
-                                        <span className="text-xs text-gray-400 ml-1">(5.0)</span>
-                                    </div>
                                 </div>
 
                                 <div className="flex gap-4">
                                     <button className="flex-1 btn-primary py-4 text-lg shadow-md hover:shadow-lg">
                                         {job.isLocal ? 'Apply Now' : `Go to ${job.source}`}
                                     </button>
-                                    <button className="px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50">
-                                        <i className="icon-bookmark text-gray-400 w-6 h-6"></i>
+                                    
+                                    {/* Big Save Button */}
+                                    <button 
+                                        onClick={() => onToggleSave(job)}
+                                        className={`px-4 py-3 border rounded-lg transition-all ${isSaved ? 'bg-[var(--secondary-color)] border-[var(--primary-color)] text-[var(--primary-color)]' : 'border-gray-200 hover:bg-gray-50 text-gray-400'}`}
+                                    >
+                                        <i className={`icon-bookmark w-6 h-6 ${isSaved ? 'fill-current' : ''}`}></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        {/* 4. Description (Bottom) */}
                         <div className="border-t border-gray-100 pt-8">
                             <h3 className="text-xl font-bold text-gray-900 mb-4">Job Description</h3>
-                            <p className="text-gray-600 leading-relaxed whitespace-pre-line text-lg">
-                                {job.description}
-                            </p>
+                            <p className="text-gray-600 leading-relaxed whitespace-pre-line text-lg">{job.description}</p>
                         </div>
 
-                        {/* Skills */}
                         <div className="mt-8 pt-6">
                             <h4 className="font-semibold text-gray-900 mb-3">Skills Required</h4>
                             <div className="flex flex-wrap gap-2">
                                 {job.skills.map(skill => (
-                                    <span key={skill} className="px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
-                                        {skill}
-                                    </span>
+                                    <span key={skill} className="px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">{skill}</span>
                                 ))}
                             </div>
                         </div>
@@ -272,54 +185,43 @@
             );
         }
 
-        // --- JOB LIST CARD (Old Look with Button) ---
-        function JobCard({ job, onClick }) {
+        // --- JOB CARD (List View) ---
+        function JobCard({ job, onClick, onToggleSave, isSaved }) {
             const handleButtonClick = (e) => {
-                e.stopPropagation(); // Don't trigger the card click
-                if (!job.isLocal) {
-                    // Open external link for global jobs
-                    alert(`Redirecting to ${job.source}... (Simulation)`);
-                } else {
-                    // Open details for local jobs
-                    onClick(job);
-                }
+                e.stopPropagation();
+                if (!job.isLocal) alert(`Redirecting to ${job.source}...`);
+                else onClick(job);
+            };
+
+            const handleSaveClick = (e) => {
+                e.stopPropagation();
+                onToggleSave(job);
             };
 
             return (
                 <div onClick={() => onClick(job)} className="card flex flex-col md:flex-row gap-6 group relative">
-                    {/* Logo */}
                     <div className="flex-shrink-0">
-                        <div className={`w-16 h-16 rounded-lg flex items-center justify-center text-xl font-bold 
-                            ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                        <div className={`w-16 h-16 rounded-lg flex items-center justify-center text-xl font-bold ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
                             {job.isLocal ? 'NL' : job.source.substring(0, 2)}
                         </div>
                     </div>
 
-                    {/* Content */}
                     <div className="flex-1">
                         <div className="flex justify-between items-start">
                             <div>
-                                <h3 className="text-xl font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-color)] transition-colors">
-                                    {job.title}
-                                </h3>
+                                <h3 className="text-xl font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-color)] transition-colors">{job.title}</h3>
                                 <div className="flex items-center gap-2 mt-1">
                                     <span className="font-medium text-[var(--text-secondary)]">{job.company}</span>
-                                    {job.isLocal ? (
-                                        <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">Local</span>
-                                    ) : (
-                                        <span className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">{job.source}</span>
-                                    )}
+                                    <span className={`text-xs px-2 py-0.5 rounded-full ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>{job.source}</span>
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div className="flex flex-wrap gap-4 mt-3 text-sm text-[var(--text-secondary)]">
                             <span className="font-bold text-green-600">{job.budget}</span>
                             <span>• {job.type}</span>
                             <span>• {job.location}</span>
                         </div>
-
-                        <p className="mt-3 text-[var(--text-secondary)] line-clamp-2">{job.description}</p>
                         
                         <div className="mt-4 flex flex-wrap gap-2">
                             {job.skills.slice(0, 3).map(skill => (
@@ -328,16 +230,17 @@
                         </div>
                     </div>
 
-                    {/* Action Button (Right Side - Old Look) */}
-                    <div className="flex flex-col justify-center min-w-[140px] border-l border-gray-100 pl-6 md:ml-2">
+                    <div className="flex flex-col justify-between items-end min-w-[140px] pl-6 md:ml-2 border-l border-gray-100">
+                        {/* Small Save Button */}
+                        <button onClick={handleSaveClick} className={`mb-4 p-2 rounded-full hover:bg-gray-100 ${isSaved ? 'text-[var(--primary-color)]' : 'text-gray-400'}`}>
+                            <i className={`icon-bookmark ${isSaved ? 'fill-current' : ''}`}></i>
+                        </button>
+
                         {job.isLocal ? (
-                            <button onClick={handleButtonClick} className="btn-primary w-full text-sm">
-                                Apply Now
-                            </button>
+                            <button onClick={handleButtonClick} className="btn-primary w-full text-sm">Apply Now</button>
                         ) : (
                             <button onClick={handleButtonClick} className="btn-outline w-full text-sm flex items-center justify-center gap-2">
-                                View on {job.source}
-                                <i className="icon-external-link w-3 h-3"></i>
+                                View Site <i className="icon-external-link w-3 h-3"></i>
                             </button>
                         )}
                     </div>
@@ -350,9 +253,12 @@
             const [jobs, setJobs] = React.useState([]);
             const [selectedJob, setSelectedJob] = React.useState(null);
             const [searchQuery, setSearchQuery] = React.useState('');
+            const [savedJobs, setSavedJobs] = React.useState([]);
 
             React.useEffect(() => {
                 loadJobs();
+                const saved = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+                setSavedJobs(saved);
             }, []);
 
             const loadJobs = async (query = '') => {
@@ -360,43 +266,57 @@
                 setJobs(data);
             };
 
-            // Detail View
+            const toggleSave = (job) => {
+                let newSaved;
+                const exists = savedJobs.find(j => j.id === job.id);
+                if (exists) {
+                    newSaved = savedJobs.filter(j => j.id !== job.id);
+                } else {
+                    newSaved = [...savedJobs, job];
+                }
+                setSavedJobs(newSaved);
+                localStorage.setItem('savedJobs', JSON.stringify(newSaved));
+            };
+
+            const isSaved = (job) => savedJobs.some(j => j.id === job.id);
+
             if (selectedJob) {
                 return (
                     <div className="min-h-screen bg-gray-50">
                         <Header />
                         <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
-                            <JobDetailsView job={selectedJob} onBack={() => setSelectedJob(null)} />
+                            <JobDetailsView 
+                                job={selectedJob} 
+                                onBack={() => setSelectedJob(null)} 
+                                onToggleSave={toggleSave}
+                                isSaved={isSaved(selectedJob)}
+                            />
                         </div>
                     </div>
                 );
             }
 
-            // List View
             return (
                 <div className="min-h-screen bg-gray-50">
                     <Header />
                     <div className="max-w-7xl mx-auto px-4 py-12">
                         <div className="mb-8">
                             <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-2">Browse Services</h1>
-                            <p className="text-[var(--text-secondary)] mb-6">
-                                Found {jobs.length} opportunities from Upwork, Fiverr, and Local Clients.
-                            </p>
-                            
+                            <p className="text-[var(--text-secondary)] mb-6">Found {jobs.length} opportunities from Upwork, Fiverr, and Local Clients.</p>
                             <div className="flex gap-4">
-                                <input 
-                                    type="text" 
-                                    placeholder="Search by title, skill, or platform..." 
-                                    className="flex-1 px-4 py-3 border border-[var(--border-color)] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
+                                <input type="text" placeholder="Search..." className="flex-1 px-4 py-3 border rounded-lg" onChange={(e) => setSearchQuery(e.target.value)} />
                                 <button onClick={() => loadJobs(searchQuery)} className="btn-primary">Search</button>
                             </div>
                         </div>
-
                         <div className="space-y-4">
                             {jobs.map(job => (
-                                <JobCard key={job.id} job={job} onClick={setSelectedJob} />
+                                <JobCard 
+                                    key={job.id} 
+                                    job={job} 
+                                    onClick={setSelectedJob} 
+                                    onToggleSave={toggleSave}
+                                    isSaved={isSaved(job)}
+                                />
                             ))}
                         </div>
                     </div>
