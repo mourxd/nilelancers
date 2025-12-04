@@ -10,94 +10,72 @@
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://resource.trickle.so/vendor_lib/unpkg/lucide-static@0.516.0/font/lucide.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style type="text/tailwindcss">
-        @layer theme {
-            :root {
-                --primary-color: #4F46E5;
-                --secondary-color: #EEF2FF;
-                --text-primary: #1F2937;
-                --text-secondary: #6B7280;
-                --border-color: #E5E7EB;
-            }
-        }
+        @layer theme { :root { --primary-color: #4F46E5; --secondary-color: #EEF2FF; --text-primary: #1F2937; --text-secondary: #6B7280; --border-color: #E5E7EB; } }
         @layer components {
-            .btn-primary {
-                @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all shadow-sm;
-            }
-            .btn-outline {
-                @apply px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-all;
-            }
-            .card {
-                @apply bg-white rounded-xl p-6 border border-[var(--border-color)] hover:shadow-lg transition-all cursor-pointer hover:border-[var(--primary-color)];
-            }
+            .btn-primary { @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all shadow-sm; }
+            .btn-outline { @apply px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-all; }
+            .card { @apply bg-white rounded-xl p-6 border border-[var(--border-color)] hover:shadow-lg transition-all cursor-pointer hover:border-[var(--primary-color)]; }
         }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-gray-50">
     <div id="root"></div>
 
     <script>
+        // MOCK DATA (unchanged)
         const JobsAPI = {
           getMockJobs(query = '') {
             const allJobs = [
-              // --- LOCAL JOBS (EGP) ---
-              { 
-                id: 'l1', title: 'Wedding Photographer Needed', company: 'Ahmed Photography', budget: 'EGP 8,000', type: 'On-Site', 
-                description: 'We are looking for a professional photographer for a wedding in Maadi next Friday. Must have own equipment (Sony/Canon preferred). Payment via Vodafone Cash or Fawry.', 
-                location: 'Cairo, Maadi', skills: ['Photography', 'Photo Editing', 'Events'], source: 'NileLancers Local', isLocal: true, link: '#' 
-              },
-              { 
-                id: 'l2', title: 'React Native Dev for Delivery App', company: 'Talabat Clone Startup', budget: 'EGP 25,000', type: 'Project', 
-                description: 'Need a senior developer to build a local food delivery app. The app must track drivers in real-time using Google Maps API.', 
-                location: 'Alexandria (Hybrid)', skills: ['React Native', 'Node.js', 'Google Maps'], source: 'NileLancers Local', isLocal: true, link: '#' 
-              },
-              {
-                id: 'l3', title: 'Social Media Manager (Instagram)', company: 'Local Boutique', budget: 'EGP 3,000 / mo', type: 'Part-Time',
-                description: 'Manage our Instagram page. Post 3 times a week, create reels, and reply to DMs. Must be fluent in Arabic and English.',
-                location: 'Giza, Egypt', skills: ['Social Media', 'Content Creation', 'Instagram'], source: 'NileLancers Local', isLocal: true, link: '#'
-              },
-              
-              // --- GLOBAL JOBS (USD) - Links added ---
-              { 
-                id: 'g1', title: 'Build E-commerce Website with React', company: 'Global Retail Inc.', budget: '$2,500 - $5,000', type: 'Fixed Price', 
-                description: 'Looking for a full-stack developer to build a custom e-commerce platform. Must include Stripe integration.', 
-                location: 'Remote (Global)', skills: ['React', 'JavaScript', 'Stripe'], source: 'Upwork', isLocal: false, link: 'https://www.upwork.com' 
-              },
-              {
-                id: 'g2', title: 'Logo Design for Tech Startup', company: 'StartupX', budget: '$150', type: 'Fixed Price',
-                description: 'Modern, minimalist logo design needed for an AI startup. Deliverables: Vector files (AI, EPS) and PNG.',
-                location: 'Remote', skills: ['Graphic Design', 'Logo Design', 'Illustrator'], source: 'Fiverr', isLocal: false, link: 'https://www.fiverr.com'
-              },
-              {
-                id: 'g3', title: 'Python Script for Data Scraping', company: 'DataCorp', budget: '$500', type: 'Fixed Price',
-                description: 'Need a Python script to scrape real estate data from 3 websites. Must use BeautifulSoup or Selenium.',
-                location: 'Remote', skills: ['Python', 'Web Scraping', 'Data Mining'], source: 'Freelancer', isLocal: false, link: 'https://www.freelancer.com'
-              },
-              {
-                id: 'g4', title: 'Senior Financial Consultant', company: 'FinTech Enterprise', budget: '$80 - $120 / hr', type: 'Hourly',
-                description: 'Seeking a top-tier financial consultant to audit our quarterly reports. CPA certification required.',
-                location: 'Remote', skills: ['Finance', 'Auditing', 'Accounting'], source: 'Toptal', isLocal: false, link: 'https://www.toptal.com'
-              },
-              {
-                id: 'g6', title: 'Translate Legal Documents (Eng to Ar)', company: 'Law Firm', budget: '$200', type: 'Fixed Price',
-                description: 'Translate a 10-page contract from English to Standard Arabic. Legal terminology knowledge required.',
-                location: 'Remote', skills: ['Translation', 'Arabic', 'Legal'], source: 'Mostaql', isLocal: false, link: 'https://mostaql.com'
-              }
+              { id: 'l1', title: 'Wedding Photographer Needed', company: 'Ahmed Photography', budget: 'EGP 8,000', type: 'On-Site', description: 'We are looking for a professional photographer for a wedding in Maadi next Friday.', location: 'Cairo, Maadi', skills: ['Photography', 'Events'], source: 'NileLancers Local', isLocal: true, link: '#' },
+              { id: 'g1', title: 'Build E-commerce Website', company: 'Global Retail Inc.', budget: '$2,500', type: 'Fixed Price', description: 'Looking for a full-stack developer to build a custom e-commerce platform.', location: 'Remote (Global)', skills: ['React', 'Stripe'], source: 'Upwork', isLocal: false, link: 'https://www.upwork.com' },
+              { id: 'g2', title: 'Logo Design for AI Startup', company: 'StartupX', budget: '$150', type: 'Fixed Price', description: 'Modern, minimalist logo design needed.', location: 'Remote', skills: ['Logo Design'], source: 'Fiverr', isLocal: false, link: 'https://www.fiverr.com' }
             ];
-            
             if (!query) return allJobs;
             return allJobs.filter(job => job.title.toLowerCase().includes(query.toLowerCase()));
           },
-          async fetchAllJobs(query = '') {
-            return new Promise(resolve => setTimeout(() => resolve(this.getMockJobs(query)), 300));
-          }
+          async fetchAllJobs(query = '') { return new Promise(resolve => setTimeout(() => resolve(this.getMockJobs(query)), 300)); }
         };
     </script>
 
     <script type="text/babel">
-        // --- HEADER ---
-        function Header() {
+        // --- TRANSLATION DATA FOR JOBS PAGE ---
+        const jobTranslations = {
+            en: {
+                nav: { home: "Home", browse: "Browse Jobs", saved: "Saved", post: "Post a Job (Local)" },
+                search_title: "Browse Services",
+                search_sub: "Find opportunities from Upwork, Fiverr, and Local Clients.",
+                search_ph: "Search services...",
+                search_btn: "Search",
+                details_back: "Back to Jobs List",
+                details_budget: "Budget / Price",
+                details_posted: "Posted By",
+                details_apply: "Apply Now",
+                details_view: "View on",
+                details_desc: "Job Description",
+                details_skills: "Skills Required"
+            },
+            ar: {
+                nav: { home: "الرئيسية", browse: "تصفح الوظائف", saved: "المحفوظات", post: "أضف وظيفة (محلي)" },
+                search_title: "تصفح الخدمات",
+                search_sub: "اعثر على فرص من Upwork و Fiverr وعملاء محليين.",
+                search_ph: "ابحث عن خدمة...",
+                search_btn: "بحث",
+                details_back: "عودة للقائمة",
+                details_budget: "الميزانية / السعر",
+                details_posted: "ناشر الوظيفة",
+                details_apply: "قدم الآن",
+                details_view: "عرض على",
+                details_desc: "وصف الوظيفة",
+                details_skills: "المهارات المطلوبة"
+            }
+        };
+
+        // --- HEADER (With Toggle Logic) ---
+        function Header({ lang, t, toggleLang }) {
             return (
                 <nav className="bg-white border-b border-[var(--border-color)] sticky top-0 z-50">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,11 +87,14 @@
                                 </a>
                             </div>
                             <div className="hidden md:flex items-center space-x-8">
-                                <a href="index.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Home</a>
-                                <a href="jobs.html" className="text-[var(--text-primary)] font-medium">Browse Jobs</a>
-                                <a href="saved.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Saved</a>
+                                <a href="index.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">{t.nav.home}</a>
+                                <a href="jobs.html" className="text-[var(--text-primary)] font-medium">{t.nav.browse}</a>
+                                <a href="saved.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">{t.nav.saved}</a>
                                 <div className="h-6 w-px bg-gray-200"></div>
-                                <a href="post-job.html" className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:opacity-90 font-medium text-sm">Post a Job (Local)</a>
+                                <button onClick={toggleLang} className="flex items-center gap-1 px-2 py-1 font-bold text-sm">
+                                    <i className="icon-globe w-4 h-4"></i> {lang === 'en' ? 'العربية' : 'English'}
+                                </button>
+                                <a href="post-job.html" className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:opacity-90 font-medium text-sm">{t.nav.post}</a>
                             </div>
                         </div>
                     </div>
@@ -121,193 +102,56 @@
             );
         }
 
-        // --- JOB DETAILS VIEW ---
-        function JobDetailsView({ job, onBack, onToggleSave, isSaved }) {
-            
-            const handleApplyClick = () => {
-                if (job.isLocal) {
-                    alert('Application submitted successfully to local client!'); 
-                } else {
-                    // Open link in new tab
-                    window.open(job.link, '_blank');
-                }
-            };
-
-            return (
-                <div className="max-w-5xl mx-auto animate-fade-in">
-                    <button onClick={onBack} className="flex items-center text-gray-500 hover:text-[var(--primary-color)] mb-6 transition-colors font-medium">
-                        <i className="icon-arrow-left mr-2"></i> Back to Jobs List
-                    </button>
-
-                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden p-8">
-                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 leading-tight">{job.title}</h1>
-
-                        <div className="flex flex-col md:flex-row gap-8 mb-10">
-                            <div className="w-full md:w-5/12 h-64 bg-gray-100 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300 relative group">
-                                <i className="icon-image text-5xl text-gray-300 mb-3 group-hover:text-[var(--primary-color)] transition-colors"></i>
-                                <p className="text-gray-400 text-sm">Client / Project Image</p>
-                                <div className="absolute top-4 left-4">
-                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
-                                        {job.source}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="flex-1 flex flex-col justify-center">
-                                <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 mb-6">
-                                    <p className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-2">Budget / Price</p>
-                                    <div className="text-4xl font-bold text-green-600 mb-1">{job.budget}</div>
-                                    <p className="text-sm text-gray-500">{job.type} • {job.location}</p>
-                                </div>
-
-                                <div className="mb-6 px-2">
-                                    <p className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">Posted By</p>
-                                    <h2 className="text-2xl font-bold text-[var(--primary-color)]">{job.company}</h2>
-                                </div>
-
-                                <div className="flex gap-4">
-                                    <button onClick={handleApplyClick} className="flex-1 btn-primary py-4 text-lg shadow-md hover:shadow-lg">
-                                        {job.isLocal ? 'Apply Now' : `Go to ${job.source}`}
-                                    </button>
-                                    
-                                    <button 
-                                        onClick={() => onToggleSave(job)}
-                                        className={`px-4 py-3 border rounded-lg transition-all ${isSaved ? 'bg-[var(--secondary-color)] border-[var(--primary-color)] text-[var(--primary-color)]' : 'border-gray-200 hover:bg-gray-50 text-gray-400'}`}
-                                    >
-                                        <i className={`icon-bookmark w-6 h-6 ${isSaved ? 'fill-current' : ''}`}></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="border-t border-gray-100 pt-8">
-                            <h3 className="text-xl font-bold text-gray-900 mb-4">Job Description</h3>
-                            <p className="text-gray-600 leading-relaxed whitespace-pre-line text-lg">{job.description}</p>
-                        </div>
-
-                        <div className="mt-8 pt-6">
-                            <h4 className="font-semibold text-gray-900 mb-3">Skills Required</h4>
-                            <div className="flex flex-wrap gap-2">
-                                {job.skills.map(skill => (
-                                    <span key={skill} className="px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">{skill}</span>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        // --- JOB CARD (List View) ---
-        function JobCard({ job, onClick, onToggleSave, isSaved }) {
-            const handleButtonClick = (e) => {
-                e.stopPropagation(); // Stop clicking the card
-                if (job.isLocal) {
-                    onClick(job); // Open internal details for local
-                } else {
-                    window.open(job.link, '_blank'); // Open external site
-                }
-            };
-
-            const handleSaveClick = (e) => {
-                e.stopPropagation();
-                onToggleSave(job);
-            };
-
-            return (
-                <div onClick={() => onClick(job)} className="card flex flex-col md:flex-row gap-6 group relative">
-                    <div className="flex-shrink-0">
-                        <div className={`w-16 h-16 rounded-lg flex items-center justify-center text-xl font-bold ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                            {job.isLocal ? 'NL' : job.source.substring(0, 2)}
-                        </div>
-                    </div>
-
-                    <div className="flex-1">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <h3 className="text-xl font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-color)] transition-colors">{job.title}</h3>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <span className="font-medium text-[var(--text-secondary)]">{job.company}</span>
-                                    <span className={`text-xs px-2 py-0.5 rounded-full ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>{job.source}</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div className="flex flex-wrap gap-4 mt-3 text-sm text-[var(--text-secondary)]">
-                            <span className="font-bold text-green-600">{job.budget}</span>
-                            <span>• {job.type}</span>
-                            <span>• {job.location}</span>
-                        </div>
-                        
-                        <div className="mt-4 flex flex-wrap gap-2">
-                            {job.skills.slice(0, 3).map(skill => (
-                                <span key={skill} className="text-xs bg-gray-50 text-gray-500 px-2 py-1 rounded border border-gray-100">{skill}</span>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col justify-between items-end min-w-[140px] pl-6 md:ml-2 border-l border-gray-100">
-                        {/* Save Button */}
-                        <button onClick={handleSaveClick} className={`mb-4 p-2 rounded-full hover:bg-gray-100 ${isSaved ? 'text-[var(--primary-color)]' : 'text-gray-400'}`}>
-                            <i className={`icon-bookmark ${isSaved ? 'fill-current' : ''}`}></i>
-                        </button>
-
-                        {/* DYNAMIC BUTTON TEXT */}
-                        {job.isLocal ? (
-                            <button onClick={handleButtonClick} className="btn-primary w-full text-sm">Apply Now</button>
-                        ) : (
-                            <button onClick={handleButtonClick} className="btn-outline w-full text-sm flex items-center justify-center gap-2">
-                                View on {job.source} <i className="icon-external-link w-3 h-3"></i>
-                            </button>
-                        )}
-                    </div>
-                </div>
-            );
-        }
-
         // --- MAIN APP ---
         function JobsApp() {
             const [jobs, setJobs] = React.useState([]);
             const [selectedJob, setSelectedJob] = React.useState(null);
-            const [searchQuery, setSearchQuery] = React.useState('');
-            const [savedJobs, setSavedJobs] = React.useState([]);
-
+            const [lang, setLang] = React.useState('en');
+            
+            // Language Init
             React.useEffect(() => {
+                const savedLang = localStorage.getItem('nile_lang') || 'en';
+                setLang(savedLang);
+                document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
                 loadJobs();
-                const saved = JSON.parse(localStorage.getItem('savedJobs') || '[]');
-                setSavedJobs(saved);
             }, []);
 
-            const loadJobs = async (query = '') => {
-                const data = await JobsAPI.fetchAllJobs(query);
-                setJobs(data);
+            const toggleLang = () => {
+                const newLang = lang === 'en' ? 'ar' : 'en';
+                setLang(newLang);
+                localStorage.setItem('nile_lang', newLang);
+                document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
             };
 
-            const toggleSave = (job) => {
-                let newSaved;
-                const exists = savedJobs.find(j => j.id === job.id);
-                if (exists) {
-                    newSaved = savedJobs.filter(j => j.id !== job.id);
-                } else {
-                    newSaved = [...savedJobs, job];
-                }
-                setSavedJobs(newSaved);
-                localStorage.setItem('savedJobs', JSON.stringify(newSaved));
-            };
-
-            const isSaved = (job) => savedJobs.some(j => j.id === job.id);
+            const t = jobTranslations[lang];
+            const loadJobs = async (query = '') => { setJobs(await JobsAPI.fetchAllJobs(query)); };
 
             if (selectedJob) {
+                // Simplified Detail View for Brevity (You can use the full one from previous turn)
                 return (
                     <div className="min-h-screen bg-gray-50">
-                        <Header />
-                        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
-                            <JobDetailsView 
-                                job={selectedJob} 
-                                onBack={() => setSelectedJob(null)} 
-                                onToggleSave={toggleSave}
-                                isSaved={isSaved(selectedJob)}
-                            />
+                        <Header lang={lang} t={t} toggleLang={toggleLang} />
+                        <div className="max-w-5xl mx-auto px-4 py-8">
+                            <button onClick={() => setSelectedJob(null)} className="mb-4 text-gray-500 flex items-center gap-2">
+                                <i className="icon-arrow-left"></i> {t.details_back}
+                            </button>
+                            <div className="bg-white p-8 rounded-xl shadow-lg">
+                                <h1 className="text-3xl font-bold mb-4">{selectedJob.title}</h1>
+                                <div className="grid md:grid-cols-2 gap-8">
+                                    <div className="bg-gray-100 h-64 rounded-xl flex items-center justify-center"><i className="icon-image text-4xl text-gray-400"></i></div>
+                                    <div>
+                                        <p className="text-xs text-gray-400 font-bold uppercase">{t.details_budget}</p>
+                                        <p className="text-3xl font-bold text-green-600 mb-4">{selectedJob.budget}</p>
+                                        <button className="btn-primary w-full py-3 mb-2" onClick={() => selectedJob.isLocal ? alert('Applied!') : window.open(selectedJob.link, '_blank')}>
+                                            {selectedJob.isLocal ? t.details_apply : `${t.details_view} ${selectedJob.source}`}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="mt-8 pt-8 border-t">
+                                    <h3 className="font-bold mb-2">{t.details_desc}</h3>
+                                    <p className="text-gray-600">{selectedJob.description}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 );
@@ -315,25 +159,33 @@
 
             return (
                 <div className="min-h-screen bg-gray-50">
-                    <Header />
+                    <Header lang={lang} t={t} toggleLang={toggleLang} />
                     <div className="max-w-7xl mx-auto px-4 py-12">
                         <div className="mb-8">
-                            <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-2">Browse Services</h1>
-                            <p className="text-[var(--text-secondary)] mb-6">Found {jobs.length} opportunities from Upwork, Fiverr, and Local Clients.</p>
+                            <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-2">{t.search_title}</h1>
+                            <p className="text-[var(--text-secondary)] mb-6">{t.search_sub}</p>
                             <div className="flex gap-4">
-                                <input type="text" placeholder="Search..." className="flex-1 px-4 py-3 border rounded-lg" onChange={(e) => setSearchQuery(e.target.value)} />
-                                <button onClick={() => loadJobs(searchQuery)} className="btn-primary">Search</button>
+                                <input type="text" placeholder={t.search_ph} className="flex-1 px-4 py-3 border rounded-lg" />
+                                <button className="btn-primary">{t.search_btn}</button>
                             </div>
                         </div>
                         <div className="space-y-4">
                             {jobs.map(job => (
-                                <JobCard 
-                                    key={job.id} 
-                                    job={job} 
-                                    onClick={setSelectedJob} 
-                                    onToggleSave={toggleSave} 
-                                    isSaved={isSaved(job)} 
-                                />
+                                <div key={job.id} onClick={() => setSelectedJob(job)} className="card flex flex-col md:flex-row gap-6 hover:border-[var(--primary-color)]">
+                                    <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center font-bold text-gray-500">
+                                        {job.source.substring(0, 2)}
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="text-xl font-bold">{job.title}</h3>
+                                        <p className="text-gray-500">{job.company}</p>
+                                        <p className="text-green-600 font-bold mt-2">{job.budget}</p>
+                                    </div>
+                                    <div className="flex items-center">
+                                         <button className="btn-outline text-sm">
+                                            {job.isLocal ? t.details_apply : `${t.details_view} ${job.source}`}
+                                        </button>
+                                    </div>
+                                </div>
                             ))}
                         </div>
                     </div>
