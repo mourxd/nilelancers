@@ -3,22 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saved Services - NileLancers</title>
+    <title>Saved Jobs - NileLancers</title>
+    
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://resource.trickle.so/vendor_lib/unpkg/lucide-static@0.516.0/font/lucide.css" rel="stylesheet">
+
     <style type="text/tailwindcss">
-        @layer theme { :root { --primary-color: #4F46E5; --secondary-color: #EEF2FF; --text-primary: #1F2937; --text-secondary: #6B7280; --border-color: #E5E7EB; } }
-        @layer components { .btn-primary { @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all; } .card { @apply bg-white rounded-xl p-6 border border-[var(--border-color)] hover:shadow-lg transition-all; } }
+        @layer theme {
+            :root {
+                --primary-color: #4F46E5;
+                --secondary-color: #EEF2FF;
+                --text-primary: #1F2937;
+                --text-secondary: #6B7280;
+                --border-color: #E5E7EB;
+            }
+        }
+        @layer components {
+            .btn-primary { @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all shadow-sm; }
+            .btn-outline { @apply px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-all; }
+            .card { @apply bg-white rounded-xl p-6 border border-[var(--border-color)] hover:shadow-lg transition-all cursor-pointer hover:border-[var(--primary-color)]; }
+        }
     </style>
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/babel" src="components/Header.js"></script>
-    <script type="text/babel" src="components/Footer.js"></script>
-    <script type="text/babel" src="components/SavedJobCard.js"></script>
-    <script type="text/babel" src="saved-app.js"></script>
+
+    <script type="text/babel">
+        function Header() {
+            return (
+                <nav className="bg-white border-b border-[var(--border-color)] sticky top-0 z-50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between h-16">
+                            <div className="flex items-center">
+                                <a href="index.html" className="flex items-center gap-2">
+                                    <div className="w-8 h-8 bg-[var(--primary-color)] rounded-lg flex items-center justify-center text-white font-bold text-xl">N</div>
+                                    <span className="text-xl font-bold text-[var(--text-primary)]">NileLancers</span>
+                                </a>
+                            </div>
+                            <div className="hidden md:flex items-center space-x-8">
+                                <a href="index.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Home</a>
+                                <a href="jobs.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Browse Jobs</a>
+                                <a href="saved.html" className="text-[var(--text-primary)] font-medium">Saved</a>
+                                <div className="h-6 w-px bg-gray-200"></div>
+                                <a href="post-job.html" className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:opacity-90 font-medium text-sm">Post a Job (Local)</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            );
+        }
+
+        // --- REUSE: JobDetailsView (Same as Browse Page) ---
+        function JobDetailsView({ job, onBack, onToggleSave, isSaved }) {
+            return (
+                <div className="max-w-5xl mx-auto animate-fade-in">
+                    <button onClick={onBack} className="flex items-center text-gray-500 hover:text-[var(--primary-color)] mb-6 transition-colors font-medium">
+                        <i className="icon-arrow-left mr-2"></i> Back to Saved List
+                    </button>
+
+                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden p-8">
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">{job.title}</h1>
+
+                        <div className="flex flex-col md:flex-row gap-8 mb-10">
+                            <div className="w-full md:w-5/12 h-64 bg-gray-100 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300 relative">
+                                <i className="icon-image text-5xl text-gray-300 mb-3"></i>
+                                <p className="text-gray-400 text-sm">Job Image</p>
+                                <div className="absolute top-4 left-4">
+                                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700">{job.source}</span>
+                                </div>
+                            </div>
+
+                            <div className="flex-1 flex flex-col justify-center">
+                                <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 mb-6">
+                                    <p className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-2">Budget</p>
+                                    <div className="text-4xl font-bold text-green-600 mb-1">{job.budget}</div>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <button className="flex-1 btn-primary py-4 text-lg">Apply Now</button>
+                                    <button 
+                                        onClick={() => onToggleSave(job)}
+                                        className="px-4 py-3 border border-[var(--primary-color)] bg-[var(--secondary-color)] text-[var(--primary-color)] rounded-lg"
+                                    >
+                                        <i className="icon-bookmark w-6 h-6 fill-current"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="border-t border-gray-100 pt-8">
+                            <h3 className="text-xl font-bold text-gray-900 mb-4">Job Description</h3>
+                            <p className="text-gray-600 leading-relaxed whitespace-pre-line text-lg">{job.description}</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- SAVED CARD (Clickable) ---
+        function SavedJobCard({ job, onClick, onRemove }) {
+            const handleRemove = (e) => {
+                e.stopPropagation(); // Stop click from opening details
+                onRemove(job);
+            };
+
+            return (
+                <div onClick={() => onClick(job)} className="card flex items-center justify-between group">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center font-bold text-gray-500">
+                            {job.source.substring(0, 2)}
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-lg text-[var(--text-primary)] group-hover:text-[var(--primary-color)]">{job.title}</h3>
+                            <p className="text-sm text-gray-500">{job.company} • {job.budget}</p>
+                        </div>
+                    </div>
+                    <button onClick={handleRemove} className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors" title="Remove from Saved">
+                        <i className="icon-trash-2 w-5 h-5"></i>
+                    </button>
+                </div>
+            );
+        }
+
+        function SavedApp() {
+            const [savedJobs, setSavedJobs] = React.useState([]);
+            const [selectedJob, setSelectedJob] = React.useState(null);
+
+            React.useEffect(() => {
+                const saved = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+                setSavedJobs(saved);
+            }, []);
+
+            const removeJob = (job) => {
+                const updated = savedJobs.filter(j => j.id !== job.id);
+                setSavedJobs(updated);
+                localStorage.setItem('savedJobs', JSON.stringify(updated));
+                if (selectedJob && selectedJob.id === job.id) {
+                    setSelectedJob(null); // Close details if removed
+                }
+            };
+
+            if (selectedJob) {
+                return (
+                    <div className="min-h-screen bg-gray-50">
+                        <Header />
+                        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+                            <JobDetailsView 
+                                job={selectedJob} 
+                                onBack={() => setSelectedJob(null)} 
+                                onToggleSave={removeJob}
+                                isSaved={true}
+                            />
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="min-h-screen bg-gray-50">
+                    <Header />
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                        <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-8">Saved Services</h1>
+                        {savedJobs.length === 0 ? (
+                            <div className="text-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
+                                <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <i className="icon-bookmark text-3xl text-gray-400"></i>
+                                </div>
+                                <h2 className="text-xl font-semibold text-gray-900 mb-2">No saved jobs yet</h2>
+                                <p className="text-gray-500 mb-6">Browse services and click the bookmark icon to save them.</p>
+                                <a href="jobs.html" className="btn-primary">Browse Jobs</a>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                {savedJobs.map(job => (
+                                    <SavedJobCard key={job.id} job={job} onClick={setSelectedJob} onRemove={removeJob} />
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SavedApp />);
+    </script>
 </body>
 </html>
