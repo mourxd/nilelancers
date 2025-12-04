@@ -10,150 +10,189 @@
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://resource.trickle.so/vendor_lib/unpkg/lucide-static@0.516.0/font/lucide.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style type="text/tailwindcss">
         @layer theme {
-            :root {
-                --primary-color: #4F46E5;
-                --secondary-color: #EEF2FF;
-                --text-primary: #1F2937;
-                --text-secondary: #6B7280;
-                --border-color: #E5E7EB;
-            }
+            :root { --primary-color: #4F46E5; --secondary-color: #EEF2FF; --text-primary: #1F2937; --text-secondary: #6B7280; }
         }
         @layer components {
-            .btn-primary {
-                @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all inline-block;
-            }
-            .btn-secondary {
-                @apply px-6 py-3 bg-white text-[var(--text-primary)] border border-gray-200 rounded-lg font-medium hover:bg-gray-50 transition-all inline-block;
-            }
+            .btn-primary { @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all inline-block; }
+            .btn-secondary { @apply px-6 py-3 bg-white text-[var(--text-primary)] border border-gray-200 rounded-lg font-medium hover:bg-gray-50 transition-all inline-block; }
         }
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-white">
     <div id="root"></div>
 
     <script type="text/babel">
-        // --- 1. HEADER COMPONENT ---
-        function Header() {
+        // --- TRANSLATION DATA ---
+        const translations = {
+            en: {
+                nav: { home: "Home", browse: "Browse Jobs", saved: "Saved", login: "Log In", post: "Post a Job (Local)" },
+                hero: {
+                    badge: "🇪🇬 The First Hybrid Marketplace for Egyptians",
+                    title_1: "One Platform.",
+                    title_2: "Global & Local",
+                    title_3: "Opportunities.",
+                    desc: "Stop checking 9 different websites. We aggregate jobs from Upwork, Fiverr, and local Egyptian clients in one place.",
+                    btn_browse: "Browse All Jobs",
+                    btn_post: "Post a Local Job",
+                    check_1: "No Hidden Fees",
+                    check_2: "Vodafone Cash Accepted",
+                    check_3: "Verified Freelancers"
+                },
+                badges: "Aggregating Jobs From",
+                features: {
+                    title: "Why NileLancers?",
+                    desc: "We bridge the gap between global opportunities and local accessibility.",
+                    f1_title: "Global Aggregator", f1_desc: "We scrape listings from major platforms so you don’t have to check them one by one.",
+                    f2_title: "Local Marketplace", f2_desc: "Directly hire Egyptian talent or find clients in your governorate.",
+                    f3_title: "Local Payments", f3_desc: "Solving the payment barrier with Fawry, Instapay, and Vodafone Cash.",
+                    f4_title: "Verified Trust", f4_desc: "Local ID verification ensures you are working with real people, not bots."
+                },
+                footer: { desc: "Graduation Project 2025 - Egyptian E-Learning University", rights: "© 2025 NileLancers. Built for EELU Graduation Project." }
+            },
+            ar: {
+                nav: { home: "الرئيسية", browse: "تصفح الوظائف", saved: "المحفوظات", login: "تسجيل دخول", post: "أضف وظيفة (محلي)" },
+                hero: {
+                    badge: "🇪🇬 أول منصة هجينة للمستقلين المصريين",
+                    title_1: "منصة واحدة.",
+                    title_2: "فرص عالمية",
+                    title_3: "ومحلية.",
+                    desc: "توقف عن تصفح ٩ مواقع مختلفة. نحن نجمع الوظائف من Upwork و Fiverr والعملاء المصريين المحليين في مكان واحد.",
+                    btn_browse: "تصفح جميع الوظائف",
+                    btn_post: "أضف وظيفة محلية",
+                    check_1: "بدون رسوم خفية",
+                    check_2: "نقبل فودافون كاش",
+                    check_3: "مستقلين موثقين"
+                },
+                badges: "نجمع الوظائف من",
+                features: {
+                    title: "لماذا نايل لانسرز؟",
+                    desc: "نحن نسد الفجوة بين الفرص العالمية وسهولة الوصول المحلية.",
+                    f1_title: "مجمع عالمي", f1_desc: "نجمع القوائم من المنصات الكبرى حتى لا تضطر لفحصها واحدة تلو الأخرى.",
+                    f2_title: "سوق محلي", f2_desc: "وظف المواهب المصرية مباشرة أو اعثر على عملاء في محافظتك.",
+                    f3_title: "دفع محلي", f3_desc: "حل مشكلة الدفع مع فوري، إنستاباي، وفودافون كاش.",
+                    f4_title: "ثقة وأمان", f4_desc: "التحقق من الهوية المحلية يضمن أنك تعمل مع أشخاص حقيقيين."
+                },
+                footer: { desc: "مشروع تخرج ٢٠٢٥ - الجامعة المصرية للتعلم الإلكتروني الأهلية", rights: "© ٢٠٢٥ نايل لانسرز. تم البناء لمشروع تخرج EELU." }
+            }
+        };
+
+        // --- CUSTOM HOOK FOR LANGUAGE ---
+        function useLanguage() {
+            const [lang, setLang] = React.useState('en');
+
+            React.useEffect(() => {
+                const savedLang = localStorage.getItem('nile_lang') || 'en';
+                setLang(savedLang);
+                document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
+            }, []);
+
+            const toggleLang = () => {
+                const newLang = lang === 'en' ? 'ar' : 'en';
+                setLang(newLang);
+                localStorage.setItem('nile_lang', newLang);
+                document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+            };
+
+            return { lang, t: translations[lang], toggleLang };
+        }
+
+        // --- HEADER COMPONENT ---
+        function Header({ lang, t, toggleLang }) {
             const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
             return (
                 <nav className="bg-white border-b border-[var(--border-color)] sticky top-0 z-50">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex justify-between h-16">
-                            {/* Logo */}
                             <div className="flex items-center">
                                 <a href="index.html" className="flex items-center gap-2">
-                                    <div className="w-8 h-8 bg-[var(--primary-color)] rounded-lg flex items-center justify-center">
-                                        <span className="text-white font-bold text-xl">N</span>
-                                    </div>
+                                    <div className="w-8 h-8 bg-[var(--primary-color)] rounded-lg flex items-center justify-center text-white font-bold text-xl">N</div>
                                     <span className="text-xl font-bold text-[var(--text-primary)]">NileLancers</span>
                                 </a>
                             </div>
 
                             {/* Desktop Nav */}
                             <div className="hidden md:flex items-center space-x-8">
-                                <a href="index.html" className="text-[var(--text-primary)] font-medium">Home</a>
-                                {/* POINTS TO JOBS.HTML */}
-                                <a href="jobs.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Browse Jobs</a>
-                                <a href="saved.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Saved</a>
+                                <a href="index.html" className="text-[var(--text-primary)] font-medium">{t.nav.home}</a>
+                                <a href="jobs.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">{t.nav.browse}</a>
+                                <a href="saved.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">{t.nav.saved}</a>
                                 
                                 <div className="h-6 w-px bg-gray-200"></div>
 
-                                <div className="flex items-center space-x-4">
-                                    <a href="#" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-medium">Log In</a>
+                                {/* Language Switcher */}
+                                <button onClick={toggleLang} className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 font-bold text-sm">
+                                    <i className="icon-globe w-4 h-4"></i>
+                                    {lang === 'en' ? 'العربية' : 'English'}
+                                </button>
+
+                                <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                                    <a href="#" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-medium">{t.nav.login}</a>
                                     <a href="post-job.html" className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:opacity-90 font-medium text-sm">
-                                        Post a Job (Local)
+                                        {t.nav.post}
                                     </a>
                                 </div>
                             </div>
-
-                            {/* Mobile Button */}
-                            <div className="md:hidden flex items-center">
-                                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                                    <i className="icon-menu text-2xl"></i>
-                                </button>
-                            </div>
                         </div>
                     </div>
-                    {/* Mobile Menu */}
-                    {isMobileMenuOpen && (
-                        <div className="md:hidden bg-white border-t border-gray-100 py-2">
-                            <a href="index.html" className="block px-4 py-3 bg-gray-50 font-medium">Home</a>
-                            <a href="jobs.html" className="block px-4 py-3 text-[var(--text-secondary)]">Browse Jobs</a>
-                            <a href="post-job.html" className="block px-4 py-3 text-[var(--primary-color)] font-medium">Post a Local Job</a>
-                        </div>
-                    )}
                 </nav>
             );
         }
 
-        // --- 2. HERO COMPONENT ---
-        function Hero() {
+        // --- HERO COMPONENT ---
+        function Hero({ t }) {
             return (
                 <div className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-20 px-4">
                     <div className="max-w-4xl mx-auto text-center">
                         <span className="inline-block py-1 px-3 rounded-full bg-indigo-100 text-indigo-700 text-sm font-semibold mb-6">
-                            🇪🇬 The First Hybrid Marketplace for Egyptians
+                            {t.hero.badge}
                         </span>
                         <h1 className="text-5xl md:text-6xl font-bold text-[var(--text-primary)] mb-6 leading-tight">
-                            One Platform.<br/>
-                            <span className="text-[var(--primary-color)]">Global & Local</span> Opportunities.
+                            {t.hero.title_1}<br/>
+                            <span className="text-[var(--primary-color)]"> {t.hero.title_2} </span> <br/>
+                            {t.hero.title_3}
                         </h1>
                         <p className="text-xl text-[var(--text-secondary)] mb-10 max-w-2xl mx-auto">
-                            Stop checking 9 different websites. We aggregate jobs from Upwork, Fiverr, and local Egyptian clients in one place.
+                            {t.hero.desc}
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <a href="jobs.html" className="btn-primary flex items-center justify-center gap-2">
-                                <i className="icon-search w-5 h-5"></i> Browse All Jobs
+                                <i className="icon-search w-5 h-5"></i> {t.hero.btn_browse}
                             </a>
                             <a href="post-job.html" className="btn-secondary flex items-center justify-center gap-2">
-                                <i className="icon-plus-circle w-5 h-5"></i> Post a Local Job
+                                <i className="icon-plus-circle w-5 h-5"></i> {t.hero.btn_post}
                             </a>
                         </div>
-                        <div className="mt-12 text-sm text-gray-500 flex justify-center gap-6">
-                            <span className="flex items-center gap-2"><i className="icon-check text-green-500"></i> No Hidden Fees</span>
-                            <span className="flex items-center gap-2"><i className="icon-check text-green-500"></i> Vodafone Cash Accepted</span>
-                            <span className="flex items-center gap-2"><i className="icon-check text-green-500"></i> Verified Freelancers</span>
+                        <div className="mt-12 text-sm text-gray-500 flex flex-wrap justify-center gap-6">
+                            <span className="flex items-center gap-2"><i className="icon-check text-green-500"></i> {t.hero.check_1}</span>
+                            <span className="flex items-center gap-2"><i className="icon-check text-green-500"></i> {t.hero.check_2}</span>
+                            <span className="flex items-center gap-2"><i className="icon-check text-green-500"></i> {t.hero.check_3}</span>
                         </div>
                     </div>
                 </div>
             );
         }
 
-        // --- 3. PLATFORM BADGES ---
-        function PlatformBadges() {
-            const platforms = ['Upwork', 'Fiverr', 'Toptal', 'Freelancer', 'Mostaql', 'Khamsat'];
-            return (
-                <div className="border-y border-gray-100 bg-white py-8">
-                    <div className="max-w-7xl mx-auto px-4 text-center">
-                        <p className="text-sm text-gray-400 font-medium mb-6 uppercase tracking-wider">Aggregating Jobs From</p>
-                        <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                            {platforms.map(p => (
-                                <span key={p} className="text-xl font-bold text-gray-400 hover:text-indigo-600 cursor-default">{p}</span>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        // --- 4. FEATURES COMPONENT ---
-        function Features() {
+        // --- FEATURES COMPONENT ---
+        function Features({ t }) {
             const features = [
-                { icon: 'icon-globe', title: 'Global Aggregator', desc: 'We scrape listings from major platforms so you don’t have to check them one by one.' },
-                { icon: 'icon-map-pin', title: 'Local Marketplace', desc: 'Directly hire Egyptian talent or find clients in your governorate.' },
-                { icon: 'icon-credit-card', title: 'Local Payments', desc: 'Solving the payment barrier with Fawry, Instapay, and Vodafone Cash integration.' },
-                { icon: 'icon-shield', title: 'Verified Trust', desc: 'Local ID verification ensures you are working with real people, not bots.' }
+                { icon: 'icon-globe', title: t.features.f1_title, desc: t.features.f1_desc },
+                { icon: 'icon-map-pin', title: t.features.f2_title, desc: t.features.f2_desc },
+                { icon: 'icon-credit-card', title: t.features.f3_title, desc: t.features.f3_desc },
+                { icon: 'icon-shield', title: t.features.f4_title, desc: t.features.f4_desc }
             ];
             return (
                 <div className="py-24 bg-white">
                     <div className="max-w-7xl mx-auto px-4">
                         <div className="text-center mb-16">
-                            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why NileLancers?</h2>
-                            <p className="text-gray-500 max-w-2xl mx-auto">We bridge the gap between global opportunities and local accessibility.</p>
+                            <h2 className="text-3xl font-bold text-gray-900 mb-4">{t.features.title}</h2>
+                            <p className="text-gray-500 max-w-2xl mx-auto">{t.features.desc}</p>
                         </div>
                         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {features.map((f, i) => (
@@ -171,51 +210,36 @@
             );
         }
 
-        // --- 5. FOOTER COMPONENT ---
-        function Footer() {
+        // --- MAIN APP ---
+        function App() {
+            const { lang, t, toggleLang } = useLanguage();
+
             return (
-                <footer className="bg-gray-900 text-white py-12">
-                    <div className="max-w-7xl mx-auto px-4">
-                        <div className="grid md:grid-cols-4 gap-8 mb-8">
-                            <div className="col-span-1">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center font-bold">N</div>
-                                    <span className="text-xl font-bold">NileLancers</span>
-                                </div>
-                                <p className="text-gray-400 text-sm">Graduation Project 2025<br/>Egyptian E-Learning University</p>
-                            </div>
-                            <div>
-                                <h4 className="font-bold mb-4">Platform</h4>
-                                <ul className="space-y-2 text-gray-400 text-sm">
-                                    <li><a href="jobs.html" className="hover:text-white">Browse Jobs</a></li>
-                                    <li><a href="post-job.html" className="hover:text-white">Post a Job</a></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 className="font-bold mb-4">Legal</h4>
-                                <ul className="space-y-2 text-gray-400 text-sm">
-                                    <li>Privacy Policy</li>
-                                    <li>Terms of Service</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div className="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm">
-                            © 2025 NileLancers. Built for EELU Graduation Project.
+                <div className={`min-h-screen bg-white ${lang === 'ar' ? 'font-cairo' : ''}`}>
+                    <Header lang={lang} t={t} toggleLang={toggleLang} />
+                    <Hero t={t} />
+                    
+                    <div className="border-y border-gray-100 bg-white py-8 text-center">
+                        <p className="text-sm text-gray-400 font-medium mb-6 uppercase tracking-wider">{t.badges}</p>
+                        <div className="flex flex-wrap justify-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all">
+                            {['Upwork', 'Fiverr', 'Toptal', 'Mostaql', 'Khamsat'].map(p => (
+                                <span key={p} className="text-xl font-bold text-gray-400 hover:text-indigo-600 cursor-default">{p}</span>
+                            ))}
                         </div>
                     </div>
-                </footer>
-            );
-        }
 
-        // --- 6. MAIN APP ---
-        function App() {
-            return (
-                <div className="min-h-screen bg-white">
-                    <Header />
-                    <Hero />
-                    <PlatformBadges />
-                    <Features />
-                    <Footer />
+                    <Features t={t} />
+                    
+                    <footer className="bg-gray-900 text-white py-12">
+                        <div className="max-w-7xl mx-auto px-4 text-center">
+                             <div className="flex items-center justify-center gap-2 mb-4">
+                                <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center font-bold">N</div>
+                                <span className="text-xl font-bold">NileLancers</span>
+                            </div>
+                            <p className="text-gray-400 text-sm mb-2">{t.footer.desc}</p>
+                            <p className="text-gray-600 text-xs">{t.footer.rights}</p>
+                        </div>
+                    </footer>
                 </div>
             );
         }
