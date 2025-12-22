@@ -10,6 +10,7 @@
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://resource.trickle.so/vendor_lib/unpkg/lucide-static@0.516.0/font/lucide.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style type="text/tailwindcss">
         @layer theme {
@@ -26,42 +27,110 @@
             .btn-outline { @apply px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-all; }
             .card { @apply bg-white rounded-xl p-6 border border-[var(--border-color)] hover:shadow-lg transition-all cursor-pointer hover:border-[var(--primary-color)]; }
         }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-gray-50">
     <div id="root"></div>
 
     <script type="text/babel">
-        function Header() {
+        // --- TRANSLATIONS ---
+        const translations = {
+            en: {
+                nav: { home: "Home", browse: "Browse Jobs", saved: "Saved", post: "Post a Job (Local)" },
+                title: "Saved Services",
+                empty_title: "No saved jobs yet",
+                empty_desc: "Browse services and click the bookmark icon to save them.",
+                empty_btn: "Browse Jobs",
+                details_back: "Back to Saved List",
+                details_budget: "Budget",
+                details_apply: "Apply Now",
+                details_view: "View on",
+                details_desc: "Job Description"
+            },
+            ar: {
+                nav: { home: "الرئيسية", browse: "تصفح الوظائف", saved: "المحفوظات", post: "أضف وظيفة (محلي)" },
+                title: "الخدمات المحفوظة",
+                empty_title: "لا توجد وظائف محفوظة",
+                empty_desc: "تصفح الخدمات واضغط على أيقونة الحفظ لإضافتها هنا.",
+                empty_btn: "تصفح الوظائف",
+                details_back: "عودة للقائمة",
+                details_budget: "الميزانية",
+                details_apply: "قدم الآن",
+                details_view: "عرض على",
+                details_desc: "وصف الوظيفة"
+            }
+        };
+
+        // --- HEADER (Mobile Friendly) ---
+        function Header({ lang, t, toggleLang }) {
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
             return (
                 <nav className="bg-white border-b border-[var(--border-color)] sticky top-0 z-50">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex justify-between h-16">
+                            
+                            {/* Logo */}
                             <div className="flex items-center">
                                 <a href="index.html" className="flex items-center gap-2">
                                     <div className="w-8 h-8 bg-[var(--primary-color)] rounded-lg flex items-center justify-center text-white font-bold text-xl">N</div>
                                     <span className="text-xl font-bold text-[var(--text-primary)]">NileLancers</span>
                                 </a>
                             </div>
+
+                            {/* Desktop Menu */}
                             <div className="hidden md:flex items-center space-x-8">
-                                <a href="index.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Home</a>
-                                <a href="jobs.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">Browse Jobs</a>
-                                <a href="saved.html" className="text-[var(--text-primary)] font-medium">Saved</a>
+                                <a href="index.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">{t.nav.home}</a>
+                                <a href="jobs.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">{t.nav.browse}</a>
+                                <a href="saved.html" className="text-[var(--text-primary)] font-medium">{t.nav.saved}</a>
                                 <div className="h-6 w-px bg-gray-200"></div>
-                                <a href="post-job.html" className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:opacity-90 font-medium text-sm">Post a Job (Local)</a>
+                                <button onClick={toggleLang} className="flex items-center gap-1 px-2 py-1 font-bold text-sm hover:bg-gray-100 rounded">
+                                    <i className="icon-globe w-4 h-4"></i> {lang === 'en' ? 'العربية' : 'English'}
+                                </button>
+                                <a href="post-job.html" className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:opacity-90 font-medium text-sm">{t.nav.post}</a>
+                            </div>
+
+                            {/* Mobile Hamburger */}
+                            <div className="md:hidden flex items-center gap-4">
+                                <button onClick={toggleLang} className="flex items-center gap-1 font-bold text-sm">
+                                    {lang === 'en' ? 'AR' : 'EN'}
+                                </button>
+                                <button 
+                                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                    className="text-gray-500 hover:text-[var(--primary-color)] p-2"
+                                >
+                                    <i className={`icon-${isMobileMenuOpen ? 'x' : 'menu'} text-2xl`}></i>
+                                </button>
                             </div>
                         </div>
                     </div>
+
+                    {/* Mobile Menu Dropdown */}
+                    {isMobileMenuOpen && (
+                        <div className="md:hidden bg-white border-t border-gray-100 py-2 shadow-lg animate-fade-in">
+                            <a href="index.html" className="block px-4 py-3 text-[var(--text-secondary)] hover:bg-gray-50 font-medium">{t.nav.home}</a>
+                            <a href="jobs.html" className="block px-4 py-3 text-[var(--text-secondary)] hover:bg-gray-50 font-medium">{t.nav.browse}</a>
+                            <a href="saved.html" className="block px-4 py-3 text-[var(--primary-color)] font-medium bg-indigo-50">{t.nav.saved}</a>
+                            <div className="border-t border-gray-100 my-2"></div>
+                            <a href="post-job.html" className="block px-4 py-3 text-[var(--primary-color)] font-bold">{t.nav.post}</a>
+                        </div>
+                    )}
                 </nav>
             );
         }
 
-        // --- REUSE: JobDetailsView (Same as Browse Page) ---
-        function JobDetailsView({ job, onBack, onToggleSave, isSaved }) {
+        // --- JOB DETAILS VIEW ---
+        function JobDetailsView({ job, onBack, onToggleSave, isSaved, t }) {
+            const handleAction = () => {
+                 if (job.isLocal) alert('Application Sent!');
+                 else window.open(job.link, '_blank');
+            };
+
             return (
                 <div className="max-w-5xl mx-auto animate-fade-in">
                     <button onClick={onBack} className="flex items-center text-gray-500 hover:text-[var(--primary-color)] mb-6 transition-colors font-medium">
-                        <i className="icon-arrow-left mr-2"></i> Back to Saved List
+                        <i className="icon-arrow-left mr-2"></i> {t.details_back}
                     </button>
 
                     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden p-8">
@@ -72,18 +141,22 @@
                                 <i className="icon-image text-5xl text-gray-300 mb-3"></i>
                                 <p className="text-gray-400 text-sm">Job Image</p>
                                 <div className="absolute top-4 left-4">
-                                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700">{job.source}</span>
+                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                                        {job.source}
+                                    </span>
                                 </div>
                             </div>
 
                             <div className="flex-1 flex flex-col justify-center">
                                 <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 mb-6">
-                                    <p className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-2">Budget</p>
+                                    <p className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-2">{t.details_budget}</p>
                                     <div className="text-4xl font-bold text-green-600 mb-1">{job.budget}</div>
                                 </div>
 
                                 <div className="flex gap-4">
-                                    <button className="flex-1 btn-primary py-4 text-lg">Apply Now</button>
+                                    <button onClick={handleAction} className="flex-1 btn-primary py-4 text-lg">
+                                        {job.isLocal ? t.details_apply : `${t.details_view} ${job.source}`}
+                                    </button>
                                     <button 
                                         onClick={() => onToggleSave(job)}
                                         className="px-4 py-3 border border-[var(--primary-color)] bg-[var(--secondary-color)] text-[var(--primary-color)] rounded-lg"
@@ -95,7 +168,7 @@
                         </div>
 
                         <div className="border-t border-gray-100 pt-8">
-                            <h3 className="text-xl font-bold text-gray-900 mb-4">Job Description</h3>
+                            <h3 className="text-xl font-bold text-gray-900 mb-4">{t.details_desc}</h3>
                             <p className="text-gray-600 leading-relaxed whitespace-pre-line text-lg">{job.description}</p>
                         </div>
                     </div>
@@ -103,18 +176,19 @@
             );
         }
 
-        // --- SAVED CARD (Clickable) ---
+        // --- SAVED CARD ---
         function SavedJobCard({ job, onClick, onRemove }) {
             const handleRemove = (e) => {
-                e.stopPropagation(); // Stop click from opening details
+                e.stopPropagation();
                 onRemove(job);
             };
 
             return (
-                <div onClick={() => onClick(job)} className="card flex items-center justify-between group">
+                <div onClick={() => onClick(job)} className={`card flex items-center justify-between group ${job.isLocal ? 'border-l-4 border-l-green-500 bg-green-50/30' : ''}`}>
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center font-bold text-gray-500">
-                            {job.source.substring(0, 2)}
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center font-bold 
+                            ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                            {job.isLocal ? 'NL' : job.source.substring(0, 2)}
                         </div>
                         <div>
                             <h3 className="font-bold text-lg text-[var(--text-primary)] group-hover:text-[var(--primary-color)]">{job.title}</h3>
@@ -128,34 +202,49 @@
             );
         }
 
+        // --- MAIN SAVED APP ---
         function SavedApp() {
             const [savedJobs, setSavedJobs] = React.useState([]);
             const [selectedJob, setSelectedJob] = React.useState(null);
+            const [lang, setLang] = React.useState('en');
 
             React.useEffect(() => {
+                const savedLang = localStorage.getItem('nile_lang') || 'en';
                 const saved = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+                setLang(savedLang);
                 setSavedJobs(saved);
+                document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
             }, []);
+
+            const toggleLang = () => {
+                const newLang = lang === 'en' ? 'ar' : 'en';
+                setLang(newLang);
+                localStorage.setItem('nile_lang', newLang);
+                document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+            };
+
+            const t = translations[lang];
 
             const removeJob = (job) => {
                 const updated = savedJobs.filter(j => j.id !== job.id);
                 setSavedJobs(updated);
                 localStorage.setItem('savedJobs', JSON.stringify(updated));
                 if (selectedJob && selectedJob.id === job.id) {
-                    setSelectedJob(null); // Close details if removed
+                    setSelectedJob(null);
                 }
             };
 
             if (selectedJob) {
                 return (
                     <div className="min-h-screen bg-gray-50">
-                        <Header />
+                        <Header lang={lang} t={t} toggleLang={toggleLang} />
                         <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
                             <JobDetailsView 
                                 job={selectedJob} 
                                 onBack={() => setSelectedJob(null)} 
                                 onToggleSave={removeJob}
                                 isSaved={true}
+                                t={t}
                             />
                         </div>
                     </div>
@@ -164,17 +253,17 @@
 
             return (
                 <div className="min-h-screen bg-gray-50">
-                    <Header />
+                    <Header lang={lang} t={t} toggleLang={toggleLang} />
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                        <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-8">Saved Services</h1>
+                        <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-8">{t.title}</h1>
                         {savedJobs.length === 0 ? (
                             <div className="text-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
                                 <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                                     <i className="icon-bookmark text-3xl text-gray-400"></i>
                                 </div>
-                                <h2 className="text-xl font-semibold text-gray-900 mb-2">No saved jobs yet</h2>
-                                <p className="text-gray-500 mb-6">Browse services and click the bookmark icon to save them.</p>
-                                <a href="jobs.html" className="btn-primary">Browse Jobs</a>
+                                <h2 className="text-xl font-semibold text-gray-900 mb-2">{t.empty_title}</h2>
+                                <p className="text-gray-500 mb-6">{t.empty_desc}</p>
+                                <a href="jobs.html" className="btn-primary inline-block">{t.empty_btn}</a>
                             </div>
                         ) : (
                             <div className="space-y-4">
