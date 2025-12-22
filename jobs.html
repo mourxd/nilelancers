@@ -9,20 +9,94 @@
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://resource.trickle.so/vendor_lib/unpkg/lucide-static@0.516.0/font/lucide.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <style type="text/tailwindcss">
-        @layer theme { :root { --primary-color: #4F46E5; --secondary-color: #EEF2FF; --text-primary: #1F2937; --text-secondary: #6B7280; --border-color: #E5E7EB; } }
-        @layer components {
-            .btn-primary { @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all shadow-sm; }
-            .btn-outline { @apply px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-all; }
-            .card { @apply bg-white rounded-xl p-6 border border-[var(--border-color)] hover:shadow-lg transition-all cursor-pointer; }
+    <style>
+        :root {
+            --navy-blue: #001f3f;
+            --dark-navy: #001529;
+            --light-navy: #0a2d5a;
+            --primary-blue: #0074D9;
+            --secondary-blue: #7FDBFF;
+            --accent-gold: #FFD700;
+            --accent-green: #2ecc71; /* New for Local Jobs */
+            --text-light: #ffffff;
+            --text-gray: #e0e0e0;
+            --shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            --transition: all 0.3s ease;
         }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-gray);
+            background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%);
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
         body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
+
+        /* HEADER */
+        header {
+            background: rgba(0, 15, 40, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 2px solid var(--primary-blue);
+        }
+        .nav-link { color: var(--text-light); font-weight: 600; margin: 0 15px; text-decoration: none; transition: var(--transition); }
+        .nav-link:hover, .nav-link.active { color: var(--accent-gold); }
+        
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--dark-navy);
+            padding: 8px 20px; border-radius: 30px; font-weight: 700; text-decoration: none;
+            display: inline-block; transition: var(--transition); border: none; cursor: pointer;
+        }
+        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0, 116, 217, 0.4); }
+
+        /* SEARCH BAR */
+        .search-container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px; border-radius: 15px; border: 1px solid rgba(127, 219, 255, 0.1);
+            backdrop-filter: blur(10px); margin-bottom: 40px;
+        }
+        .search-input {
+            width: 100%; padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.3); color: white; outline: none; transition: var(--transition);
+        }
+        .search-input:focus { border-color: var(--secondary-blue); box-shadow: 0 0 10px rgba(0, 116, 217, 0.3); }
+
+        /* JOB CARDS */
+        .job-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px; padding: 25px; margin-bottom: 20px;
+            transition: var(--transition); cursor: pointer; position: relative;
+            backdrop-filter: blur(5px);
+        }
+        .job-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.08); }
+        
+        /* Local Job Highlight (Green) */
+        .job-card.local {
+            border-left: 5px solid var(--accent-green);
+            background: linear-gradient(90deg, rgba(46, 204, 113, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        }
+        .job-card.local:hover { border-left-color: #27ae60; }
+        
+        .badge { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
+        .badge-local { background: rgba(46, 204, 113, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .badge-global { background: rgba(255, 255, 255, 0.1); color: #ccc; border: 1px solid #555; }
+
+        .price-tag { font-size: 20px; font-weight: 800; color: var(--accent-gold); }
+        .local .price-tag { color: var(--accent-green); }
+
     </style>
 </head>
-<body class="bg-gray-50">
+<body>
     <div id="root"></div>
 
     <script>
@@ -30,11 +104,8 @@
         const JobsAPI = {
           getMockJobs(query = '') {
             const allJobs = [
-              // LOCAL JOBS (Highlighted Green)
               { id: 'l1', title: 'Wedding Photographer Needed', company: 'Ahmed Photography', budget: 'EGP 8,000', type: 'On-Site', description: 'We are looking for a professional photographer for a wedding in Maadi next Friday.', location: 'Cairo, Maadi', skills: ['Photography', 'Events'], source: 'NileLancers Local', isLocal: true, link: '#' },
               { id: 'l2', title: 'React Native Dev for Delivery App', company: 'Talabat Clone Startup', budget: 'EGP 25,000', type: 'Project', description: 'Build a local food delivery app tracking drivers in real-time.', location: 'Alexandria', skills: ['React Native', 'Maps'], source: 'NileLancers Local', isLocal: true, link: '#' },
-              
-              // GLOBAL JOBS (Standard White)
               { id: 'g1', title: 'Build E-commerce Website', company: 'Global Retail Inc.', budget: '$2,500', type: 'Fixed Price', description: 'Looking for a full-stack developer to build a custom e-commerce platform.', location: 'Remote (Global)', skills: ['React', 'Stripe'], source: 'Upwork', isLocal: false, link: 'https://www.upwork.com' },
               { id: 'g2', title: 'Logo Design for AI Startup', company: 'StartupX', budget: '$150', type: 'Fixed Price', description: 'Modern, minimalist logo design needed.', location: 'Remote', skills: ['Logo Design'], source: 'Fiverr', isLocal: false, link: 'https://www.fiverr.com' },
               { id: 'g3', title: 'Python Data Scraping', company: 'DataCorp', budget: '$500', type: 'Fixed Price', description: 'Scrape real estate data from 3 websites.', location: 'Remote', skills: ['Python', 'Scraping'], source: 'Freelancer', isLocal: false, link: 'https://www.freelancer.com' }
@@ -47,130 +118,81 @@
     </script>
 
     <script type="text/babel">
-        // --- TRANSLATIONS ---
         const jobTranslations = {
-            en: {
-                nav: { home: "Home", browse: "Browse Jobs", saved: "Saved", post: "Post a Job (Local)" },
-                search_title: "Browse Services",
-                search_sub: "Find opportunities from Upwork, Fiverr, and Local Clients.",
-                search_btn: "Search",
-                details_apply: "Apply Now",
-                details_view: "View on"
-            },
-            ar: {
-                nav: { home: "الرئيسية", browse: "تصفح الوظائف", saved: "المحفوظات", post: "أضف وظيفة (محلي)" },
-                search_title: "تصفح الخدمات",
-                search_sub: "اعثر على فرص من Upwork و Fiverr وعملاء محليين.",
-                search_btn: "بحث",
-                details_apply: "قدم الآن",
-                details_view: "عرض على"
-            }
+            en: { nav: { home: "Home", browse: "Browse Jobs", saved: "Saved", post: "Post Job" }, search_title: "Browse Services", search_sub: "Find opportunities from Upwork, Fiverr, and Local Clients.", search_btn: "Search", details_apply: "Apply Now", details_view: "View on" },
+            ar: { nav: { home: "الرئيسية", browse: "تصفح الوظائف", saved: "المحفوظات", post: "أضف وظيفة" }, search_title: "تصفح الخدمات", search_sub: "اعثر على فرص من Upwork و Fiverr وعملاء محليين.", search_btn: "بحث", details_apply: "قدم الآن", details_view: "عرض على" }
         };
 
-        // --- HEADER ---
         function Header({ lang, t, toggleLang }) {
+            const [isOpen, setIsOpen] = React.useState(false);
             return (
-                <nav className="bg-white border-b border-[var(--border-color)] sticky top-0 z-50">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex justify-between h-16">
-                            <div className="flex items-center">
-                                <a href="index.html" className="flex items-center gap-2">
-                                    <div className="w-8 h-8 bg-[var(--primary-color)] rounded-lg flex items-center justify-center text-white font-bold text-xl">N</div>
-                                    <span className="text-xl font-bold text-[var(--text-primary)]">NileLancers</span>
-                                </a>
-                            </div>
-                            <div className="hidden md:flex items-center space-x-8">
-                                <a href="index.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">{t.nav.home}</a>
-                                <a href="jobs.html" className="text-[var(--text-primary)] font-medium">{t.nav.browse}</a>
-                                <a href="saved.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">{t.nav.saved}</a>
-                                <div className="h-6 w-px bg-gray-200"></div>
-                                <button onClick={toggleLang} className="flex items-center gap-1 px-2 py-1 font-bold text-sm">
-                                    <i className="icon-globe w-4 h-4"></i> {lang === 'en' ? 'العربية' : 'English'}
-                                </button>
-                                <a href="post-job.html" className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:opacity-90 font-medium text-sm">{t.nav.post}</a>
-                            </div>
+                <header>
+                    <div className="container flex justify-between items-center">
+                         <div className="flex items-center gap-3 text-white">
+                            <i className="fas fa-water text-[var(--accent-gold)] text-2xl"></i>
+                            <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[var(--secondary-blue)] to-[var(--accent-gold)]">NileLancers</h1>
+                        </div>
+                        <nav className="hidden md:flex items-center">
+                            <a href="index.html" className="nav-link">{t.nav.home}</a>
+                            <a href="jobs.html" className="nav-link active" style={{color: 'var(--accent-gold)'}}>{t.nav.browse}</a>
+                            <a href="saved.html" className="nav-link">{t.nav.saved}</a>
+                            <button onClick={toggleLang} className="mx-4 border border-[var(--accent-gold)] text-[var(--accent-gold)] px-3 py-1 rounded-full text-sm font-bold hover:bg-[var(--accent-gold)] hover:text-[var(--dark-navy)] transition-all">
+                                {lang === 'en' ? 'العربية' : 'EN'}
+                            </button>
+                            <a href="post-job.html" className="cta-button">{t.nav.post}</a>
+                        </nav>
+                        <div className="md:hidden flex items-center gap-4">
+                             <button onClick={toggleLang} className="text-[var(--accent-gold)] font-bold text-sm">{lang === 'en' ? 'AR' : 'EN'}</button>
+                             <button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl"><i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i></button>
                         </div>
                     </div>
-                </nav>
+                    {isOpen && (
+                        <div className="md:hidden bg-[var(--dark-navy)] border-t border-[var(--accent-gold)] p-4 flex flex-col gap-4">
+                            <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
+                            <a href="jobs.html" className="text-[var(--accent-gold)] font-bold">{t.nav.browse}</a>
+                            <a href="saved.html" className="text-white font-bold">{t.nav.saved}</a>
+                            <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
+                        </div>
+                    )}
+                </header>
             );
         }
 
-        // --- JOB LIST CARD ---
         function JobCard({ job, onClick, onToggleSave, isSaved, t }) {
-            
-            const handleButtonClick = (e) => {
-                e.stopPropagation();
-                if (job.isLocal) {
-                    onClick(job);
-                } else {
-                    window.open(job.link, '_blank');
-                }
-            };
-
-            const handleSaveClick = (e) => {
-                e.stopPropagation();
-                onToggleSave(job);
-            };
+            const handleButtonClick = (e) => { e.stopPropagation(); job.isLocal ? onClick(job) : window.open(job.link, '_blank'); };
+            const handleSaveClick = (e) => { e.stopPropagation(); onToggleSave(job); };
 
             return (
-                <div 
-                    onClick={() => onClick(job)} 
-                    // CONDITIONAL CLASS: If isLocal, add green border and light green background
-                    className={`card flex flex-col md:flex-row gap-6 group relative transition-all
-                    ${job.isLocal ? 'border-l-4 border-l-green-500 bg-green-50/50' : 'hover:border-[var(--primary-color)]'}`}
-                >
-                    {/* Logo */}
-                    <div className="flex-shrink-0">
-                        <div className={`w-16 h-16 rounded-lg flex items-center justify-center text-xl font-bold 
-                            ${job.isLocal ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                            {job.isLocal ? 'NL' : job.source.substring(0, 2)}
-                        </div>
+                <div onClick={() => onClick(job)} className={`job-card flex flex-col md:flex-row gap-6 ${job.isLocal ? 'local' : ''}`}>
+                    <div className={`w-16 h-16 rounded-lg flex items-center justify-center text-xl font-bold shrink-0 ${job.isLocal ? 'bg-[rgba(46,204,113,0.2)] text-[var(--accent-green)]' : 'bg-gray-700 text-gray-300'}`}>
+                        {job.isLocal ? 'NL' : job.source.substring(0, 2)}
                     </div>
-
                     <div className="flex-1">
                         <div className="flex justify-between items-start">
-                            <div>
-                                <h3 className="text-xl font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-color)] transition-colors">{job.title}</h3>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <span className="font-medium text-[var(--text-secondary)]">{job.company}</span>
-                                    {/* Badge */}
-                                    <span className={`text-xs px-2 py-0.5 rounded-full ${job.isLocal ? 'bg-green-100 text-green-700 font-bold' : 'bg-gray-100 text-gray-600'}`}>
-                                        {job.source}
-                                    </span>
-                                </div>
-                            </div>
+                            <h3 className="text-xl font-bold text-white mb-1 group-hover:text-[var(--secondary-blue)]">{job.title}</h3>
+                            <button onClick={handleSaveClick} className={`p-2 rounded-full hover:bg-white/10 ${isSaved ? 'text-[var(--accent-gold)]' : 'text-gray-500'}`}>
+                                <i className={`fas fa-bookmark ${isSaved ? '' : ''}`}></i>
+                            </button>
                         </div>
-                        
-                        <div className="flex flex-wrap gap-4 mt-3 text-sm text-[var(--text-secondary)]">
-                            <span className={`font-bold ${job.isLocal ? 'text-green-700' : 'text-green-600'}`}>{job.budget}</span>
-                            <span>• {job.type}</span>
-                            <span>• {job.location}</span>
+                        <div className="flex items-center gap-2 mb-3">
+                            <span className="text-gray-400 text-sm">{job.company}</span>
+                            <span className={`badge ${job.isLocal ? 'badge-local' : 'badge-global'}`}>{job.source}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-4 text-sm text-gray-300 mb-3">
+                            <span className="price-tag">{job.budget}</span>
+                            <span><i className="fas fa-briefcase mr-1"></i> {job.type}</span>
+                            <span><i className="fas fa-map-marker-alt mr-1"></i> {job.location}</span>
                         </div>
                     </div>
-
-                    <div className="flex flex-col justify-between items-end min-w-[140px] pl-6 md:ml-2 border-l border-gray-100">
-                        
-                        {/* --- RESTORED SAVE BUTTON --- */}
-                        <button onClick={handleSaveClick} className={`mb-4 p-2 rounded-full hover:bg-gray-100 ${isSaved ? 'text-[var(--primary-color)]' : 'text-gray-400'}`}>
-                            <i className={`icon-bookmark ${isSaved ? 'fill-current' : ''}`}></i>
+                    <div className="flex flex-col justify-center min-w-[140px]">
+                        <button onClick={handleButtonClick} className={`cta-button w-full text-center text-sm ${job.isLocal ? 'bg-gradient-to-r from-green-600 to-green-500 border-none text-white' : ''}`}>
+                            {job.isLocal ? t.details_apply : <span>{t.details_view} <i className="fas fa-external-link-alt ml-1"></i></span>}
                         </button>
-
-                        {/* Action Button */}
-                        {job.isLocal ? (
-                            <button onClick={handleButtonClick} className="btn-primary w-full text-sm bg-green-600 hover:bg-green-700 border-none">
-                                {t.details_apply}
-                            </button>
-                        ) : (
-                            <button onClick={handleButtonClick} className="btn-outline w-full text-sm flex items-center justify-center gap-2">
-                                {t.details_view} {job.source} <i className="icon-external-link w-3 h-3"></i>
-                            </button>
-                        )}
                     </div>
                 </div>
             );
         }
 
-        // --- MAIN APP ---
         function JobsApp() {
             const [jobs, setJobs] = React.useState([]);
             const [selectedJob, setSelectedJob] = React.useState(null);
@@ -180,67 +202,48 @@
             React.useEffect(() => {
                 const savedLang = localStorage.getItem('nile_lang') || 'en';
                 const saved = JSON.parse(localStorage.getItem('savedJobs') || '[]');
-                setLang(savedLang);
-                setSavedJobs(saved);
+                setLang(savedLang); setSavedJobs(saved);
                 document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
                 loadJobs();
             }, []);
 
             const toggleLang = () => {
                 const newLang = lang === 'en' ? 'ar' : 'en';
-                setLang(newLang);
-                localStorage.setItem('nile_lang', newLang);
+                setLang(newLang); localStorage.setItem('nile_lang', newLang);
                 document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
             };
-
             const toggleSave = (job) => {
-                let newSaved;
-                const exists = savedJobs.find(j => j.id === job.id);
-                if (exists) {
-                    newSaved = savedJobs.filter(j => j.id !== job.id);
-                } else {
-                    newSaved = [...savedJobs, job];
-                }
-                setSavedJobs(newSaved);
-                localStorage.setItem('savedJobs', JSON.stringify(newSaved));
+                let newSaved = savedJobs.find(j => j.id === job.id) ? savedJobs.filter(j => j.id !== job.id) : [...savedJobs, job];
+                setSavedJobs(newSaved); localStorage.setItem('savedJobs', JSON.stringify(newSaved));
             };
-
-            const isSaved = (job) => savedJobs.some(j => j.id === job.id);
             const t = jobTranslations[lang];
             const loadJobs = async (query = '') => { setJobs(await JobsAPI.fetchAllJobs(query)); };
 
-            // Simplified Detail View for this response
             if (selectedJob) {
-                const handleAction = () => {
-                     if (selectedJob.isLocal) alert('Application Sent!');
-                     else window.open(selectedJob.link, '_blank');
-                };
                 return (
-                    <div className="min-h-screen bg-gray-50">
+                    <div className="min-h-screen">
                         <Header lang={lang} t={t} toggleLang={toggleLang} />
-                        <div className="max-w-5xl mx-auto px-4 py-8">
-                            <button onClick={() => setSelectedJob(null)} className="mb-4 text-gray-500 flex items-center gap-2"><i className="icon-arrow-left"></i> Back</button>
-                            <div className="bg-white p-8 rounded-xl shadow-lg border-t-4 border-[var(--primary-color)]">
-                                <h1 className="text-3xl font-bold mb-4">{selectedJob.title}</h1>
+                        <div className="container py-12">
+                            <button onClick={() => setSelectedJob(null)} className="text-gray-400 hover:text-white mb-6 flex items-center gap-2"><i className="fas fa-arrow-left"></i> Back</button>
+                            <div className="job-card" style={{cursor: 'default', background: 'rgba(0,0,0,0.6)'}}>
+                                <h1 className="text-3xl font-bold text-white mb-4">{selectedJob.title}</h1>
                                 <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="bg-gray-100 h-64 rounded-xl flex items-center justify-center"><i className="icon-image text-4xl text-gray-400"></i></div>
+                                    <div className="bg-white/5 h-64 rounded-xl flex items-center justify-center border border-white/10"><i className="fas fa-image text-5xl text-white/20"></i></div>
                                     <div>
-                                        <p className="text-3xl font-bold text-green-600 mb-4">{selectedJob.budget}</p>
-                                        
+                                        <p className="price-tag text-4xl mb-6">{selectedJob.budget}</p>
                                         <div className="flex gap-4">
-                                            <button className="flex-1 btn-primary py-3" onClick={handleAction}>
+                                            <button className="cta-button flex-1 py-3 text-lg" onClick={() => selectedJob.isLocal ? alert('Applied!') : window.open(selectedJob.link, '_blank')}>
                                                 {selectedJob.isLocal ? t.details_apply : `${t.details_view} ${selectedJob.source}`}
                                             </button>
-                                            <button onClick={() => toggleSave(selectedJob)} className={`px-4 border rounded-lg ${isSaved(selectedJob) ? 'text-[var(--primary-color)] border-[var(--primary-color)]' : 'text-gray-400'}`}>
-                                                <i className={`icon-bookmark w-6 h-6 ${isSaved(selectedJob) ? 'fill-current' : ''}`}></i>
+                                            <button onClick={() => toggleSave(selectedJob)} className={`px-5 rounded-full border border-[var(--accent-gold)] ${savedJobs.some(j => j.id === selectedJob.id) ? 'bg-[var(--accent-gold)] text-black' : 'text-[var(--accent-gold)]'}`}>
+                                                <i className="fas fa-bookmark"></i>
                                             </button>
                                         </div>
-
                                     </div>
                                 </div>
-                                <div className="mt-8 pt-8 border-t">
-                                    <h3 className="font-bold mb-2">Description</h3>
-                                    <p className="text-gray-600">{selectedJob.description}</p>
+                                <div className="mt-8 pt-8 border-t border-white/10 text-gray-300 leading-relaxed">
+                                    <h3 className="text-white font-bold mb-3 text-xl">Description</h3>
+                                    {selectedJob.description}
                                 </div>
                             </div>
                         </div>
@@ -249,34 +252,22 @@
             }
 
             return (
-                <div className="min-h-screen bg-gray-50">
+                <div className="min-h-screen">
                     <Header lang={lang} t={t} toggleLang={toggleLang} />
-                    <div className="max-w-7xl mx-auto px-4 py-12">
-                        <div className="mb-8">
-                            <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-2">{t.search_title}</h1>
-                            <p className="text-[var(--text-secondary)] mb-6">{t.search_sub}</p>
-                            <div className="flex gap-4">
-                                <input type="text" placeholder="Search..." className="flex-1 px-4 py-3 border rounded-lg" />
-                                <button className="btn-primary">{t.search_btn}</button>
+                    <div className="container py-12">
+                        <div className="mb-10 text-center">
+                            <h1 className="text-4xl font-bold text-white mb-4">{t.search_title}</h1>
+                            <p className="text-gray-400 mb-8">{t.search_sub}</p>
+                            <div className="search-container flex gap-4">
+                                <input type="text" placeholder="Search services..." className="search-input" onChange={(e) => loadJobs(e.target.value)} />
+                                <button className="cta-button">{t.search_btn}</button>
                             </div>
                         </div>
-                        <div className="space-y-4">
-                            {jobs.map(job => (
-                                <JobCard 
-                                    key={job.id} 
-                                    job={job} 
-                                    onClick={setSelectedJob} 
-                                    onToggleSave={toggleSave}
-                                    isSaved={isSaved(job)}
-                                    t={t} 
-                                />
-                            ))}
-                        </div>
+                        <div>{jobs.map(job => <JobCard key={job.id} job={job} onClick={setSelectedJob} onToggleSave={toggleSave} isSaved={savedJobs.some(j => j.id === job.id)} t={t} />)}</div>
                     </div>
                 </div>
             );
         }
-
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<JobsApp />);
     </script>
