@@ -3,31 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post a Job - NileLancers</title>
+    <title>Post Job - NileLancers</title>
     
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        :root { --navy-blue: #001f3f; --dark-navy: #001529; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; --text-light: #ffffff; }
-        body { margin: 0; font-family: 'Montserrat', sans-serif; color: #e0e0e0; background: linear-gradient(135deg, var(--dark-navy), var(--navy-blue)); min-height: 100vh; background-attachment: fixed; }
+        :root { --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; --text-light: #ffffff; --text-gray: #f0f0f0; --transition: all 0.4s ease; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
         body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
 
-        header { background: rgba(0, 15, 40, 0.95); backdrop-filter: blur(10px); padding: 15px 0; border-bottom: 2px solid var(--primary-blue); position: sticky; top: 0; z-index: 50; }
+        header { background: rgba(0, 15, 40, 0.95); backdrop-filter: blur(10px); padding: 15px 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary-blue); }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .nav-link { color: white; margin: 0 15px; font-weight: 600; text-decoration: none; }
-        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; border: none; cursor: pointer; width: 100%; display: block; text-align: center; }
-        .cta-button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,116,217,0.5); }
+        
+        .logo h1 { font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
+        .nav-link { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 16px; margin: 0 15px; transition: var(--transition); position: relative; padding-bottom: 5px; }
+        .nav-link:hover, .nav-link.active { color: var(--secondary-blue); }
+        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; transition: var(--transition); border: none; cursor: pointer; }
+        .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; font-size: 14px; margin: 0 15px; }
 
         .form-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 40px; backdrop-filter: blur(10px); max-width: 700px; margin: 0 auto; }
         label { display: block; color: var(--accent-gold); margin-bottom: 8px; font-weight: 600; }
         .input-field { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; outline: none; transition: 0.3s; }
-        .input-field:focus { border-color: var(--secondary-blue); box-shadow: 0 0 10px rgba(0, 116, 217, 0.3); }
-        select.input-field { appearance: none; }
+        .input-field:focus { border-color: var(--secondary-blue); }
     </style>
 </head>
 <body>
@@ -35,8 +38,8 @@
 
     <script type="text/babel">
         const translations = {
-            en: { nav: { home: "Home", browse: "Browse Jobs", saved: "Saved", post: "Post Job" }, title: "Post a New Job", lbl_title: "Job Title", ph_title: "e.g. Logo Designer", lbl_pay: "Payment Method", lbl_loc: "Location", btn: "Post Job Now", success: "Job Posted!", view: "View Jobs" },
-            ar: { nav: { home: "الرئيسية", browse: "تصفح الوظائف", saved: "المحفوظات", post: "أضف وظيفة" }, title: "نشر وظيفة جديدة", lbl_title: "عنوان الوظيفة", ph_title: "مثال: مصمم شعار", lbl_pay: "طريقة الدفع", lbl_loc: "الموقع", btn: "انشر الآن", success: "تم النشر!", view: "تصفح الوظائف" }
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", post: "Post Job" }, title: "Post a New Job", lbl_title: "Job Title", ph_title: "e.g. Logo Designer", lbl_pay: "Payment Method", lbl_loc: "Location", btn: "Post Job Now", success: "Job Posted!", view: "View Jobs" },
+            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", post: "أضف وظيفة" }, title: "نشر وظيفة جديدة", lbl_title: "عنوان الوظيفة", ph_title: "مثال: مصمم شعار", lbl_pay: "طريقة الدفع", lbl_loc: "الموقع", btn: "انشر الآن", success: "تم النشر!", view: "تصفح الوظائف" }
         };
 
         function Header({ lang, t, toggleLang }) {
@@ -44,16 +47,30 @@
             return (
                 <header>
                     <div className="container flex justify-between items-center">
-                        <div className="flex items-center gap-3 text-white"><i className="fas fa-water text-[var(--accent-gold)] text-2xl"></i><h1 className="text-2xl font-bold">NileLancers</h1></div>
+                        <div className="logo flex items-center gap-3">
+                            <i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i>
+                            <h1>NileLancers</h1>
+                        </div>
                         <nav className="hidden md:flex items-center">
                             <a href="index.html" className="nav-link">{t.nav.home}</a>
-                            <a href="jobs.html" className="nav-link">{t.nav.browse}</a>
+                            <a href="jobs.html" className="nav-link">{t.nav.services}</a>
                             <a href="saved.html" className="nav-link">{t.nav.saved}</a>
-                            <button onClick={toggleLang} className="mx-4 text-[var(--accent-gold)] font-bold">{lang === 'en' ? 'العربية' : 'EN'}</button>
-                            <a href="post-job.html" className="cta-button" style={{width: 'auto'}}>{t.nav.post}</a>
+                            <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'العربية' : 'EN'}</button>
+                            <a href="post-job.html" className="cta-button">{t.nav.post}</a>
                         </nav>
-                        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-white text-2xl"><i className="fas fa-bars"></i></button>
+                         <div className="md:hidden flex items-center gap-4">
+                             <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
+                             <button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl"><i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i></button>
+                        </div>
                     </div>
+                     {isOpen && (
+                        <div className="md:hidden bg-[var(--navy-blue)] border-t border-[var(--primary-blue)] p-4 flex flex-col gap-4 absolute w-full left-0 top-[100%]">
+                            <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
+                            <a href="jobs.html" className="text-white font-bold">{t.nav.services}</a>
+                            <a href="saved.html" className="text-white font-bold">{t.nav.saved}</a>
+                            <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
+                        </div>
+                    )}
                 </header>
             );
         }
@@ -122,7 +139,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <button type="submit" className="cta-button mt-6">{t.btn}</button>
+                            <button type="submit" className="cta-button mt-6 w-full">{t.btn}</button>
                         </form>
                     </div>
                 </div>
