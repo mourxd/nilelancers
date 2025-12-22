@@ -3,21 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post a Local Job - NileLancers</title>
+    <title>Post a Job - NileLancers</title>
+    
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://resource.trickle.so/vendor_lib/unpkg/lucide-static@0.516.0/font/lucide.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style type="text/tailwindcss">
         @layer theme { :root { --primary-color: #4F46E5; --secondary-color: #EEF2FF; --text-primary: #1F2937; --text-secondary: #6B7280; --border-color: #E5E7EB; } }
-        @layer components { .btn-primary { @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all w-full md:w-auto text-center; } .input-field { @apply w-full px-4 py-2 border border-[var(--border-color)] rounded-lg focus:ring-2 focus:ring-[var(--primary-color)] focus:outline-none transition-all; } }
+        @layer components {
+            .btn-primary { @apply px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:opacity-90 transition-all w-full text-center block; }
+            .input-field { @apply w-full px-4 py-2 border border-[var(--border-color)] rounded-lg focus:ring-2 focus:ring-[var(--primary-color)] focus:outline-none transition-all; }
+        }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-gray-50">
     <div id="root"></div>
-    <script type="text/babel" src="components/Header.js"></script>
-    <script type="text/babel" src="components/Footer.js"></script>
-    <script type="text/babel" src="post-job-app.js"></script>
+
+    <script type="text/babel">
+        // --- TRANSLATIONS ---
+        const translations = {
+            en: {
+                nav: { home: "Home", browse: "Browse Jobs", saved: "Saved", post: "Post a Job (Local)" },
+                title: "Post a New Job",
+                lbl_title: "Job Title",
+                ph_title: "e.g. Logo Designer",
+                lbl_payment: "Payment Method",
+                lbl_location: "Location",
+                btn_submit: "Post Job Now",
+                btn_loading: "Publishing...",
+                success_title: "Job Posted!",
+                success_desc: "Your job is now live on the NileLancers Local Marketplace.",
+                success_btn: "View Your Job"
+            },
+            ar: {
+                nav: { home: "الرئيسية", browse: "تصفح الوظائف", saved: "المحفوظات", post: "أضف وظيفة (محلي)" },
+                title: "نشر وظيفة جديدة",
+                lbl_title: "عنوان الوظيفة",
+                ph_title: "مثال: مصمم شعار",
+                lbl_payment: "طريقة الدفع",
+                lbl_location: "الموقع",
+                btn_submit: "انشر الوظيفة الآن",
+                btn_loading: "جاري النشر...",
+                success_title: "تم النشر بنجاح!",
+                success_desc: "وظيفتك متاحة الآن على سوق نايل لانسرز المحلي.",
+                success_btn: "شاهد وظيفتك"
+            }
+        };
+
+        // --- HEADER (Mobile Friendly) ---
+        function Header({ lang, t, toggleLang }) {
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+            return (
+                <nav className="bg-white border-b border-[var(--border-color)] sticky top-0 z-50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between h-16">
+                            
+                            {/* Logo */}
+                            <div className="flex items-center">
+                                <a href="index.html" className="flex items-center gap-2">
+                                    <div className="w-8 h-8 bg-[var(--primary-color)] rounded-lg flex items-center justify-center text-white font-bold text-xl">N</div>
+                                    <span className="text-xl font-bold text-[var(--text-primary)]">NileLancers</span>
+                                </a>
+                            </div>
+
+                            {/* Desktop Menu */}
+                            <div className="hidden md:flex items-center space-x-8">
+                                <a href="index.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">{t.nav.home}</a>
+                                <a href="jobs.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">{t.nav.browse}</a>
+                                <a href="saved.html" className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] font-medium">{t.nav.saved}</a>
+                                <div className="h-6 w-px bg-gray-200"></div>
+                                <button onClick={toggleLang} className="flex items-center gap-1 px-2 py-1 font-bold text-sm hover:bg-gray-100 rounded">
+                                    <i className="icon-globe w-4 h-4"></i> {lang === 'en' ? 'العربية' : 'English'}
+                                </button>
+                                <a href="post-job.html" className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:opacity-90 font-medium text-sm">{t.nav.post}</a>
+                            </div>
+
+                            {/* Mobile Hamburger */}
+                            <div className="md:hidden flex items-center gap-4">
+                                <button onClick={toggleLang} className="flex items-center gap-1 font-bold text-sm">
+                                    {lang === 'en' ? 'AR' : 'EN'}
+                                </button>
+                                <button 
+                                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                    className="text-gray-500 hover:text-[var(--primary-color)] p-2"
+                                >
+                                    <i className={`icon-${isMobileMenuOpen ? 'x' : 'menu'} text-2xl`}></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Mobile Menu Dropdown */}
+                    {isMobileMenuOpen && (
+                        <div className="md:hidden bg-white border-t border-gray-100 py-2 shadow-lg animate-fade-in">
+                            <a href="index.html" className="block px-4 py-3 text-[var(--text-secondary)] hover:bg-gray-50 font-medium">{t.nav.home}</a>
+                            <a href="jobs.html" className="block px-4 py-3 text-[var(--text-secondary)] hover:bg-gray-50 font-medium">{t.nav.browse}</a>
+                            <a href="saved.html" className="block px-4 py-3 text-[var(--text-secondary)] hover:bg-gray-50 font-medium">{t.nav.saved}</a>
+                            <div className="border-t border-gray-100 my-2"></div>
+                            <a href="post-job.html" className="block px-4 py-3 text-[var(--primary-color)] font-bold bg-indigo-50">{t.nav.post}</a>
+                        </div>
+                    )}
+                </nav>
+            );
+        }
+
+        // --- MAIN APP ---
+        function PostJobApp() {
+            const [step, setStep] = React.useState(1);
+            const [loading, setLoading] = React.useState(false);
+            const [lang, setLang] = React.useState('en');
+            const [formData, setFormData] = React.useState({ title: '', location: 'Remote (Egypt)', paymentMethod: 'Vodafone Cash' });
+
+            React.useEffect(() => {
+                const savedLang = localStorage.getItem('nile_lang') || 'en';
+                setLang(savedLang);
+                document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
+            }, []);
+
+            const toggleLang = () => {
+                const newLang = lang === 'en' ? 'ar' : 'en';
+                setLang(newLang);
+                localStorage.setItem('nile_lang', newLang);
+                document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+            };
+
+            const t = translations[lang];
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                setLoading(true);
+                // Simulate API call
+                setTimeout(() => {
+                    setLoading(false);
+                    setStep(2);
+                    window.scrollTo(0, 0);
+                }, 1500);
+            };
+
+            // SUCCESS VIEW
+            if (step === 2) {
+                return (
+                    <div className="min-h-screen bg-gray-50 flex flex-col">
+                        <Header lang={lang} t={t} toggleLang={toggleLang} />
+                        <div className="flex-1 flex items-center justify-center p-4">
+                            <div className="bg-white rounded-xl shadow-lg p-8 max-w-lg w-full text-center">
+                                <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i className="icon-check text-3xl"></i>
+                                </div>
+                                <h2 className="text-3xl font-bold text-gray-900 mb-2">{t.success_title}</h2>
+                                <p className="text-gray-600 mb-8">{t.success_desc}</p>
+                                <a href="jobs.html" className="btn-primary">{t.success_btn}</a>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // FORM VIEW
+            return (
+                <div className="min-h-screen bg-gray-50 font-sans">
+                    <Header lang={lang} t={t} toggleLang={toggleLang} />
+                    <div className="max-w-3xl mx-auto px-4 py-12">
+                        <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-8">{t.title}</h1>
+                        
+                        <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 md:p-8 space-y-8">
+                            <div>
+                                <label className="block text-sm font-medium mb-1">{t.lbl_title}</label>
+                                <input 
+                                    type="text" 
+                                    className="input-field" 
+                                    placeholder={t.ph_title}
+                                    required 
+                                    onChange={(e) => setFormData({...formData, title: e.target.value})} 
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">{t.lbl_payment}</label>
+                                    <select className="input-field" onChange={(e) => setFormData({...formData, paymentMethod: e.target.value})}>
+                                        <option>Vodafone Cash</option>
+                                        <option>Instapay</option>
+                                        <option>Fawry</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">{t.lbl_location}</label>
+                                    <select className="input-field" onChange={(e) => setFormData({...formData, location: e.target.value})}>
+                                        <option>Remote (Egypt)</option>
+                                        <option>Cairo</option>
+                                        <option>Alexandria</option>
+                                        <option>Giza</option>
+                                        <option>Mansoura</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" disabled={loading} className="btn-primary">
+                                {loading ? t.btn_loading : t.btn_submit}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<PostJobApp />);
+    </script>
 </body>
 </html>
