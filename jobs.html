@@ -81,6 +81,7 @@
     <div id="root"></div>
 
     <script>
+        // --- 1. CONFIG & INIT ---
         const SUPABASE_URL = 'https://hnzxjhwpqmdkosgalseq.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhuenhqaHdwcW1ka29zZ2Frc2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NTU5OTgsImV4cCI6MjA4MjEzMTk5OH0.h-FylEeaWzNQpK_hcvcm9-GcksRbKW5xbnzimzsiP7Y';
         
@@ -89,55 +90,64 @@
             if (window.supabase) {
                 supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             }
-        } catch (e) { console.warn("Supabase Init Error", e); }
+        } catch (e) { console.warn("Supabase failed to init", e); }
 
+        // --- 2. DATA HANDLING ---
         const JobsAPI = {
-          async fetchAllJobs(query = '') {
-            const staticJobs = [
+          // ALWAYS have these jobs available (Dummy Data)
+          getStaticJobs() {
+            return [
               { id: 'l1', title: 'Wedding Photographer Needed', company: 'Ahmed Photography', budget: 'EGP 8,000', type: 'On-Site', description: 'We are looking for a professional photographer for a wedding in Maadi next Friday.', location: 'Cairo, Maadi', category: 'Photography', skills: ['Photography', 'Events'], source: 'NileLancers Local', isLocal: true, link: '#', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80' },
               { id: 'l2', title: 'React Native Dev for Delivery App', company: 'Talabat Clone Startup', budget: 'EGP 25,000', type: 'Project', description: 'Build a local food delivery app tracking drivers in real-time.', location: 'Alexandria', category: 'Development', skills: ['React Native', 'Maps'], source: 'NileLancers Local', isLocal: true, link: '#', image: 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=800&q=80' },
               { id: 'g1', title: 'Build E-commerce Website', company: 'Global Retail Inc.', budget: '$2,500', type: 'Fixed Price', description: 'Looking for a full-stack developer to build a custom e-commerce platform.', location: 'Remote (Global)', category: 'Development', skills: ['React', 'Stripe'], source: 'Upwork', isLocal: false, link: 'https://www.upwork.com', image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=800&q=80' },
               { id: 'g2', title: 'Logo Design for AI Startup', company: 'StartupX', budget: '$150', type: 'Fixed Price', description: 'Modern, minimalist logo design needed.', location: 'Remote', category: 'Design', skills: ['Logo Design'], source: 'Fiverr', isLocal: false, link: 'https://www.fiverr.com', image: 'https://images.unsplash.com/photo-1626785774573-4b7993125120?auto=format&fit=crop&w=800&q=80' },
               { id: 'g3', title: 'Python Data Scraping', company: 'DataCorp', budget: '$500', type: 'Fixed Price', description: 'Scrape real estate data from 3 websites.', location: 'Remote', category: 'Development', skills: ['Python', 'Scraping'], source: 'Freelancer', isLocal: false, link: 'https://www.freelancer.com', image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80' }
             ];
+          },
 
+          async fetchAllJobs(query = '') {
+            const staticJobs = this.getStaticJobs();
+            let allJobs = [...staticJobs];
+
+            // Try Fetching from DB
             try {
-                if (!supabase) throw new Error("Supabase unavailable");
-                const { data, error } = await supabase.from('jobs').select('*').order('created_at', { ascending: false });
-                if (error || !data) throw error;
-
-                const dbJobs = data.map(job => ({
-                    id: job.id,
-                    title: job.title,
-                    company: job.company,
-                    budget: job.budget,
-                    type: job.type,
-                    description: job.description,
-                    location: job.location,
-                    category: job.category || 'Other',
-                    skills: ['Custom Job'],
-                    source: 'NileLancers Local',
-                    isLocal: true,
-                    link: '#',
-                    image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'
-                }));
-
-                const combined = [...dbJobs, ...staticJobs];
-                if (!query) return combined;
-                return combined.filter(j => j.title.toLowerCase().includes(query.toLowerCase()));
-
+                if (supabase) {
+                    const { data, error } = await supabase.from('jobs').select('*').order('created_at', { ascending: false });
+                    
+                    if (data && !error) {
+                        const dbJobs = data.map(job => ({
+                            id: job.id,
+                            title: job.title,
+                            company: job.company,
+                            budget: job.budget,
+                            type: job.type,
+                            description: job.description,
+                            location: job.location,
+                            category: job.category || 'Other',
+                            skills: ['Custom Job'],
+                            source: 'NileLancers Local',
+                            isLocal: true,
+                            link: '#',
+                            image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'
+                        }));
+                        // Add DB jobs to the TOP of the list
+                        allJobs = [...dbJobs, ...staticJobs];
+                    }
+                }
             } catch (e) {
-                console.log("Using static fallback data");
-                if (!query) return staticJobs;
-                return staticJobs.filter(j => j.title.toLowerCase().includes(query.toLowerCase()));
+                console.log("Supabase fetch failed, using static only");
             }
+
+            // Filter
+            if (!query) return allJobs;
+            return allJobs.filter(j => j.title.toLowerCase().includes(query.toLowerCase()));
           }
         };
     </script>
 
     <script type="text/babel">
-        // *** VARIABLE NAME FIXED HERE ***
-        const jobTranslations = {
+        // --- TRANSLATIONS (FIXED NAME) ---
+        const translations = {
             en: { nav: { home: "Home", services: "Services", saved: "Saved", why_us: "Why Us", how: "How It Works", post: "Post Job" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." }, search_title: "Browse Services", search_sub: "Find opportunities from Upwork, Fiverr, and Local Clients.", search_btn: "Search", details_apply: "Apply Now", details_view: "View on" },
             ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", why_us: "لماذا نحن", how: "كيف يعمل", post: "أضف وظيفة" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }, search_title: "تصفح الخدمات", search_sub: "اعثر على فرص من Upwork و Fiverr وعملاء محليين.", search_btn: "بحث", details_apply: "قدم الآن", details_view: "عرض على" }
         };
@@ -249,6 +259,7 @@
             const [searchQuery, setSearchQuery] = React.useState('');
             const [toast, setToast] = React.useState({ show: false, message: '' });
             const [isModalOpen, setIsModalOpen] = React.useState(false);
+            const [isLoading, setIsLoading] = React.useState(true); // Added Loading State
             
             React.useEffect(() => { 
                 const savedLang = localStorage.getItem('nile_lang') || 'en'; 
@@ -262,9 +273,21 @@
             const toggleLang = () => { const newLang = lang === 'en' ? 'ar' : 'en'; setLang(newLang); localStorage.setItem('nile_lang', newLang); document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; };
             const showToast = (message) => { setToast({ show: true, message }); setTimeout(() => setToast({ show: false, message: '' }), 3000); };
             const toggleSave = (job) => { let newSaved = savedJobs.find(j => j.id === job.id) ? savedJobs.filter(j => j.id !== job.id) : [...savedJobs, job]; setSavedJobs(newSaved); localStorage.setItem('savedJobs', JSON.stringify(newSaved)); showToast(savedJobs.find(j => j.id === job.id) ? 'Job Removed' : 'Job Saved'); };
-            const t = jobTranslations[lang];
-            const loadJobs = async (query = '') => { const data = await JobsAPI.fetchAllJobs(query); setJobs(data); filterJobs(data, activeCategory); };
-            const filterJobs = (allJobs, category) => { if (category === 'All') { setFilteredJobs(allJobs); } else { setFilteredJobs(allJobs.filter(job => job.category === category)); } };
+            const t = translations[lang];
+            
+            const loadJobs = async (query = '') => { 
+                setIsLoading(true);
+                const data = await JobsAPI.fetchAllJobs(query);
+                setJobs(data);
+                filterJobs(data, activeCategory);
+                setIsLoading(false);
+            };
+
+            const filterJobs = (allJobs, category) => { 
+                if (category === 'All') { setFilteredJobs(allJobs); } 
+                else { setFilteredJobs(allJobs.filter(job => job.category === category)); } 
+            };
+
             const handleCategoryClick = (category) => { setActiveCategory(category); filterJobs(jobs, category); };
             const handleSearch = (e) => { setSearchQuery(e.target.value); loadJobs(e.target.value); };
             const handleApplySubmit = (e) => { e.preventDefault(); setIsModalOpen(false); showToast(`Application sent!`); };
@@ -309,7 +332,12 @@
                     <Header lang={lang} t={t} toggleLang={toggleLang} />
                     <div className="container py-12 flex-grow">
                         <div className="mb-10 text-center"><h1 className="text-4xl font-bold text-white mb-4">{t.search_title}</h1><p className="text-gray-400 mb-8">{t.search_sub}</p><div className="search-wrapper"><div className="search-container mx-auto"><input type="text" placeholder="Search..." className="search-input" onChange={handleSearch} /><button className="search-btn"><i className="fas fa-search"></i></button></div><div className="filters-container">{categories.map(cat => (<button key={cat} className={`filter-pill ${activeCategory === cat ? 'active' : ''}`} onClick={() => handleCategoryClick(cat)}>{cat}</button>))}</div></div></div>
-                        <div>{filteredJobs.map(job => <JobCard key={job.id} job={job} onClick={setSelectedJob} onToggleSave={toggleSave} isSaved={savedJobs.some(j => j.id === job.id)} t={t} />)}</div>
+                        
+                        {isLoading ? (
+                            <div className="text-center text-white py-10"><i className="fas fa-spinner fa-spin text-4xl text-[var(--accent-gold)]"></i><p className="mt-4">Loading Services...</p></div>
+                        ) : (
+                            <div>{filteredJobs.map(job => <JobCard key={job.id} job={job} onClick={setSelectedJob} onToggleSave={toggleSave} isSaved={savedJobs.some(j => j.id === job.id)} t={t} />)}</div>
+                        )}
                     </div>
                     <Footer t={t} />
                     <Toast show={toast.show} message={toast.message} />
