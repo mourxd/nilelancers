@@ -59,7 +59,6 @@
         .search-btn { background: var(--primary-blue); color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: 0.3s; }
         .search-btn:hover { background: var(--secondary-blue); transform: rotate(10deg); }
 
-        /* CATEGORY PILLS */
         .filters-container { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
         .filter-pill { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #ccc; padding: 8px 20px; border-radius: 25px; font-size: 14px; cursor: pointer; transition: var(--transition); }
         .filter-pill:hover, .filter-pill.active { background: var(--primary-blue); border-color: var(--primary-blue); color: white; transform: translateY(-2px); }
@@ -73,20 +72,18 @@
         .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: var(--dark-navy); border-bottom: 2px solid var(--accent-gold); padding: 20px; display: flex; flex-direction: column; gap: 15px; animation: slideDown 0.3s ease; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* New Detail View Styles */
+        /* DETAIL & MODAL STYLES */
         .detail-meta-box { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 20px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; }
         .meta-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
         .meta-item:last-child { margin-bottom: 0; }
         .meta-icon { width: 40px; height: 40px; background: rgba(0, 116, 217, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--secondary-blue); font-size: 18px; }
 
-        /* Modal Overlay */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.2s ease; }
         .modal-content { background: var(--dark-navy); border: 1px solid var(--primary-blue); border-radius: 20px; width: 100%; max-width: 500px; padding: 30px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         .close-modal { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 24px; cursor: pointer; }
         .close-modal:hover { color: white; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Toast Notification */
         .toast { position: fixed; bottom: 30px; right: 30px; background: var(--dark-navy); border-left: 5px solid var(--accent-green); color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); z-index: 3000; display: flex; align-items: center; gap: 15px; }
         .toast.show { transform: translateY(0); opacity: 1; }
         .toast i { color: var(--accent-green); font-size: 20px; }
@@ -130,7 +127,6 @@
               }
             ];
             const postedJobs = JSON.parse(localStorage.getItem('user_posted_jobs') || '[]');
-            // Assign a default category to user posted jobs if missing
             postedJobs.forEach(job => { if(!job.category) job.category = 'Other'; });
             
             const allJobs = [...postedJobs, ...staticJobs];
@@ -387,6 +383,9 @@
                                         <div className="flex gap-4">
                                             <button className="cta-button flex-1 py-3 text-lg" onClick={openApplyModal}>
                                                 {selectedJob.isLocal ? t.details_apply : `${t.details_view} ${selectedJob.source}`}
+                                            </button>
+                                            <button onClick={() => toggleSave(selectedJob)} className={`px-5 rounded-full border border-[var(--accent-gold)] transition-colors ${savedJobs.some(j => j.id === selectedJob.id) ? 'bg-[var(--accent-gold)] text-[var(--dark-navy)]' : 'text-[var(--accent-gold)] hover:bg-[var(--accent-gold)] hover:text-[var(--dark-navy)]'}`}>
+                                                <i className={`fas fa-bookmark`}></i>
                                             </button>
                                         </div>
                                     </div>
