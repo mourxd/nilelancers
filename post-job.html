@@ -24,8 +24,21 @@
         .logo h1 { font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
         .nav-link { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 16px; margin: 0 15px; transition: var(--transition); position: relative; padding-bottom: 5px; }
         .nav-link:hover, .nav-link.active { color: var(--secondary-blue); }
+        .nav-link.active:after { content: ''; position: absolute; width: 100%; height: 2px; background: var(--accent-gold); bottom: 0; left: 0; }
+        
         .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; transition: var(--transition); border: none; cursor: pointer; }
         .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; font-size: 14px; margin: 0 15px; }
+
+        footer { background: rgba(0, 15, 40, 0.95); color: var(--text-light); padding: 80px 0 30px; border-top: 2px solid var(--primary-blue); margin-top: auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 50px; }
+        .footer-logo { font-size: 34px; font-weight: 800; margin-bottom: 25px; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .footer-col h4 { font-size: 22px; margin-bottom: 25px; font-weight: 700; color: var(--text-light); }
+        .footer-col ul { list-style: none; padding: 0; }
+        .footer-col li { margin-bottom: 12px; }
+        .footer-col a { color: #cccccc; text-decoration: none; transition: 0.3s; }
+        .footer-col a:hover { color: var(--secondary-blue); padding-left: 5px; }
+        .social-icons a { width: 45px; height: 45px; background: rgba(255,255,255,0.1); display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; transition: 0.3s; color: white; }
+        .social-icons a:hover { background: var(--primary-blue); transform: translateY(-5px); }
 
         .form-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 40px; backdrop-filter: blur(10px); max-width: 700px; margin: 0 auto; }
         label { display: block; color: var(--accent-gold); margin-bottom: 8px; font-weight: 600; }
@@ -38,8 +51,8 @@
 
     <script type="text/babel">
         const translations = {
-            en: { nav: { home: "Home", services: "Services", saved: "Saved", post: "Post Job" }, title: "Post a New Job", lbl_title: "Job Title", ph_title: "e.g. Logo Designer", lbl_pay: "Payment Method", lbl_loc: "Location", btn: "Post Job Now", success: "Job Posted!", view: "View Jobs" },
-            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", post: "أضف وظيفة" }, title: "نشر وظيفة جديدة", lbl_title: "عنوان الوظيفة", ph_title: "مثال: مصمم شعار", lbl_pay: "طريقة الدفع", lbl_loc: "الموقع", btn: "انشر الآن", success: "تم النشر!", view: "تصفح الوظائف" }
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", post: "Post Job" }, footer: { quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers. All rights reserved.", desc: "The premier freelance platform connecting global talent with innovative businesses." }, title: "Post a New Job", lbl_title: "Job Title", ph_title: "e.g. Logo Designer", lbl_pay: "Payment Method", lbl_loc: "Location", btn: "Post Job Now", success: "Job Posted!", view: "View Jobs" },
+            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", post: "أضف وظيفة" }, footer: { quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© ٢٠٢٥ نايل لانسرز. جميع الحقوق محفوظة.", desc: "المنصة الرائدة لربط المواهب العالمية بالأعمال المبتكرة." }, title: "نشر وظيفة جديدة", lbl_title: "عنوان الوظيفة", ph_title: "مثال: مصمم شعار", lbl_pay: "طريقة الدفع", lbl_loc: "الموقع", btn: "انشر الآن", success: "تم النشر!", view: "تصفح الوظائف" }
         };
 
         function Header({ lang, t, toggleLang }) {
@@ -75,6 +88,39 @@
             );
         }
 
+        function Footer({ t }) {
+            return (
+                <footer>
+                    <div className="container footer-grid">
+                        <div className="footer-col">
+                            <div className="footer-logo">NileLancers</div>
+                            <p className="text-sm text-gray-400 mb-4">{t.footer.desc}</p>
+                            <div className="social-icons">
+                                <a href="#"><i className="fab fa-facebook-f"></i></a>
+                                <a href="#"><i className="fab fa-twitter"></i></a>
+                                <a href="#"><i className="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                        <div className="footer-col">
+                            <h4>{t.footer.quick}</h4>
+                            <ul>
+                                <li><a href="index.html">{t.nav.home}</a></li>
+                                <li><a href="jobs.html">{t.nav.services}</a></li>
+                            </ul>
+                        </div>
+                        <div className="footer-col">
+                            <h4>{t.footer.contact}</h4>
+                            <ul>
+                                <li><i className="fas fa-envelope mr-2 text-[var(--secondary-blue)]"></i> info@nilelancers.com</li>
+                                <li><i className="fas fa-map-marker-alt mr-2 text-[var(--secondary-blue)]"></i> Cairo, Egypt</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="text-center mt-12 pt-5 border-t border-gray-700 text-sm text-gray-500">{t.footer.rights}</div>
+                </footer>
+            );
+        }
+
         function PostJobApp() {
             const [step, setStep] = React.useState(1);
             const [lang, setLang] = React.useState('en');
@@ -99,23 +145,24 @@
 
             if (step === 2) {
                 return (
-                    <div>
+                    <div className="min-h-screen flex flex-col">
                         <Header lang={lang} t={t} toggleLang={toggleLang} />
-                        <div className="container py-20 text-center">
+                        <div className="container py-20 text-center flex-grow">
                             <div className="form-card text-center">
                                 <i className="fas fa-check-circle text-6xl text-green-500 mb-6"></i>
                                 <h2 className="text-3xl font-bold text-white mb-6">{t.success}</h2>
                                 <a href="jobs.html" className="cta-button inline-block" style={{width: 'auto'}}>{t.view}</a>
                             </div>
                         </div>
+                        <Footer t={t} />
                     </div>
                 );
             }
 
             return (
-                <div>
+                <div className="min-h-screen flex flex-col">
                     <Header lang={lang} t={t} toggleLang={toggleLang} />
-                    <div className="container py-12">
+                    <div className="container py-12 flex-grow">
                         <h1 className="text-3xl font-bold text-white text-center mb-10">{t.title}</h1>
                         <form onSubmit={handleSubmit} className="form-card space-y-6">
                             <div>
@@ -142,6 +189,7 @@
                             <button type="submit" className="cta-button mt-6 w-full">{t.btn}</button>
                         </form>
                     </div>
+                    <Footer t={t} />
                 </div>
             );
         }
