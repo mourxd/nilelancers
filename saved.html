@@ -29,6 +29,17 @@
         .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; transition: var(--transition); border: none; cursor: pointer; }
         .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; font-size: 14px; margin: 0 15px; }
 
+        footer { background: rgba(0, 15, 40, 0.95); color: var(--text-light); padding: 80px 0 30px; border-top: 2px solid var(--primary-blue); margin-top: auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 50px; }
+        .footer-logo { font-size: 34px; font-weight: 800; margin-bottom: 25px; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .footer-col h4 { font-size: 22px; margin-bottom: 25px; font-weight: 700; color: var(--text-light); }
+        .footer-col ul { list-style: none; padding: 0; }
+        .footer-col li { margin-bottom: 12px; }
+        .footer-col a { color: #cccccc; text-decoration: none; transition: 0.3s; }
+        .footer-col a:hover { color: var(--secondary-blue); padding-left: 5px; }
+        .social-icons a { width: 45px; height: 45px; background: rgba(255,255,255,0.1); display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; transition: 0.3s; color: white; }
+        .social-icons a:hover { background: var(--primary-blue); transform: translateY(-5px); }
+
         .job-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 25px; margin-bottom: 20px; transition: var(--transition); cursor: pointer; backdrop-filter: blur(5px); }
         .job-card.local { border-left: 5px solid var(--accent-green); background: linear-gradient(90deg, rgba(46, 204, 113, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%); }
     </style>
@@ -38,8 +49,8 @@
 
     <script type="text/babel">
         const translations = {
-            en: { nav: { home: "Home", services: "Services", saved: "Saved", post: "Post Job" }, title: "Saved Services", empty: "No saved jobs yet", empty_btn: "Browse Jobs" },
-            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", post: "أضف وظيفة" }, title: "الخدمات المحفوظة", empty: "لا توجد وظائف محفوظة", empty_btn: "تصفح الوظائف" }
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", post: "Post Job" }, footer: { quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers. All rights reserved.", desc: "The premier freelance platform connecting global talent with innovative businesses." }, title: "Saved Services", empty: "No saved jobs yet", empty_btn: "Browse Jobs" },
+            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", post: "أضف وظيفة" }, footer: { quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© ٢٠٢٥ نايل لانسرز. جميع الحقوق محفوظة.", desc: "المنصة الرائدة لربط المواهب العالمية بالأعمال المبتكرة." }, title: "الخدمات المحفوظة", empty: "لا توجد وظائف محفوظة", empty_btn: "تصفح الوظائف" }
         };
 
         function Header({ lang, t, toggleLang }) {
@@ -72,6 +83,39 @@
                         </div>
                     )}
                 </header>
+            );
+        }
+
+        function Footer({ t }) {
+            return (
+                <footer>
+                    <div className="container footer-grid">
+                        <div className="footer-col">
+                            <div className="footer-logo">NileLancers</div>
+                            <p className="text-sm text-gray-400 mb-4">{t.footer.desc}</p>
+                            <div className="social-icons">
+                                <a href="#"><i className="fab fa-facebook-f"></i></a>
+                                <a href="#"><i className="fab fa-twitter"></i></a>
+                                <a href="#"><i className="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                        <div className="footer-col">
+                            <h4>{t.footer.quick}</h4>
+                            <ul>
+                                <li><a href="index.html">{t.nav.home}</a></li>
+                                <li><a href="jobs.html">{t.nav.services}</a></li>
+                            </ul>
+                        </div>
+                        <div className="footer-col">
+                            <h4>{t.footer.contact}</h4>
+                            <ul>
+                                <li><i className="fas fa-envelope mr-2 text-[var(--secondary-blue)]"></i> info@nilelancers.com</li>
+                                <li><i className="fas fa-map-marker-alt mr-2 text-[var(--secondary-blue)]"></i> Cairo, Egypt</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="text-center mt-12 pt-5 border-t border-gray-700 text-sm text-gray-500">{t.footer.rights}</div>
+                </footer>
             );
         }
 
@@ -115,9 +159,9 @@
             const t = translations[lang];
 
             return (
-                <div>
+                <div className="min-h-screen flex flex-col">
                     <Header lang={lang} t={t} toggleLang={toggleLang} />
-                    <div className="container py-12">
+                    <div className="container py-12 flex-grow">
                         <h1 className="text-3xl font-bold text-white mb-8 border-b border-gray-700 pb-4">{t.title}</h1>
                         {savedJobs.length === 0 ? (
                             <div className="text-center py-20 border border-dashed border-gray-600 rounded-xl">
@@ -129,6 +173,7 @@
                             <div>{savedJobs.map(job => <SavedJobCard key={job.id} job={job} onRemove={removeJob} />)}</div>
                         )}
                     </div>
+                    <Footer t={t} />
                 </div>
             );
         }
