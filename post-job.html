@@ -3,30 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Job - NileLancers (Debug Mode)</title>
-    
+    <title>Post Job - NileLancers</title>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        :root { --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; --transition: all 0.4s ease; }
-        body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; }
-        
-        /* Simple Styles */
+        /* Styles kept simple */
+        :root { --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; color: white; }
         header { background: rgba(0, 15, 40, 0.95); padding: 15px 0; border-bottom: 2px solid var(--primary-blue); }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; font-size: 24px; font-weight: bold; }
-        
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; font-size: 24px; font-weight: 800; }
         .form-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 40px; max-width: 700px; margin: 40px auto; }
-        label { display: block; color: var(--accent-gold); margin-bottom: 8px; font-weight: 600; }
-        .input-field { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; margin-bottom: 20px; }
-        .cta-button { background: var(--primary-blue); color: white; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; }
+        .input-field { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: rgba(0,0,0,0.5); color: white; margin-bottom: 20px; display: block; }
+        label { display: block; color: var(--accent-gold); margin-bottom: 8px; font-weight: bold; }
+        .cta-button { background: var(--primary-blue); color: white; padding: 15px; width: 100%; border-radius: 30px; font-weight: bold; cursor: pointer; border: none; }
         .cta-button:disabled { opacity: 0.5; }
     </style>
 </head>
@@ -34,10 +29,9 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        // 1. SUPABASE CONFIG
-        const SUPABASE_URL = 'https://hnzxjhwpqmdkosgalseq.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhuenhqaHdwcW1ka29zZ2Frc2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NTU5OTgsImV4cCI6MjA4MjEzMTk5OH0.h-FylEeaWzNQpK_hcvcm9-GcksRbKW5xbnzimzsiP7Y';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // 1. DIRECT API CONFIG
+        const PROJECT_URL = 'https://hnzxjhwpqmdkosgalseq.supabase.co';
+        const API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhuenhqaHdwcW1ka29zZ2Frc2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NTU5OTgsImV4cCI6MjA4MjEzMTk5OH0.h-FylEeaWzNQpK_hcvcm9-GcksRbKW5xbnzimzsiP7Y';
 
         function PostJobApp() {
             const [loading, setLoading] = React.useState(false);
@@ -47,40 +41,51 @@
                 e.preventDefault();
                 setLoading(true);
 
-                // DEBUG: Alert before sending
-                console.log("Attempting to post:", formData);
-
-                const payload = {
+                const newJob = {
                     title: formData.title,
                     company: 'Client (You)',
                     budget: 'EGP ' + formData.budget,
                     type: 'Project',
                     description: formData.description,
                     location: formData.location,
-                    category: 'Development', // Make sure this column exists in Supabase!
+                    category: 'Development',
                     is_local: true
                 };
 
-                const { data, error } = await supabase.from('jobs').insert([payload]);
+                try {
+                    // DIRECT FETCH REQUEST (Bypasses Library Issues)
+                    const response = await fetch(`${PROJECT_URL}/rest/v1/jobs`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': API_KEY,
+                            'Authorization': `Bearer ${API_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify(newJob)
+                    });
 
-                setLoading(false);
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Database refused connection');
+                    }
 
-                if (error) {
-                    // THIS WILL SHOW YOU THE REAL ERROR
-                    alert("DATABASE ERROR:\n" + error.message + "\n\nHint: Check if your table columns match exactly.");
-                    console.error("Full Error:", error);
-                } else {
                     alert("SUCCESS! Job Posted.");
                     window.location.href = "jobs.html";
+
+                } catch (error) {
+                    alert("NETWORK ERROR: " + error.message + "\n\nTry turning off your Ad-Blocker.");
+                } finally {
+                    setLoading(false);
                 }
             };
 
             return (
                 <div>
-                    <header><div className="container"><a href="index.html" className="logo">NileLancers Debugger</a></div></header>
+                    <header><div className="container"><a href="index.html" className="logo">NileLancers</a></div></header>
                     <div className="container">
                         <form onSubmit={handleSubmit} className="form-card">
-                            <h2 className="text-2xl text-white mb-6 text-center">Post a Job (Debug Mode)</h2>
+                            <h2 className="text-2xl text-white mb-6 text-center">Post a Job</h2>
                             
                             <label>Job Title</label>
                             <input type="text" className="input-field" required onChange={e => setFormData({...formData, title: e.target.value})} />
@@ -92,13 +97,14 @@
                             <select className="input-field" onChange={e => setFormData({...formData, location: e.target.value})}>
                                 <option>Remote (Egypt)</option>
                                 <option>Cairo</option>
+                                <option>Alexandria</option>
                             </select>
 
                             <label>Description</label>
-                            <textarea className="input-field" rows="3" required onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
+                            <textarea className="input-field" rows="4" required onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
 
                             <button type="submit" disabled={loading} className="cta-button">
-                                {loading ? 'Sending to Database...' : 'Post Job'}
+                                {loading ? 'Posting...' : 'Post Job Now'}
                             </button>
                         </form>
                     </div>
