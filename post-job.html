@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Job - NileLancers</title>
+    <title>Post Job - NileLancers (Debug Mode)</title>
     
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -16,36 +16,18 @@
     
     <style>
         :root { --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; --transition: all 0.4s ease; }
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
-        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; }
         
-        header { background: rgba(0, 15, 40, 0.95); backdrop-filter: blur(10px); padding: 15px 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary-blue); }
+        /* Simple Styles */
+        header { background: rgba(0, 15, 40, 0.95); padding: 15px 0; border-bottom: 2px solid var(--primary-blue); }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .header-content { display: flex; justify-content: space-between; align-items: center; }
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; transition: var(--transition); }
-        .logo:hover { transform: translateY(-2px); }
-        .logo h1 { font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
-        .desktop-nav ul { display: flex; align-items: center; gap: 30px; margin: 0; padding: 0; }
-        .desktop-nav a { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 15px; transition: var(--transition); position: relative; padding-bottom: 5px; }
-        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; border: none; cursor: pointer; transition: var(--transition); white-space: nowrap; }
-        .cta-button:disabled { opacity: 0.7; cursor: not-allowed; }
-        .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 8px 20px; border-radius: 30px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; font-size: 14px; transition: var(--transition); white-space: nowrap; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; font-size: 24px; font-weight: bold; }
         
-        footer { background: rgba(0, 15, 40, 0.95); color: var(--text-light); padding: 80px 0 30px; border-top: 2px solid var(--primary-blue); margin-top: auto; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 50px; }
-        .footer-logo { font-size: 34px; font-weight: 800; margin-bottom: 25px; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .footer-col h4 { font-size: 22px; margin-bottom: 25px; font-weight: 700; color: var(--text-light); }
-        .footer-col ul { list-style: none; padding: 0; }
-        .footer-col li { margin-bottom: 12px; }
-        .footer-col a { color: #cccccc; text-decoration: none; transition: 0.3s; }
-        .social-icons a { width: 45px; height: 45px; background: rgba(255,255,255,0.1); display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; transition: 0.3s; color: white; }
-
-        .form-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 40px; backdrop-filter: blur(10px); max-width: 700px; margin: 0 auto; }
+        .form-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 40px; max-width: 700px; margin: 40px auto; }
         label { display: block; color: var(--accent-gold); margin-bottom: 8px; font-weight: 600; }
-        .input-field { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; outline: none; transition: 0.3s; }
-        .input-field:focus { border-color: var(--secondary-blue); }
-        .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: var(--dark-navy); border-bottom: 2px solid var(--accent-gold); padding: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 999; }
+        .input-field { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; margin-bottom: 20px; }
+        .cta-button { background: var(--primary-blue); color: white; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; }
+        .cta-button:disabled { opacity: 0.5; }
     </style>
 </head>
 <body>
@@ -55,109 +37,75 @@
         // 1. SUPABASE CONFIG
         const SUPABASE_URL = 'https://hnzxjhwpqmdkosgalseq.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhuenhqaHdwcW1ka29zZ2Frc2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NTU5OTgsImV4cCI6MjA4MjEzMTk5OH0.h-FylEeaWzNQpK_hcvcm9-GcksRbKW5xbnzimzsiP7Y';
-        
-        let supabase = null;
-        try {
-            if (window.supabase) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            }
-        } catch (e) { console.error("Supabase failed", e); }
-
-        // 2. COMPONENTS
-        const translations = {
-            en: { nav: { home: "Home", services: "Services", saved: "Saved", why_us: "Why Us", how: "How It Works", post: "Post Job" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." }, title: "Post a New Job", lbl_title: "Job Title", ph_title: "e.g. Logo Designer", lbl_budget: "Budget (EGP)", ph_budget: "e.g. 5000", lbl_desc: "Job Description", ph_desc: "Describe the project details...", lbl_pay: "Payment Method", lbl_loc: "Location", btn: "Post Job Now", success: "Job Posted!", view: "View Jobs" },
-            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", why_us: "لماذا نحن", how: "كيف يعمل", post: "أضف وظيفة" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }, title: "نشر وظيفة جديدة", lbl_title: "عنوان الوظيفة", ph_title: "مثال: مصمم شعار", lbl_budget: "الميزانية (ج.م)", ph_budget: "مثال: 5000", lbl_desc: "وصف الوظيفة", ph_desc: "اشرح تفاصيل المشروع...", lbl_pay: "طريقة الدفع", lbl_loc: "الموقع", btn: "انشر الآن", success: "تم النشر!", view: "تصفح الوظائف" }
-        };
-
-        function Header({ lang, t, toggleLang }) {
-            const [isOpen, setIsOpen] = React.useState(false);
-            return (
-                <header>
-                    <div className="container header-content">
-                        <a href="index.html" className="logo"><i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i><h1>NileLancers</h1></a>
-                        <nav className="hidden md:block desktop-nav">
-                            <ul><li><a href="index.html">{t.nav.home}</a></li><li><a href="jobs.html">{t.nav.services}</a></li><li><a href="saved.html">{t.nav.saved}</a></li><li><a href="index.html#features">{t.nav.why_us}</a></li><li><a href="index.html#how">{t.nav.how}</a></li><li><button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'العربية' : 'EN'}</button></li><li><a href="post-job.html" className="cta-button">{t.nav.post}</a></li></ul>
-                        </nav>
-                        <div className="md:hidden flex items-center gap-4"><button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button><button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl"><i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i></button></div>
-                    </div>
-                    {isOpen && <div className="mobile-menu md:hidden"><a href="index.html" className="text-white font-bold">{t.nav.home}</a><a href="jobs.html" className="text-white font-bold">{t.nav.services}</a><a href="saved.html" className="text-white font-bold">{t.nav.saved}</a><a href="index.html#features" className="text-white">{t.nav.why_us}</a><a href="index.html#how" className="text-white">{t.nav.how}</a><a href="post-job.html" className="cta-button text-center">{t.nav.post}</a></div>}
-                </header>
-            );
-        }
-
-        function Footer({ t }) {
-            return (
-                <footer>
-                    <div className="container footer-grid">
-                        <div className="footer-col"><div className="footer-logo">NileLancers</div><p className="text-sm text-gray-400 mb-4">{t.footer.desc}</p><div className="social-icons"><a href="#"><i className="fab fa-facebook-f"></i></a><a href="#"><i className="fab fa-twitter"></i></a><a href="#"><i className="fab fa-linkedin-in"></i></a></div></div>
-                        <div className="footer-col"><h4>{t.footer.quick}</h4><ul><li><a href="index.html">{t.nav.home}</a></li><li><a href="jobs.html">{t.nav.services}</a></li><li><a href="index.html#how">{t.nav.how}</a></li></ul></div>
-                        <div className="footer-col"><h4>{t.footer.contact}</h4><ul><li><i className="fas fa-envelope mr-2"></i> info@nilelancers.com</li><li><i className="fas fa-map-marker-alt mr-2"></i> Cairo, Egypt</li></ul></div>
-                    </div>
-                    <div className="text-center mt-12 pt-5 border-t border-gray-700 text-sm text-gray-500">{t.footer.rights}</div>
-                </footer>
-            );
-        }
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         function PostJobApp() {
-            const [step, setStep] = React.useState(1);
             const [loading, setLoading] = React.useState(false);
-            const [lang, setLang] = React.useState('en');
             const [formData, setFormData] = React.useState({ title: '', budget: '', description: '', payment: 'Vodafone Cash', location: 'Remote (Egypt)' });
-
-            React.useEffect(() => { setLang(localStorage.getItem('nile_lang') || 'en'); document.dir = localStorage.getItem('nile_lang') === 'ar' ? 'rtl' : 'ltr'; }, []);
-            const toggleLang = () => { const newLang = lang === 'en' ? 'ar' : 'en'; setLang(newLang); localStorage.setItem('nile_lang', newLang); document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; };
 
             const handleSubmit = async (e) => {
                 e.preventDefault();
                 setLoading(true);
 
-                // Create a "Timeout Promise" that resolves to error after 3 seconds
-                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Connection too slow')), 3000));
+                // DEBUG: Alert before sending
+                console.log("Attempting to post:", formData);
 
-                try {
-                    if (!supabase) throw new Error("Database not connected");
+                const payload = {
+                    title: formData.title,
+                    company: 'Client (You)',
+                    budget: 'EGP ' + formData.budget,
+                    type: 'Project',
+                    description: formData.description,
+                    location: formData.location,
+                    category: 'Development', // Make sure this column exists in Supabase!
+                    is_local: true
+                };
 
-                    const dbPromise = supabase.from('jobs').insert([{
-                        title: formData.title,
-                        company: 'You (Client)',
-                        budget: 'EGP ' + formData.budget,
-                        type: 'Project',
-                        description: formData.description,
-                        location: formData.location,
-                        category: 'Development', // Hardcoded default for now
-                        is_local: true
-                    }]);
+                const { data, error } = await supabase.from('jobs').insert([payload]);
 
-                    // Race Database vs Timeout
-                    const { error } = await Promise.race([dbPromise, timeoutPromise]);
+                setLoading(false);
 
-                    if (error) throw error;
-                    
-                    // Success!
-                    setStep(2);
-
-                } catch (err) {
-                    console.warn("Posting Error (handled):", err);
-                    // Fallback Success (Optimistic UI)
-                    // Even if DB fails, show success to user so they don't get stuck
-                    setStep(2);
-                } finally {
-                    setLoading(false);
+                if (error) {
+                    // THIS WILL SHOW YOU THE REAL ERROR
+                    alert("DATABASE ERROR:\n" + error.message + "\n\nHint: Check if your table columns match exactly.");
+                    console.error("Full Error:", error);
+                } else {
+                    alert("SUCCESS! Job Posted.");
+                    window.location.href = "jobs.html";
                 }
             };
 
-            const t = translations[lang];
-
-            if (step === 2) {
-                return (
-                    <div className="min-h-screen flex flex-col"><Header lang={lang} t={t} toggleLang={toggleLang} /><div className="container py-20 text-center flex-grow"><div className="form-card text-center"><i className="fas fa-check-circle text-6xl text-green-500 mb-6"></i><h2 className="text-3xl font-bold text-white mb-6">{t.success}</h2><a href="jobs.html" className="cta-button inline-block" style={{width: 'auto'}}>{t.view}</a></div></div><Footer t={t} /></div>
-                );
-            }
-
             return (
-                <div className="min-h-screen flex flex-col"><Header lang={lang} t={t} toggleLang={toggleLang} /><div className="container py-12 flex-grow"><h1 className="text-3xl font-bold text-white text-center mb-10">{t.title}</h1><form onSubmit={handleSubmit} className="form-card space-y-6"><div><label>{t.lbl_title}</label><input type="text" className="input-field" placeholder={t.ph_title} required onChange={(e) => setFormData({...formData, title: e.target.value})} /></div><div className="grid md:grid-cols-2 gap-6"><div><label>{t.lbl_budget}</label><input type="number" className="input-field" placeholder={t.ph_budget} required onChange={(e) => setFormData({...formData, budget: e.target.value})} /></div><div><label>{t.lbl_pay}</label><select className="input-field" onChange={(e) => setFormData({...formData, payment: e.target.value})}><option>Vodafone Cash</option><option>Instapay</option><option>Fawry</option></select></div></div><div><label>{t.lbl_loc}</label><select className="input-field" onChange={(e) => setFormData({...formData, location: e.target.value})}><option>Remote (Egypt)</option><option>Cairo</option><option>Alexandria</option><option>Giza</option></select></div><div><label>{t.lbl_desc}</label><textarea rows="4" className="input-field" placeholder={t.ph_desc} required onChange={(e) => setFormData({...formData, description: e.target.value})}></textarea></div><button type="submit" disabled={loading} className="cta-button mt-6 w-full">{loading ? 'Posting...' : t.btn}</button></form></div><Footer t={t} /></div>
+                <div>
+                    <header><div className="container"><a href="index.html" className="logo">NileLancers Debugger</a></div></header>
+                    <div className="container">
+                        <form onSubmit={handleSubmit} className="form-card">
+                            <h2 className="text-2xl text-white mb-6 text-center">Post a Job (Debug Mode)</h2>
+                            
+                            <label>Job Title</label>
+                            <input type="text" className="input-field" required onChange={e => setFormData({...formData, title: e.target.value})} />
+                            
+                            <label>Budget (EGP)</label>
+                            <input type="number" className="input-field" required onChange={e => setFormData({...formData, budget: e.target.value})} />
+                            
+                            <label>Location</label>
+                            <select className="input-field" onChange={e => setFormData({...formData, location: e.target.value})}>
+                                <option>Remote (Egypt)</option>
+                                <option>Cairo</option>
+                            </select>
+
+                            <label>Description</label>
+                            <textarea className="input-field" rows="3" required onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
+
+                            <button type="submit" disabled={loading} className="cta-button">
+                                {loading ? 'Sending to Database...' : 'Post Job'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
             );
         }
+        
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<PostJobApp />);
     </script>
