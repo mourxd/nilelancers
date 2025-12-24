@@ -61,8 +61,8 @@
     <div id="root"></div>
     <script type="text/babel">
         const translations = {
-            en: { nav: { home: "Home", services: "Services", saved: "Saved", why_us: "Why Us", how: "How It Works", post: "Post Job" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." }, title: "Post a New Job", lbl_title: "Job Title", ph_title: "e.g. Logo Designer", lbl_pay: "Payment Method", lbl_loc: "Location", btn: "Post Job Now", success: "Job Posted!", view: "View Jobs" },
-            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", why_us: "لماذا نحن", how: "كيف يعمل", post: "أضف وظيفة" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }, title: "نشر وظيفة جديدة", lbl_title: "عنوان الوظيفة", ph_title: "مثال: مصمم شعار", lbl_pay: "طريقة الدفع", lbl_loc: "الموقع", btn: "انشر الآن", success: "تم النشر!", view: "تصفح الوظائف" }
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", why_us: "Why Us", how: "How It Works", post: "Post Job" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." }, title: "Post a New Job", lbl_title: "Job Title", ph_title: "e.g. Logo Designer", lbl_budget: "Budget (EGP)", ph_budget: "e.g. 5000", lbl_desc: "Job Description", ph_desc: "Describe the project details...", lbl_pay: "Payment Method", lbl_loc: "Location", btn: "Post Job Now", success: "Job Posted!", view: "View Jobs" },
+            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", why_us: "لماذا نحن", how: "كيف يعمل", post: "أضف وظيفة" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }, title: "نشر وظيفة جديدة", lbl_title: "عنوان الوظيفة", ph_title: "مثال: مصمم شعار", lbl_budget: "الميزانية (ج.م)", ph_budget: "مثال: 5000", lbl_desc: "وصف الوظيفة", ph_desc: "اشرح تفاصيل المشروع...", lbl_pay: "طريقة الدفع", lbl_loc: "الموقع", btn: "انشر الآن", success: "تم النشر!", view: "تصفح الوظائف" }
         };
 
         function Header({ lang, t, toggleLang }) {
@@ -130,9 +130,56 @@
         function PostJobApp() {
             const [step, setStep] = React.useState(1);
             const [lang, setLang] = React.useState('en');
-            React.useEffect(() => { setLang(localStorage.getItem('nile_lang') || 'en'); document.dir = localStorage.getItem('nile_lang') === 'ar' ? 'rtl' : 'ltr'; }, []);
-            const toggleLang = () => { const newLang = lang === 'en' ? 'ar' : 'en'; setLang(newLang); localStorage.setItem('nile_lang', newLang); document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; };
-            const handleSubmit = (e) => { e.preventDefault(); setTimeout(() => setStep(2), 1000); };
+            
+            // FORM STATE
+            const [formData, setFormData] = React.useState({
+                title: '',
+                budget: '',
+                description: '',
+                payment: 'Vodafone Cash',
+                location: 'Remote (Egypt)'
+            });
+
+            React.useEffect(() => { 
+                setLang(localStorage.getItem('nile_lang') || 'en'); 
+                document.dir = localStorage.getItem('nile_lang') === 'ar' ? 'rtl' : 'ltr'; 
+            }, []);
+
+            const toggleLang = () => { 
+                const newLang = lang === 'en' ? 'ar' : 'en'; 
+                setLang(newLang); 
+                localStorage.setItem('nile_lang', newLang); 
+                document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; 
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                
+                // 1. Create New Job Object
+                const newJob = {
+                    id: 'local_' + Date.now(), // Unique ID
+                    title: formData.title,
+                    company: 'You (Client)', // Placeholder for user
+                    budget: 'EGP ' + formData.budget,
+                    type: 'Project',
+                    description: formData.description,
+                    location: formData.location,
+                    skills: ['Custom Job'], 
+                    source: 'NileLancers Local',
+                    isLocal: true,
+                    link: '#',
+                    image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80' // Generic Business Image
+                };
+
+                // 2. Save to Local Storage
+                const existingJobs = JSON.parse(localStorage.getItem('user_posted_jobs') || '[]');
+                existingJobs.unshift(newJob); // Add to beginning
+                localStorage.setItem('user_posted_jobs', JSON.stringify(existingJobs));
+
+                // 3. Show Success
+                setTimeout(() => setStep(2), 500);
+            };
+
             const t = translations[lang];
 
             if (step === 2) {
@@ -157,11 +204,49 @@
                     <div className="container py-12 flex-grow">
                         <h1 className="text-3xl font-bold text-white text-center mb-10">{t.title}</h1>
                         <form onSubmit={handleSubmit} className="form-card space-y-6">
-                            <div><label>{t.lbl_title}</label><input type="text" className="input-field" placeholder={t.ph_title} required /></div>
-                            <div className="grid md:grid-cols-2 gap-6">
-                                <div><label>{t.lbl_pay}</label><select className="input-field"><option>Vodafone Cash</option><option>Instapay</option></select></div>
-                                <div><label>{t.lbl_loc}</label><select className="input-field"><option>Remote (Egypt)</option><option>Cairo</option><option>Alexandria</option></select></div>
+                            
+                            {/* Title */}
+                            <div>
+                                <label>{t.lbl_title}</label>
+                                <input type="text" className="input-field" placeholder={t.ph_title} required 
+                                    onChange={(e) => setFormData({...formData, title: e.target.value})} />
                             </div>
+
+                            {/* Budget & Payment */}
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label>{t.lbl_budget}</label>
+                                    <input type="number" className="input-field" placeholder={t.ph_budget} required 
+                                        onChange={(e) => setFormData({...formData, budget: e.target.value})} />
+                                </div>
+                                <div>
+                                    <label>{t.lbl_pay}</label>
+                                    <select className="input-field" onChange={(e) => setFormData({...formData, payment: e.target.value})}>
+                                        <option>Vodafone Cash</option>
+                                        <option>Instapay</option>
+                                        <option>Fawry</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Location */}
+                            <div>
+                                <label>{t.lbl_loc}</label>
+                                <select className="input-field" onChange={(e) => setFormData({...formData, location: e.target.value})}>
+                                    <option>Remote (Egypt)</option>
+                                    <option>Cairo</option>
+                                    <option>Alexandria</option>
+                                    <option>Giza</option>
+                                </select>
+                            </div>
+
+                            {/* Description */}
+                            <div>
+                                <label>{t.lbl_desc}</label>
+                                <textarea rows="4" className="input-field" placeholder={t.ph_desc} required 
+                                    onChange={(e) => setFormData({...formData, description: e.target.value})}></textarea>
+                            </div>
+
                             <button type="submit" className="cta-button mt-6 w-full">{t.btn}</button>
                         </form>
                     </div>
