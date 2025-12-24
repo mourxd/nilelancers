@@ -4,233 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NileLancers - The #1 Freelance Platform</title>
-    
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-
     <style>
-        :root {
-            --navy-blue: #001f3f;
-            --dark-navy: #001529;
-            --light-navy: #0a2d5a;
-            --primary-blue: #0074D9;
-            --secondary-blue: #7FDBFF;
-            --accent-gold: #FFD700;
-            --text-light: #ffffff;
-            --text-gray: #f0f0f0;
-            --shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            --transition: all 0.4s ease;
-        }
-
+        :root { --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; --text-light: #ffffff; --text-gray: #f0f0f0; --transition: all 0.4s ease; }
         * { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.7;
-            color: var(--text-gray);
-            background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%);
-            min-height: 100vh;
-            background-attachment: fixed;
-        }
-
-        /* RTL Support */
+        body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
         body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
-
-        /* --- HEADER --- */
-        header {
-            background: rgba(0, 15, 40, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 15px 0;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 2px solid var(--primary-blue);
-        }
-
+        
+        /* HEADER */
+        header { background: rgba(0, 15, 40, 0.95); backdrop-filter: blur(10px); padding: 15px 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary-blue); }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         .header-content { display: flex; justify-content: space-between; align-items: center; }
-
-        .logo h1 {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin: 0;
-        }
-
-        .desktop-nav ul { display: flex; list-style: none; gap: 25px; align-items: center; margin: 0; padding: 0; }
-        .desktop-nav a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 16px;
-            transition: var(--transition);
-            position: relative;
-            padding-bottom: 5px;
-        }
+        .logo h1 { font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
+        .desktop-nav ul { display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; padding: 0; }
+        .desktop-nav a { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 15px; transition: var(--transition); position: relative; padding-bottom: 5px; }
         .desktop-nav a:hover { color: var(--secondary-blue); }
-        .desktop-nav a:after {
-            content: ''; position: absolute; width: 0; height: 2px;
-            background: var(--accent-gold); bottom: 0; left: 50%;
-            transition: var(--transition); transform: translateX(-50%);
-        }
-        .desktop-nav a:hover:after { width: 100%; }
-
-        .cta-button {
-            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-            color: var(--dark-navy);
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 700;
-            text-decoration: none;
-            display: inline-block;
-            box-shadow: 0 6px 20px rgba(0, 116, 217, 0.4);
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0, 116, 217, 0.6); color: var(--navy-blue); }
-
-        .lang-btn {
-            background: rgba(255,255,255,0.1);
-            color: var(--accent-gold);
-            padding: 5px 15px;
-            border-radius: 20px;
-            border: 1px solid var(--accent-gold);
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: var(--transition);
-        }
+        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; border: none; cursor: pointer; transition: var(--transition); }
+        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 116, 217, 0.4); color: var(--navy-blue); }
+        .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; font-size: 14px; transition: var(--transition); }
         .lang-btn:hover { background: var(--accent-gold); color: var(--dark-navy); }
 
-        /* --- HERO --- */
-        .hero {
-            background: radial-gradient(circle at center, rgba(0, 31, 63, 0.9) 0%, rgba(0, 21, 41, 0.95) 100%),
-                        url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: var(--text-light);
-            padding: 160px 0 120px;
-            text-align: center;
-            position: relative;
-        }
-        .hero h2 {
-            font-size: 48px;
-            margin-bottom: 25px;
-            font-weight: 800;
-            background: linear-gradient(to right, var(--text-light), var(--secondary-blue));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .hero p { font-size: 20px; max-width: 800px; margin: 0 auto 40px; opacity: 0.9; font-weight: 300; }
-
-        /* --- SECTIONS COMMON --- */
+        /* SECTIONS */
+        .hero { background: radial-gradient(circle at center, rgba(0, 31, 63, 0.9) 0%, rgba(0, 21, 41, 0.95) 100%), url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'); background-size: cover; background-position: center; background-attachment: fixed; color: var(--text-light); padding: 160px 0 120px; text-align: center; }
+        .hero h2 { font-size: 48px; margin-bottom: 25px; font-weight: 800; background: linear-gradient(to right, var(--text-light), var(--secondary-blue)); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .section-padding { padding: 100px 0; }
-        .section-title {
-            text-align: center; margin-bottom: 60px; font-size: 42px;
-            color: var(--text-light); position: relative; padding-bottom: 20px; font-weight: 700;
-        }
-        .section-title:after {
-            content: ''; position: absolute; width: 100px; height: 5px;
-            background: linear-gradient(to right, var(--primary-blue), var(--accent-gold));
-            bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 5px;
-        }
-
-        /* --- SERVICES GRID --- */
+        .section-title { text-align: center; margin-bottom: 60px; font-size: 42px; color: var(--text-light); position: relative; padding-bottom: 20px; font-weight: 700; }
+        .section-title:after { content: ''; position: absolute; width: 100px; height: 5px; background: linear-gradient(to right, var(--primary-blue), var(--accent-gold)); bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 5px; }
+        
+        /* GRIDS */
         .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; }
-        .service-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 40px 25px;
-            text-align: center;
-            border: 1px solid rgba(127, 219, 255, 0.1);
-            backdrop-filter: blur(10px);
-            transition: var(--transition);
-        }
-        .service-card:hover { transform: translateY(-15px); border-color: rgba(127, 219, 255, 0.3); background: rgba(255, 255, 255, 0.08); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        .service-icon { font-size: 60px; color: var(--secondary-blue); margin-bottom: 25px; transition: var(--transition); }
-        .service-card:hover .service-icon { color: var(--accent-gold); transform: scale(1.1); }
-        .service-card h3 { color: var(--text-light); font-size: 26px; margin-bottom: 20px; font-weight: 700; }
-
-        /* --- FEATURES (Why Us) --- */
+        .service-card { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 40px 25px; text-align: center; border: 1px solid rgba(127, 219, 255, 0.1); backdrop-filter: blur(10px); transition: var(--transition); }
+        .service-card:hover { transform: translateY(-15px); border-color: rgba(127, 219, 255, 0.3); background: rgba(255, 255, 255, 0.08); }
+        .service-icon { font-size: 60px; color: var(--secondary-blue); margin-bottom: 25px; }
+        
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 35px; }
-        .feature-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 35px 25px;
-            border-radius: 15px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: var(--transition);
-        }
-        .feature-item:hover { transform: translateY(-10px); border-color: var(--primary-blue); box-shadow: 0 15px 30px rgba(0, 116, 217, 0.2); }
+        .feature-item { background: rgba(255, 255, 255, 0.05); padding: 35px 25px; border-radius: 15px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); transition: var(--transition); }
+        .feature-item:hover { transform: translateY(-10px); border-color: var(--primary-blue); }
         .feature-icon { font-size: 48px; color: var(--accent-gold); margin-bottom: 25px; }
-        .feature-item h3 { font-size: 22px; color: var(--text-light); margin-bottom: 15px; font-weight: 700; }
 
-        /* --- HOW IT WORKS --- */
         .how-it-works { background: rgba(0, 21, 41, 0.7); }
         .steps-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; }
-        .step-card {
-            flex: 1; min-width: 250px; text-align: center; padding: 40px 25px;
-            background: rgba(255, 255, 255, 0.05); border-radius: 15px; border: 1px solid rgba(127, 219, 255, 0.1);
-            transition: var(--transition);
-        }
-        .step-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.08); }
-        .step-number {
-            width: 70px; height: 70px;
-            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-            color: var(--dark-navy); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; font-weight: bold; margin: 0 auto 25px;
-            border: 3px solid var(--accent-gold);
-            box-shadow: 0 0 20px rgba(0, 116, 217, 0.5);
-        }
-        .step-card h3 { font-size: 24px; color: var(--text-light); margin-bottom: 15px; font-weight: 700; }
+        .step-card { flex: 1; min-width: 250px; text-align: center; padding: 40px 25px; background: rgba(255, 255, 255, 0.05); border-radius: 15px; border: 1px solid rgba(127, 219, 255, 0.1); transition: var(--transition); }
+        .step-number { width: 70px; height: 70px; background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; margin: 0 auto 25px; border: 3px solid var(--accent-gold); }
 
-        /* --- TESTIMONIALS --- */
         .testimonial-container { max-width: 900px; margin: 0 auto; position: relative; }
-        .testimonial-card {
-            background: rgba(255, 255, 255, 0.05); padding: 50px; border-radius: 20px;
-            border: 1px solid rgba(127, 219, 255, 0.1); backdrop-filter: blur(10px);
-            animation: fadeIn 0.5s ease-in-out;
-        }
+        .testimonial-card { background: rgba(255, 255, 255, 0.05); padding: 50px; border-radius: 20px; border: 1px solid rgba(127, 219, 255, 0.1); backdrop-filter: blur(10px); animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .quote-icon { font-size: 60px; color: var(--accent-gold); opacity: 0.3; position: absolute; top: 20px; left: 30px; }
         .client-info { display: flex; align-items: center; margin-top: 30px; }
-        .client-avatar {
-            width: 60px; height: 60px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; color: var(--dark-navy); margin-right: 20px;
-            border: 2px solid var(--accent-gold);
-        }
-        
-        /* --- REGISTRATION --- */
+        .client-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--dark-navy); margin-right: 20px; border: 2px solid var(--accent-gold); }
+
         .registration { background: rgba(0, 21, 41, 0.7); text-align: center; }
         .reg-options { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 60px; }
-        .reg-card {
-            background: rgba(255, 255, 255, 0.05); padding: 50px 35px; border-radius: 20px;
-            width: 100%; max-width: 450px; border: 1px solid rgba(127, 219, 255, 0.1);
-            transition: var(--transition); text-align: left;
-        }
-        .reg-card:hover { transform: translateY(-15px); box-shadow: 0 25px 50px rgba(0,0,0,0.4); }
-        .reg-card h3 { font-size: 32px; margin-bottom: 25px; color: var(--text-light); font-weight: 700; text-align: center; }
+        .reg-card { background: rgba(255, 255, 255, 0.05); padding: 50px 35px; border-radius: 20px; width: 100%; max-width: 450px; border: 1px solid rgba(127, 219, 255, 0.1); transition: var(--transition); text-align: left; }
+        .reg-card:hover { transform: translateY(-15px); }
         .reg-list { list-style: none; padding: 0; margin-bottom: 35px; }
         .reg-list li { margin-bottom: 15px; padding-left: 30px; position: relative; color: #ccc; }
         .reg-list i { position: absolute; left: 0; top: 5px; }
 
-        /* --- FOOTER --- */
         footer { background: rgba(0, 15, 40, 0.95); color: var(--text-light); padding: 80px 0 30px; border-top: 2px solid var(--primary-blue); }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 50px; }
         .footer-logo { font-size: 34px; font-weight: 800; margin-bottom: 25px; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -242,149 +77,45 @@
         .social-icons a { width: 45px; height: 45px; background: rgba(255,255,255,0.1); display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; transition: 0.3s; color: white; }
         .social-icons a:hover { background: var(--primary-blue); transform: translateY(-5px); }
 
-        /* Mobile Menu */
-        .mobile-menu {
-            position: absolute; top: 100%; left: 0; right: 0;
-            background: var(--dark-navy); border-bottom: 2px solid var(--accent-gold);
-            padding: 20px; display: flex; flex-direction: column; gap: 15px;
-            animation: slideDown 0.3s ease;
-        }
+        .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: var(--dark-navy); border-bottom: 2px solid var(--accent-gold); padding: 20px; display: flex; flex-direction: column; gap: 15px; animation: slideDown 0.3s ease; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
     <div id="root"></div>
-
     <script type="text/babel">
-        // --- TRANSLATIONS ---
+        // TRANSLATIONS
         const translations = {
             en: {
-                nav: { home: "Home", services: "Services", why_us: "Why Us", how: "How It Works", join: "Join", post: "Post Job" },
-                hero: {
-                    title: "Elevate Your Freelance Career with NileLancers",
-                    desc: "Connect with top talent and premium clients across the globe. NileLancers provides the perfect platform for freelancers and businesses to collaborate.",
-                    btn_start: "Start Your Journey",
-                    btn_hire: "Hire Talent"
-                },
-                services: {
-                    title: "Premium Services",
-                    s1: "Web Development", s1_desc: "Custom websites, e-commerce solutions, and web applications.",
-                    s2: "App Development", s2_desc: "iOS, Android, and cross-platform mobile applications.",
-                    s3: "UI/UX Design", s3_desc: "Beautiful, intuitive interfaces that drive engagement.",
-                    s4: "Digital Marketing", s4_desc: "SEO, social media, PPC, and content marketing strategies.",
-                    s5: "Video Production", s5_desc: "Professional video content, animations, and multimedia.",
-                    s6: "Content Writing", s6_desc: "High-quality content creation, copywriting, and editing."
-                },
-                features: {
-                    title: "Why Choose NileLancers",
-                    f1: "Secure Payments", f1_desc: "Escrow protection ensures your funds are safe until work is delivered.",
-                    f2: "Vetted Talent", f2_desc: "Work with the top 5% of freelancers in each field.",
-                    f3: "24/7 Support", f3_desc: "Round-the-clock customer support to assist with any questions.",
-                    f4: "Global Reach", f4_desc: "Connect with clients from over 150 countries across all time zones."
-                },
-                how: {
-                    title: "How It Works",
-                    st1: "Create Account", st1_desc: "Sign up for free as a freelancer or client.",
-                    st2: "Find Match", st2_desc: "Browse profiles or post projects to find the perfect match.",
-                    st3: "Collaborate", st3_desc: "Use our workspace with built-in communication tools.",
-                    st4: "Pay Securely", st4_desc: "Release payments securely through our escrow system."
-                },
-                testi: {
-                    title: "Success Stories",
-                    t1: "NileLancers completely transformed how I run my digital agency. The quality of talent here is unmatched.",
-                    t2: "As a freelance developer, I've tripled my income in just one year. The escrow system gives me peace of mind.",
-                    t3: "Finding reliable talent was our biggest challenge until we discovered NileLancers."
-                },
-                reg: {
-                    title: "Ready to Begin?",
-                    sub: "Join thousands of successful professionals today.",
-                    free_title: "For Freelancers",
-                    free_desc: "Showcase your skills and connect with premium clients.",
-                    client_title: "For Businesses",
-                    client_desc: "Find expert talent and scale your business.",
-                    l1: "Access to high-paying projects", l2: "Secure payment protection",
-                    l3: "Top 5% talent", l4: "Project management tools",
-                    btn_free: "Become a Freelancer", btn_client: "Hire Talent"
-                },
-                footer: {
-                    desc: "The premier freelance platform connecting global talent with innovative businesses.",
-                    quick: "Quick Links", company: "Company", contact: "Contact Us",
-                    rights: "© 2025 NileLancers. All rights reserved."
-                }
+                nav: { home: "Home", services: "Services", saved: "Saved", why_us: "Why Us", how: "How It Works", post: "Post Job" },
+                hero: { title: "Elevate Your Freelance Career with NileLancers", desc: "Connect with top talent and premium clients. The perfect platform for collaborating.", btn_start: "Start Journey", btn_hire: "Hire Talent" },
+                services: { title: "Premium Services", s1: "Web Development", s2: "App Development", s3: "UI/UX Design", s4: "Digital Marketing", s5: "Video Production", s6: "Content Writing", desc: "Professional services." },
+                features: { title: "Why Choose NileLancers", f1: "Secure Payments", f2: "Vetted Talent", f3: "24/7 Support", f4: "Global Reach", desc: "Quality you can trust." },
+                how: { title: "How It Works", st1: "Create Account", st2: "Find Match", st3: "Collaborate", st4: "Pay Securely", desc: "Simple steps to success." },
+                testi: { title: "Success Stories", t1: "NileLancers transformed my agency.", t2: "Tripled my income in a year.", t3: "Found reliable talent instantly." },
+                reg: { title: "Ready to Begin?", free_title: "For Freelancers", client_title: "For Businesses", btn_free: "Join as Freelancer", btn_client: "Hire Talent", l1: "High-paying projects", l2: "Secure payments", l3: "Top 5% talent", l4: "Project tools" },
+                footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." }
             },
             ar: {
-                nav: { home: "الرئيسية", services: "الخدمات", why_us: "لماذا نحن", how: "كيف يعمل", join: "انضم إلينا", post: "أضف وظيفة" },
-                hero: {
-                    title: "ارتقِ بمسيرتك المهنية مع نايل لانسرز",
-                    desc: "تواصل مع أفضل المواهب والعملاء المميزين حول العالم. المنصة المثالية للمستقلين والشركات للتعاون والنجاح.",
-                    btn_start: "ابدأ رحلتك اليوم",
-                    btn_hire: "وظف موهبة"
-                },
-                services: {
-                    title: "خدمات متميزة",
-                    s1: "تطوير المواقع", s1_desc: "مواقع مخصصة وحلول التجارة الإلكترونية وتطبيقات الويب.",
-                    s2: "تطوير التطبيقات", s2_desc: "تطبيقات أندرويد و iOS بأداء استثنائي.",
-                    s3: "تصميم واجهات", s3_desc: "واجهات جميلة وبديهية تزيد من التفاعل.",
-                    s4: "التسويق الرقمي", s4_desc: "استراتيجيات SEO وتسويق المحتوى لنمو عملك.",
-                    s5: "إنتاج الفيديو", s5_desc: "محتوى فيديو احترافي ورسوم متحركة.",
-                    s6: "كتابة المحتوى", s6_desc: "إنشاء محتوى عالي الجودة وكتابة إعلانية."
-                },
-                features: {
-                    title: "لماذا نايل لانسرز",
-                    f1: "دفع آمن", f1_desc: "نظام الضمان يحمي أموالك حتى يتم تسليم العمل.",
-                    f2: "مواهب موثقة", f2_desc: "اعمل مع أفضل 5% من المستقلين في كل مجال.",
-                    f3: "دعم 24/7", f3_desc: "دعم فني على مدار الساعة لمساعدتك في أي وقت.",
-                    f4: "وصول عالمي", f4_desc: "تواصل مع عملاء من أكثر من 150 دولة."
-                },
-                how: {
-                    title: "كيف يعمل الموقع",
-                    st1: "أنشئ حساب", st1_desc: "سجل مجاناً كمستقل أو عميل وأكمل ملفك الشخصي.",
-                    st2: "اعثر على فرصة", st2_desc: "تصفح الملفات الشخصية أو انشر المشاريع.",
-                    st3: "تعاون", st3_desc: "استخدم مساحة العمل وأدوات التواصل المدمجة.",
-                    st4: "ادفع بأمان", st4_desc: "حرر الدفعات بأمان عبر نظام الضمان الخاص بنا."
-                },
-                testi: {
-                    title: "قصص نجاح",
-                    t1: "نايل لانسرز غيرت طريقة إدارتي لوكالتي الرقمية تماماً. جودة المواهب هنا لا تضاهى.",
-                    t2: "كمطور مستقل، ضاعفت دخلي ثلاث مرات في عام واحد. نظام الضمان يمنحني راحة البال.",
-                    t3: "كان العثور على مواهب موثوقة أكبر تحدٍ لنا حتى اكتشفنا نايل لانسرز."
-                },
-                reg: {
-                    title: "مستعد للبدء؟",
-                    sub: "انضم إلى الآلاف من المحترفين الناجحين اليوم.",
-                    free_title: "للمستقلين",
-                    free_desc: "اعرض مهاراتك وتواصل مع عملاء مميزين.",
-                    client_title: "للشركات",
-                    client_desc: "اعثر على مواهب خبيرة وقم بتوسيع عملك.",
-                    l1: "وصول لمشاريع ذات عائد عالي", l2: "حماية دفع آمنة",
-                    l3: "أفضل 5% من المواهب", l4: "أدوات إدارة المشاريع",
-                    btn_free: "كن مستقلاً", btn_client: "وظف موهبة"
-                },
-                footer: {
-                    desc: "المنصة الرائدة لربط المواهب العالمية بالأعمال المبتكرة.",
-                    quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا",
-                    rights: "© 2025 نايل لانسرز. جميع الحقوق محفوظة."
-                }
+                nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", why_us: "لماذا نحن", how: "كيف يعمل", post: "أضف وظيفة" },
+                hero: { title: "ارتقِ بمسيرتك المهنية مع نايل لانسرز", desc: "تواصل مع أفضل المواهب والعملاء المميزين. المنصة المثالية للتعاون.", btn_start: "ابدأ رحلتك", btn_hire: "وظف موهبة" },
+                services: { title: "خدمات متميزة", s1: "تطوير المواقع", s2: "تطوير التطبيقات", s3: "تصميم واجهات", s4: "التسويق الرقمي", s5: "إنتاج الفيديو", s6: "كتابة المحتوى", desc: "خدمات احترافية." },
+                features: { title: "لماذا نايل لانسرز", f1: "دفع آمن", f2: "مواهب موثقة", f3: "دعم 24/7", f4: "وصول عالمي", desc: "جودة يمكنك الوثوق بها." },
+                how: { title: "كيف يعمل الموقع", st1: "أنشئ حساب", st2: "اعثر على فرصة", st3: "تعاون", st4: "ادفع بأمان", desc: "خطوات بسيطة للنجاح." },
+                testi: { title: "قصص نجاح", t1: "نايل لانسرز غيرت وكالتي.", t2: "ضاعفت دخلي ثلاث مرات.", t3: "وجدت مواهب موثوقة فوراً." },
+                reg: { title: "مستعد للبدء؟", free_title: "للمستقلين", client_title: "للشركات", btn_free: "انضم كمستقل", btn_client: "وظف موهبة", l1: "مشاريع مربحة", l2: "دفع آمن", l3: "أفضل 5% مواهب", l4: "أدوات إدارة" },
+                footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }
             }
         };
 
-        // --- HOOKS ---
         function useLanguage() {
             const [lang, setLang] = React.useState('en');
-            React.useEffect(() => {
-                const saved = localStorage.getItem('nile_lang') || 'en';
-                setLang(saved); document.dir = saved === 'ar' ? 'rtl' : 'ltr';
-            }, []);
-            const toggleLang = () => {
-                const newLang = lang === 'en' ? 'ar' : 'en';
-                setLang(newLang); localStorage.setItem('nile_lang', newLang);
-                document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
-            };
+            React.useEffect(() => { const saved = localStorage.getItem('nile_lang') || 'en'; setLang(saved); document.dir = saved === 'ar' ? 'rtl' : 'ltr'; }, []);
+            const toggleLang = () => { const newLang = lang === 'en' ? 'ar' : 'en'; setLang(newLang); localStorage.setItem('nile_lang', newLang); document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; };
             return { lang, t: translations[lang], toggleLang };
         }
 
-        // --- COMPONENTS ---
-        
+        // --- SHARED HEADER ---
         function Header({ lang, t, toggleLang }) {
             const [isOpen, setIsOpen] = React.useState(false);
             return (
@@ -396,29 +127,27 @@
                         </div>
                         <nav className="hidden md:block desktop-nav">
                             <ul>
-                                <li><a href="#">{t.nav.home}</a></li>
+                                <li><a href="index.html">{t.nav.home}</a></li>
                                 <li><a href="jobs.html">{t.nav.services}</a></li>
-                                <li><a href="#features">{t.nav.why_us}</a></li>
-                                <li><a href="#how">{t.nav.how}</a></li>
-                                <li>
-                                    <button onClick={toggleLang} className="lang-btn">
-                                        {lang === 'en' ? 'العربية' : 'EN'}
-                                    </button>
-                                </li>
+                                <li><a href="saved.html">{t.nav.saved}</a></li>
+                                <li><a href="index.html#features">{t.nav.why_us}</a></li>
+                                <li><a href="index.html#how">{t.nav.how}</a></li>
+                                <li><button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'العربية' : 'EN'}</button></li>
                                 <li><a href="post-job.html" className="cta-button">{t.nav.post}</a></li>
                             </ul>
                         </nav>
                         <div className="md:hidden flex items-center gap-4">
-                            <button onClick={toggleLang} className="lang-btn text-xs">{lang === 'en' ? 'AR' : 'EN'}</button>
-                            <button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl">
-                                <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i>
-                            </button>
+                            <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
+                            <button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl"><i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i></button>
                         </div>
                     </div>
                     {isOpen && (
-                        <div className="mobile-menu md:hidden absolute top-full left-0 w-full bg-[var(--dark-navy)] border-t border-[var(--primary-blue)] p-4 flex flex-col gap-4">
-                            <a href="#" className="text-white font-bold">{t.nav.home}</a>
+                        <div className="mobile-menu md:hidden">
+                            <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
                             <a href="jobs.html" className="text-white font-bold">{t.nav.services}</a>
+                            <a href="saved.html" className="text-white font-bold">{t.nav.saved}</a>
+                            <a href="index.html#features" className="text-white">{t.nav.why_us}</a>
+                            <a href="index.html#how" className="text-white">{t.nav.how}</a>
                             <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
                         </div>
                     )}
@@ -426,6 +155,7 @@
             );
         }
 
+        // --- COMPONENTS FOR INDEX ---
         function Hero({ t }) {
             return (
                 <section className="hero">
@@ -434,15 +164,12 @@
                         <p>{t.hero.desc}</p>
                         <div className="flex justify-center gap-4 flex-wrap">
                             <a href="jobs.html" className="cta-button">{t.hero.btn_start}</a>
-                            <a href="post-job.html" className="cta-button" style={{background: 'transparent', border: '2px solid var(--accent-gold)', color: 'var(--accent-gold)'}}>
-                                {t.hero.btn_hire}
-                            </a>
+                            <a href="post-job.html" className="cta-button" style={{background: 'transparent', border: '2px solid var(--accent-gold)', color: 'var(--accent-gold)'}}>{t.hero.btn_hire}</a>
                         </div>
                     </div>
                 </section>
             );
         }
-
         function Services({ t }) {
             const icons = ['fa-laptop-code', 'fa-mobile-alt', 'fa-paint-brush', 'fa-chart-line', 'fa-video', 'fa-file-alt'];
             return (
@@ -460,7 +187,6 @@
                 </section>
             );
         }
-
         function WhyUs({ t }) {
             const icons = ['fa-shield-alt', 'fa-star', 'fa-headset', 'fa-globe'];
             return (
@@ -480,7 +206,6 @@
                 </section>
             );
         }
-
         function HowItWorks({ t }) {
             return (
                 <section className="how-it-works section-padding" id="how">
@@ -499,64 +224,41 @@
                 </section>
             );
         }
-
         function Testimonials({ t }) {
             const [index, setIndex] = React.useState(0);
-            React.useEffect(() => {
-                const interval = setInterval(() => setIndex(prev => (prev + 1) % 3), 5000);
-                return () => clearInterval(interval);
-            }, []);
-            
-            const stories = [
-                { text: t.testi.t1, name: "Michael Rodriguez", role: "CEO" },
-                { text: t.testi.t2, name: "Sarah Johnson", role: "Developer" },
-                { text: t.testi.t3, name: "Ahmed Hassan", role: "CTO" }
-            ];
+            React.useEffect(() => { const interval = setInterval(() => setIndex(prev => (prev + 1) % 3), 5000); return () => clearInterval(interval); }, []);
+            const stories = [{ text: t.testi.t1, name: "Michael Rodriguez", role: "CEO" }, { text: t.testi.t2, name: "Sarah Johnson", role: "Developer" }, { text: t.testi.t3, name: "Ahmed Hassan", role: "CTO" }];
             const current = stories[index];
-
             return (
                 <section className="section-padding">
                     <div className="container testimonial-container">
                         <h2 className="section-title">{t.testi.title}</h2>
                         <div className="testimonial-card">
-                            <i className="fas fa-quote-left quote-icon"></i>
-                            <p style={{fontSize: '20px', position: 'relative', zIndex: 2}}>{current.text}</p>
+                            <i className="fas fa-quote-left" style={{fontSize: '40px', color: 'var(--accent-gold)', marginBottom: '20px'}}></i>
+                            <p style={{fontSize: '20px', marginBottom: '20px'}}>{current.text}</p>
                             <div className="client-info">
                                 <div className="client-avatar"><i className="fas fa-user"></i></div>
-                                <div>
-                                    <h4 className="font-bold text-[var(--accent-gold)]">{current.name}</h4>
-                                    <p className="text-sm">{current.role}</p>
-                                </div>
+                                <div><h4 className="font-bold text-[var(--accent-gold)]">{current.name}</h4><p className="text-sm">{current.role}</p></div>
                             </div>
                         </div>
                     </div>
                 </section>
             );
         }
-
         function Registration({ t }) {
             return (
                 <section className="registration section-padding" id="register">
                     <div className="container">
                         <h2 className="section-title">{t.reg.title}</h2>
-                        <p style={{marginBottom: '40px'}}>{t.reg.sub}</p>
                         <div className="reg-options">
                             <div className="reg-card" style={{borderTop: '5px solid var(--primary-blue)'}}>
                                 <h3>{t.reg.free_title}</h3>
-                                <p className="mb-6 text-center">{t.reg.free_desc}</p>
-                                <ul className="reg-list">
-                                    <li><i className="fas fa-check-circle text-[var(--primary-blue)]"></i> {t.reg.l1}</li>
-                                    <li><i className="fas fa-check-circle text-[var(--primary-blue)]"></i> {t.reg.l2}</li>
-                                </ul>
+                                <ul className="reg-list"><li><i className="fas fa-check text-[var(--primary-blue)]"></i> {t.reg.l1}</li><li><i className="fas fa-check text-[var(--primary-blue)]"></i> {t.reg.l2}</li></ul>
                                 <a href="#" className="cta-button">{t.reg.btn_free}</a>
                             </div>
                             <div className="reg-card" style={{borderTop: '5px solid var(--accent-gold)'}}>
                                 <h3>{t.reg.client_title}</h3>
-                                <p className="mb-6 text-center">{t.reg.client_desc}</p>
-                                <ul className="reg-list">
-                                    <li><i className="fas fa-check-circle text-[var(--accent-gold)]"></i> {t.reg.l3}</li>
-                                    <li><i className="fas fa-check-circle text-[var(--accent-gold)]"></i> {t.reg.l4}</li>
-                                </ul>
+                                <ul className="reg-list"><li><i className="fas fa-check text-[var(--accent-gold)]"></i> {t.reg.l3}</li><li><i className="fas fa-check text-[var(--accent-gold)]"></i> {t.reg.l4}</li></ul>
                                 <a href="#" className="cta-button" style={{background: 'linear-gradient(135deg, var(--accent-gold), #ffaa00)', color: 'black'}}>{t.reg.btn_client}</a>
                             </div>
                         </div>
@@ -564,7 +266,6 @@
                 </section>
             );
         }
-
         function Footer({ t }) {
             return (
                 <footer>
@@ -572,26 +273,15 @@
                         <div className="footer-col">
                             <div className="footer-logo">NileLancers</div>
                             <p className="text-sm text-gray-400 mb-4">{t.footer.desc}</p>
-                            <div className="social-icons">
-                                <a href="#"><i className="fab fa-facebook-f"></i></a>
-                                <a href="#"><i className="fab fa-twitter"></i></a>
-                                <a href="#"><i className="fab fa-linkedin-in"></i></a>
-                            </div>
+                            <div className="social-icons"><a href="#"><i className="fab fa-facebook-f"></i></a><a href="#"><i className="fab fa-twitter"></i></a><a href="#"><i className="fab fa-linkedin-in"></i></a></div>
                         </div>
                         <div className="footer-col">
                             <h4>{t.footer.quick}</h4>
-                            <ul>
-                                <li><a href="#">{t.nav.home}</a></li>
-                                <li><a href="jobs.html">{t.nav.services}</a></li>
-                                <li><a href="#how">{t.nav.how}</a></li>
-                            </ul>
+                            <ul><li><a href="index.html">{t.nav.home}</a></li><li><a href="jobs.html">{t.nav.services}</a></li><li><a href="index.html#how">{t.nav.how}</a></li></ul>
                         </div>
                         <div className="footer-col">
                             <h4>{t.footer.contact}</h4>
-                            <ul>
-                                <li><i className="fas fa-envelope mr-2 text-[var(--secondary-blue)]"></i> info@nilelancers.com</li>
-                                <li><i className="fas fa-map-marker-alt mr-2 text-[var(--secondary-blue)]"></i> Cairo, Egypt</li>
-                            </ul>
+                            <ul><li><i className="fas fa-envelope mr-2"></i> info@nilelancers.com</li><li><i className="fas fa-map-marker-alt mr-2"></i> Cairo, Egypt</li></ul>
                         </div>
                     </div>
                     <div className="text-center mt-12 pt-5 border-t border-gray-700 text-sm text-gray-500">{t.footer.rights}</div>
@@ -614,7 +304,6 @@
                 </div>
             );
         }
-
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
