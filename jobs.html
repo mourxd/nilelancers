@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Services - NileLancers</title>
+    
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* SHARED STYLES */
         :root { --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; --transition: all 0.4s ease; }
@@ -49,6 +52,7 @@
         .search-container { background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 15px; border: 1px solid rgba(127, 219, 255, 0.1); backdrop-filter: blur(10px); margin-bottom: 40px; display: flex; gap: 15px; }
         .search-input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; outline: none; transition: var(--transition); }
         .search-input:focus { border-color: var(--secondary-blue); }
+        
         .job-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 25px; margin-bottom: 20px; transition: var(--transition); cursor: pointer; backdrop-filter: blur(5px); }
         .job-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.08); border-color: var(--accent-gold); }
         .job-card.local { border-left: 5px solid var(--accent-green); background: linear-gradient(90deg, rgba(46, 204, 113, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%); }
@@ -57,6 +61,12 @@
         .price-tag { font-size: 20px; font-weight: 800; color: var(--accent-gold); }
         .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: var(--dark-navy); border-bottom: 2px solid var(--accent-gold); padding: 20px; display: flex; flex-direction: column; gap: 15px; animation: slideDown 0.3s ease; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* New Detail View Styles */
+        .detail-meta-box { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 20px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; }
+        .meta-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .meta-item:last-child { margin-bottom: 0; }
+        .meta-icon { width: 40px; height: 40px; background: rgba(0, 116, 217, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--secondary-blue); font-size: 18px; }
     </style>
 </head>
 <body>
@@ -65,11 +75,36 @@
         const JobsAPI = {
           getMockJobs(query = '') {
             const allJobs = [
-              { id: 'l1', title: 'Wedding Photographer Needed', company: 'Ahmed Photography', budget: 'EGP 8,000', type: 'On-Site', description: 'We are looking for a professional photographer for a wedding in Maadi next Friday.', location: 'Cairo, Maadi', skills: ['Photography', 'Events'], source: 'NileLancers Local', isLocal: true, link: '#' },
-              { id: 'l2', title: 'React Native Dev for Delivery App', company: 'Talabat Clone Startup', budget: 'EGP 25,000', type: 'Project', description: 'Build a local food delivery app tracking drivers in real-time.', location: 'Alexandria', skills: ['React Native', 'Maps'], source: 'NileLancers Local', isLocal: true, link: '#' },
-              { id: 'g1', title: 'Build E-commerce Website', company: 'Global Retail Inc.', budget: '$2,500', type: 'Fixed Price', description: 'Looking for a full-stack developer to build a custom e-commerce platform.', location: 'Remote (Global)', skills: ['React', 'Stripe'], source: 'Upwork', isLocal: false, link: 'https://www.upwork.com' },
-              { id: 'g2', title: 'Logo Design for AI Startup', company: 'StartupX', budget: '$150', type: 'Fixed Price', description: 'Modern, minimalist logo design needed.', location: 'Remote', skills: ['Logo Design'], source: 'Fiverr', isLocal: false, link: 'https://www.fiverr.com' },
-              { id: 'g3', title: 'Python Data Scraping', company: 'DataCorp', budget: '$500', type: 'Fixed Price', description: 'Scrape real estate data from 3 websites.', location: 'Remote', skills: ['Python', 'Scraping'], source: 'Freelancer', isLocal: false, link: 'https://www.freelancer.com' }
+              { 
+                id: 'l1', title: 'Wedding Photographer Needed', company: 'Ahmed Photography', budget: 'EGP 8,000', type: 'On-Site', 
+                description: 'We are looking for a professional photographer for a wedding in Maadi next Friday.', 
+                location: 'Cairo, Maadi', skills: ['Photography', 'Events'], source: 'NileLancers Local', isLocal: true, link: '#',
+                image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80'
+              },
+              { 
+                id: 'l2', title: 'React Native Dev for Delivery App', company: 'Talabat Clone Startup', budget: 'EGP 25,000', type: 'Project', 
+                description: 'Build a local food delivery app tracking drivers in real-time.', 
+                location: 'Alexandria', skills: ['React Native', 'Maps'], source: 'NileLancers Local', isLocal: true, link: '#',
+                image: 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=800&q=80' 
+              },
+              { 
+                id: 'g1', title: 'Build E-commerce Website', company: 'Global Retail Inc.', budget: '$2,500', type: 'Fixed Price', 
+                description: 'Looking for a full-stack developer to build a custom e-commerce platform.', 
+                location: 'Remote (Global)', skills: ['React', 'Stripe'], source: 'Upwork', isLocal: false, link: 'https://www.upwork.com',
+                image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=800&q=80'
+              },
+              { 
+                id: 'g2', title: 'Logo Design for AI Startup', company: 'StartupX', budget: '$150', type: 'Fixed Price', 
+                description: 'Modern, minimalist logo design needed.', 
+                location: 'Remote', skills: ['Logo Design'], source: 'Fiverr', isLocal: false, link: 'https://www.fiverr.com',
+                image: 'https://images.unsplash.com/photo-1626785774573-4b7993125120?auto=format&fit=crop&w=800&q=80'
+              },
+              { 
+                id: 'g3', title: 'Python Data Scraping', company: 'DataCorp', budget: '$500', type: 'Fixed Price', 
+                description: 'Scrape real estate data from 3 websites.', 
+                location: 'Remote', skills: ['Python', 'Scraping'], source: 'Freelancer', isLocal: false, link: 'https://www.freelancer.com',
+                image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80' 
+              }
             ];
             if (!query) return allJobs;
             return allJobs.filter(job => job.title.toLowerCase().includes(query.toLowerCase()));
@@ -191,10 +226,27 @@
                         <div className="container py-12 flex-grow">
                             <button onClick={() => setSelectedJob(null)} className="text-gray-400 hover:text-white mb-6 flex items-center gap-2"><i className="fas fa-arrow-left"></i> Back</button>
                             <div className="job-card" style={{cursor: 'default', background: 'rgba(0,0,0,0.6)'}}>
-                                <h1 className="text-3xl font-bold text-white mb-4">{selectedJob.title}</h1>
+                                <h1 className="text-3xl font-bold text-white mb-6">{selectedJob.title}</h1>
                                 <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="bg-white/5 h-64 rounded-xl flex items-center justify-center border border-white/10"><i className="fas fa-image text-5xl text-white/20"></i></div>
+                                    <div className="h-80 rounded-xl overflow-hidden border border-white/10 shadow-lg">
+                                        <img src={selectedJob.image} alt={selectedJob.title} className="w-full h-full object-cover" />
+                                    </div>
                                     <div>
+                                        <div className="detail-meta-box">
+                                            <div className="meta-item">
+                                                <div className="meta-icon"><i className="fas fa-building"></i></div>
+                                                <div><p className="text-xs text-gray-400 uppercase">Client</p><p className="font-bold text-white">{selectedJob.company}</p></div>
+                                            </div>
+                                            <div className="meta-item">
+                                                <div className="meta-icon"><i className="fas fa-map-marker-alt"></i></div>
+                                                <div><p className="text-xs text-gray-400 uppercase">Location</p><p className="font-bold text-white">{selectedJob.location}</p></div>
+                                            </div>
+                                            <div className="meta-item">
+                                                <div className="meta-icon"><i className="fas fa-briefcase"></i></div>
+                                                <div><p className="text-xs text-gray-400 uppercase">Work Type</p><p className="font-bold text-white">{selectedJob.type}</p></div>
+                                            </div>
+                                        </div>
+
                                         <p className="price-tag text-4xl mb-6">{selectedJob.budget}</p>
                                         <div className="flex gap-4">
                                             <button className="cta-button flex-1 py-3 text-lg" onClick={() => selectedJob.isLocal ? alert('Applied!') : window.open(selectedJob.link, '_blank')}>
