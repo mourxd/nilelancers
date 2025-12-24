@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saved - NileLancers</title>
+    
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* SHARED STYLES */
         :root { --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; --transition: all 0.4s ease; }
@@ -54,14 +57,31 @@
         .job-card.local { border-left: 5px solid var(--accent-green); background: linear-gradient(90deg, rgba(46, 204, 113, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%); }
         .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: var(--dark-navy); border-bottom: 2px solid var(--accent-gold); padding: 20px; display: flex; flex-direction: column; gap: 15px; animation: slideDown 0.3s ease; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .price-tag { font-size: 20px; font-weight: 800; color: var(--accent-gold); }
+
+        /* DETAIL & MODAL STYLES (Added for Saved Page) */
+        .detail-meta-box { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 20px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; }
+        .meta-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .meta-item:last-child { margin-bottom: 0; }
+        .meta-icon { width: 40px; height: 40px; background: rgba(0, 116, 217, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--secondary-blue); font-size: 18px; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.2s ease; }
+        .modal-content { background: var(--dark-navy); border: 1px solid var(--primary-blue); border-radius: 20px; width: 100%; max-width: 500px; padding: 30px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .close-modal { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .close-modal:hover { color: white; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .toast { position: fixed; bottom: 30px; right: 30px; background: var(--dark-navy); border-left: 5px solid var(--accent-green); color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); z-index: 3000; display: flex; align-items: center; gap: 15px; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast i { color: var(--accent-green); font-size: 20px; }
     </style>
 </head>
 <body>
     <div id="root"></div>
     <script type="text/babel">
         const translations = {
-            en: { nav: { home: "Home", services: "Services", saved: "Saved", why_us: "Why Us", how: "How It Works", post: "Post Job" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." }, title: "Saved Services", empty: "No saved jobs yet", empty_btn: "Browse Jobs" },
-            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", why_us: "لماذا نحن", how: "كيف يعمل", post: "أضف وظيفة" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }, title: "الخدمات المحفوظة", empty: "لا توجد وظائف محفوظة", empty_btn: "تصفح الوظائف" }
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", why_us: "Why Us", how: "How It Works", post: "Post Job" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." }, title: "Saved Services", empty: "No saved jobs yet", empty_btn: "Browse Jobs", details_apply: "Apply Now", details_view: "View on" },
+            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", why_us: "لماذا نحن", how: "كيف يعمل", post: "أضف وظيفة" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }, title: "الخدمات المحفوظة", empty: "لا توجد وظائف محفوظة", empty_btn: "تصفح الوظائف", details_apply: "قدم الآن", details_view: "عرض على" }
         };
 
         function Header({ lang, t, toggleLang }) {
@@ -126,25 +146,149 @@
             );
         }
 
-        function SavedJobCard({ job, onRemove }) {
+        /* --- TOAST COMPONENT --- */
+        function Toast({ show, message }) {
             return (
-                <div className={`job-card flex justify-between items-center ${job.isLocal ? 'local' : ''}`}>
+                <div className={`toast ${show ? 'show' : ''}`}>
+                    <i className="fas fa-check-circle"></i>
+                    <span>{message}</span>
+                </div>
+            );
+        }
+
+        /* --- APPLICATION MODAL --- */
+        function ApplicationModal({ isOpen, onClose, job, onSubmit }) {
+            if (!isOpen) return null;
+            return (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <span className="close-modal" onClick={onClose}>&times;</span>
+                        <h2 className="text-2xl font-bold text-white mb-4">Apply for {job.title}</h2>
+                        <div className="mb-4 text-sm text-gray-400">
+                            <p>Client: <span className="text-white">{job.company}</span></p>
+                            <p>Budget: <span className="text-[var(--accent-green)]">{job.budget}</span></p>
+                        </div>
+                        <form onSubmit={onSubmit} className="space-y-4">
+                            <div>
+                                <label className="block text-[var(--accent-gold)] text-sm mb-1 font-bold">Cover Letter</label>
+                                <textarea rows="4" className="w-full bg-[rgba(255,255,255,0.1)] border border-gray-600 rounded-lg p-3 text-white focus:border-[var(--secondary-blue)] outline-none" placeholder="Why are you the best fit?"></textarea>
+                            </div>
+                            <div>
+                                <label className="block text-[var(--accent-gold)] text-sm mb-1 font-bold">Your Bid</label>
+                                <input type="text" className="w-full bg-[rgba(255,255,255,0.1)] border border-gray-600 rounded-lg p-3 text-white focus:border-[var(--secondary-blue)] outline-none" placeholder="e.g. 5000" />
+                            </div>
+                            <button type="submit" className="cta-button w-full">Submit Proposal</button>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        function SavedJobCard({ job, onClick, onRemove }) {
+            const handleRemove = (e) => { e.stopPropagation(); onRemove(job); };
+            return (
+                <div onClick={() => onClick(job)} className={`job-card flex justify-between items-center ${job.isLocal ? 'local' : ''}`}>
                     <div className="flex items-center gap-4">
                         <div className={`w-12 h-12 rounded-lg flex items-center justify-center font-bold text-white ${job.isLocal ? 'bg-[rgba(46,204,113,0.2)] text-[var(--accent-green)]' : 'bg-gray-700'}`}>{job.isLocal ? 'NL' : job.source.substring(0, 2)}</div>
                         <div><h3 className="text-lg font-bold text-white">{job.title}</h3><p className="text-gray-400 text-sm">{job.company} • <span className="text-[var(--accent-gold)]">{job.budget}</span></p></div>
                     </div>
-                    <button onClick={(e) => { e.stopPropagation(); onRemove(job); }} className="text-red-400 hover:text-red-300 p-2"><i className="fas fa-trash"></i></button>
+                    <button onClick={handleRemove} className="text-red-400 hover:text-red-300 p-2"><i className="fas fa-trash"></i></button>
                 </div>
             );
         }
 
         function SavedApp() {
             const [savedJobs, setSavedJobs] = React.useState([]);
+            const [selectedJob, setSelectedJob] = React.useState(null);
             const [lang, setLang] = React.useState('en');
+            
+            // Notification State
+            const [toast, setToast] = React.useState({ show: false, message: '' });
+            const [isModalOpen, setIsModalOpen] = React.useState(false);
+
             React.useEffect(() => { setLang(localStorage.getItem('nile_lang') || 'en'); setSavedJobs(JSON.parse(localStorage.getItem('savedJobs') || '[]')); document.dir = localStorage.getItem('nile_lang') === 'ar' ? 'rtl' : 'ltr'; }, []);
             const toggleLang = () => { const newLang = lang === 'en' ? 'ar' : 'en'; setLang(newLang); localStorage.setItem('nile_lang', newLang); document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; };
-            const removeJob = (job) => { const updated = savedJobs.filter(j => j.id !== job.id); setSavedJobs(updated); localStorage.setItem('savedJobs', JSON.stringify(updated)); };
+            
+            const showToast = (message) => {
+                setToast({ show: true, message });
+                setTimeout(() => setToast({ show: false, message: '' }), 3000);
+            };
+
+            const removeJob = (job) => { 
+                const updated = savedJobs.filter(j => j.id !== job.id); 
+                setSavedJobs(updated); 
+                localStorage.setItem('savedJobs', JSON.stringify(updated));
+                if (selectedJob && selectedJob.id === job.id) setSelectedJob(null);
+                showToast('Job Removed from Saved');
+            };
+
+            // Handle Application Submit
+            const handleApplySubmit = (e) => {
+                e.preventDefault();
+                setIsModalOpen(false);
+                showToast(`Application sent to ${selectedJob.company}!`);
+            };
+
+            const openApplyModal = () => {
+                if (selectedJob.isLocal) {
+                    setIsModalOpen(true);
+                } else {
+                    window.open(selectedJob.link, '_blank');
+                }
+            };
+
             const t = translations[lang];
+
+            if (selectedJob) {
+                return (
+                    <div className="min-h-screen flex flex-col">
+                        <Header lang={lang} t={t} toggleLang={toggleLang} />
+                        <div className="container py-12 flex-grow">
+                            <button onClick={() => setSelectedJob(null)} className="text-gray-400 hover:text-white mb-6 flex items-center gap-2"><i className="fas fa-arrow-left"></i> Back</button>
+                            <div className="job-card" style={{cursor: 'default', background: 'rgba(0,0,0,0.6)'}}>
+                                <h1 className="text-3xl font-bold text-white mb-6">{selectedJob.title}</h1>
+                                <div className="grid md:grid-cols-2 gap-8">
+                                    <div className="h-80 rounded-xl overflow-hidden border border-white/10 shadow-lg">
+                                        <img src={selectedJob.image || 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'} alt={selectedJob.title} className="w-full h-full object-cover" />
+                                    </div>
+                                    <div>
+                                        <div className="detail-meta-box">
+                                            <div className="meta-item">
+                                                <div className="meta-icon"><i className="fas fa-building"></i></div>
+                                                <div><p className="text-xs text-gray-400 uppercase">Client</p><p className="font-bold text-white">{selectedJob.company}</p></div>
+                                            </div>
+                                            <div className="meta-item">
+                                                <div className="meta-icon"><i className="fas fa-map-marker-alt"></i></div>
+                                                <div><p className="text-xs text-gray-400 uppercase">Location</p><p className="font-bold text-white">{selectedJob.location || 'Remote'}</p></div>
+                                            </div>
+                                            <div className="meta-item">
+                                                <div className="meta-icon"><i className="fas fa-briefcase"></i></div>
+                                                <div><p className="text-xs text-gray-400 uppercase">Work Type</p><p className="font-bold text-white">{selectedJob.type || 'Project'}</p></div>
+                                            </div>
+                                        </div>
+
+                                        <p className="price-tag text-4xl mb-6">{selectedJob.budget}</p>
+                                        <div className="flex gap-4">
+                                            <button className="cta-button flex-1 py-3 text-lg" onClick={openApplyModal}>
+                                                {selectedJob.isLocal ? t.details_apply : `${t.details_view} ${selectedJob.source}`}
+                                            </button>
+                                            <button onClick={() => removeJob(selectedJob)} className="px-5 rounded-full border border-[var(--accent-gold)] bg-[var(--accent-gold)] text-black">
+                                                <i className="fas fa-bookmark"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mt-8 pt-8 border-t border-white/10 text-gray-300 leading-relaxed"><h3 className="text-white font-bold mb-3 text-xl">Description</h3>{selectedJob.description}</div>
+                            </div>
+                        </div>
+                        <Footer t={t} />
+                        
+                        {/* MODAL & TOAST */}
+                        <ApplicationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} job={selectedJob} onSubmit={handleApplySubmit} />
+                        <Toast show={toast.show} message={toast.message} />
+                    </div>
+                );
+            }
 
             return (
                 <div className="min-h-screen flex flex-col">
@@ -158,10 +302,11 @@
                                 <a href="jobs.html" className="cta-button">{t.empty_btn}</a>
                             </div>
                         ) : (
-                            <div>{savedJobs.map(job => <SavedJobCard key={job.id} job={job} onRemove={removeJob} />)}</div>
+                            <div>{savedJobs.map(job => <SavedJobCard key={job.id} job={job} onClick={setSelectedJob} onRemove={removeJob} />)}</div>
                         )}
                     </div>
                     <Footer t={t} />
+                    <Toast show={toast.show} message={toast.message} />
                 </div>
             );
         }
