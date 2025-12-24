@@ -94,7 +94,6 @@
 
         // --- 2. DATA HANDLING ---
         const JobsAPI = {
-          // ALWAYS have these jobs available (Dummy Data)
           getStaticJobs() {
             return [
               { id: 'l1', title: 'Wedding Photographer Needed', company: 'Ahmed Photography', budget: 'EGP 8,000', type: 'On-Site', description: 'We are looking for a professional photographer for a wedding in Maadi next Friday.', location: 'Cairo, Maadi', category: 'Photography', skills: ['Photography', 'Events'], source: 'NileLancers Local', isLocal: true, link: '#', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80' },
@@ -107,35 +106,47 @@
 
           async fetchAllJobs(query = '') {
             const staticJobs = this.getStaticJobs();
+            
+            // Default to static just in case
             let allJobs = [...staticJobs];
 
-            // Try Fetching from DB
+            // Try Fetching from DB with Timeout
             try {
-                if (supabase) {
-                    const { data, error } = await supabase.from('jobs').select('*').order('created_at', { ascending: false });
-                    
-                    if (data && !error) {
-                        const dbJobs = data.map(job => ({
-                            id: job.id,
-                            title: job.title,
-                            company: job.company,
-                            budget: job.budget,
-                            type: job.type,
-                            description: job.description,
-                            location: job.location,
-                            category: job.category || 'Other',
-                            skills: ['Custom Job'],
-                            source: 'NileLancers Local',
-                            isLocal: true,
-                            link: '#',
-                            image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'
-                        }));
-                        // Add DB jobs to the TOP of the list
-                        allJobs = [...dbJobs, ...staticJobs];
-                    }
+                if (!supabase) throw new Error("No client");
+
+                // 1. Create the Database Promise
+                const dbPromise = supabase.from('jobs').select('*').order('created_at', { ascending: false });
+                
+                // 2. Create a Timeout Promise (2 Seconds)
+                const timeoutPromise = new Promise((resolve, reject) => {
+                    setTimeout(() => reject(new Error("Timeout")), 2000);
+                });
+
+                // 3. Race them!
+                const { data, error } = await Promise.race([dbPromise, timeoutPromise]);
+                
+                if (data && !error) {
+                    const dbJobs = data.map(job => ({
+                        id: job.id,
+                        title: job.title,
+                        company: job.company,
+                        budget: job.budget,
+                        type: job.type,
+                        description: job.description,
+                        location: job.location,
+                        category: job.category || 'Other',
+                        skills: ['Custom Job'],
+                        source: 'NileLancers Local',
+                        isLocal: true,
+                        link: '#',
+                        image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'
+                    }));
+                    // Success! Combine them.
+                    allJobs = [...dbJobs, ...staticJobs];
                 }
             } catch (e) {
-                console.log("Supabase fetch failed, using static only");
+                console.log("Using fallback data due to:", e.message);
+                // No changes needed, allJobs already contains staticJobs
             }
 
             // Filter
@@ -147,7 +158,7 @@
 
     <script type="text/babel">
         // --- TRANSLATIONS (FIXED NAME) ---
-        const translations = {
+        const jobTranslations = {
             en: { nav: { home: "Home", services: "Services", saved: "Saved", why_us: "Why Us", how: "How It Works", post: "Post Job" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." }, search_title: "Browse Services", search_sub: "Find opportunities from Upwork, Fiverr, and Local Clients.", search_btn: "Search", details_apply: "Apply Now", details_view: "View on" },
             ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", why_us: "لماذا نحن", how: "كيف يعمل", post: "أضف وظيفة" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }, search_title: "تصفح الخدمات", search_sub: "اعثر على فرص من Upwork و Fiverr وعملاء محليين.", search_btn: "بحث", details_apply: "قدم الآن", details_view: "عرض على" }
         };
@@ -273,7 +284,7 @@
             const toggleLang = () => { const newLang = lang === 'en' ? 'ar' : 'en'; setLang(newLang); localStorage.setItem('nile_lang', newLang); document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; };
             const showToast = (message) => { setToast({ show: true, message }); setTimeout(() => setToast({ show: false, message: '' }), 3000); };
             const toggleSave = (job) => { let newSaved = savedJobs.find(j => j.id === job.id) ? savedJobs.filter(j => j.id !== job.id) : [...savedJobs, job]; setSavedJobs(newSaved); localStorage.setItem('savedJobs', JSON.stringify(newSaved)); showToast(savedJobs.find(j => j.id === job.id) ? 'Job Removed' : 'Job Saved'); };
-            const t = translations[lang];
+            const t = jobTranslations[lang];
             
             const loadJobs = async (query = '') => { 
                 setIsLoading(true);
