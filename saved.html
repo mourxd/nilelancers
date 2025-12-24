@@ -21,6 +21,9 @@
         header { background: rgba(0, 15, 40, 0.95); backdrop-filter: blur(10px); padding: 15px 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary-blue); }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         .header-content { display: flex; justify-content: space-between; align-items: center; }
+        
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; transition: var(--transition); }
+        .logo:hover { transform: translateY(-2px); }
         .logo h1 { font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
         
         .desktop-nav ul { display: flex; align-items: center; gap: 30px; margin: 0; padding: 0; }
@@ -66,7 +69,10 @@
             return (
                 <header>
                     <div className="container header-content">
-                        <div className="logo flex items-center gap-3"><i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i><h1>NileLancers</h1></div>
+                        <a href="index.html" className="logo">
+                            <i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i>
+                            <h1>NileLancers</h1>
+                        </a>
                         <nav className="hidden md:block desktop-nav">
                             <ul>
                                 <li><a href="index.html">{t.nav.home}</a></li>
