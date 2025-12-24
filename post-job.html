@@ -4,31 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Job - NileLancers</title>
-    
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-
     <style>
-        :root { --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; --text-light: #ffffff; --text-gray: #f0f0f0; --transition: all 0.4s ease; }
-        body { margin: 0; font-family: 'Montserrat', sans-serif; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
+        /* Shared Styles */
+        :root { --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; --transition: all 0.4s ease; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
         body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
-
+        /* Header */
         header { background: rgba(0, 15, 40, 0.95); backdrop-filter: blur(10px); padding: 15px 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary-blue); }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        
         .logo h1 { font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
-        .nav-link { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 16px; margin: 0 15px; transition: var(--transition); position: relative; padding-bottom: 5px; }
-        .nav-link:hover, .nav-link.active { color: var(--secondary-blue); }
-        .nav-link.active:after { content: ''; position: absolute; width: 100%; height: 2px; background: var(--accent-gold); bottom: 0; left: 0; }
-        
-        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; transition: var(--transition); border: none; cursor: pointer; }
-        .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; font-size: 14px; margin: 0 15px; }
-
+        .desktop-nav ul { display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; padding: 0; }
+        .desktop-nav a { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 15px; transition: var(--transition); position: relative; padding-bottom: 5px; }
+        .desktop-nav a:hover { color: var(--secondary-blue); }
+        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; border: none; cursor: pointer; transition: var(--transition); }
+        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 116, 217, 0.4); color: var(--navy-blue); }
+        .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; font-size: 14px; transition: var(--transition); }
+        .lang-btn:hover { background: var(--accent-gold); color: var(--dark-navy); }
+        .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: var(--dark-navy); border-bottom: 2px solid var(--accent-gold); padding: 20px; display: flex; flex-direction: column; gap: 15px; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Footer */
         footer { background: rgba(0, 15, 40, 0.95); color: var(--text-light); padding: 80px 0 30px; border-top: 2px solid var(--primary-blue); margin-top: auto; }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 50px; }
         .footer-logo { font-size: 34px; font-weight: 800; margin-bottom: 25px; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -39,7 +40,7 @@
         .footer-col a:hover { color: var(--secondary-blue); padding-left: 5px; }
         .social-icons a { width: 45px; height: 45px; background: rgba(255,255,255,0.1); display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; transition: 0.3s; color: white; }
         .social-icons a:hover { background: var(--primary-blue); transform: translateY(-5px); }
-
+        /* Page Specific */
         .form-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 40px; backdrop-filter: blur(10px); max-width: 700px; margin: 0 auto; }
         label { display: block; color: var(--accent-gold); margin-bottom: 8px; font-weight: 600; }
         .input-field { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; outline: none; transition: 0.3s; }
@@ -48,39 +49,41 @@
 </head>
 <body>
     <div id="root"></div>
-
     <script type="text/babel">
         const translations = {
-            en: { nav: { home: "Home", services: "Services", saved: "Saved", post: "Post Job" }, footer: { quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers. All rights reserved.", desc: "The premier freelance platform connecting global talent with innovative businesses." }, title: "Post a New Job", lbl_title: "Job Title", ph_title: "e.g. Logo Designer", lbl_pay: "Payment Method", lbl_loc: "Location", btn: "Post Job Now", success: "Job Posted!", view: "View Jobs" },
-            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", post: "أضف وظيفة" }, footer: { quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© ٢٠٢٥ نايل لانسرز. جميع الحقوق محفوظة.", desc: "المنصة الرائدة لربط المواهب العالمية بالأعمال المبتكرة." }, title: "نشر وظيفة جديدة", lbl_title: "عنوان الوظيفة", ph_title: "مثال: مصمم شعار", lbl_pay: "طريقة الدفع", lbl_loc: "الموقع", btn: "انشر الآن", success: "تم النشر!", view: "تصفح الوظائف" }
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", why_us: "Why Us", how: "How It Works", post: "Post Job" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." }, title: "Post a New Job", lbl_title: "Job Title", ph_title: "e.g. Logo Designer", lbl_pay: "Payment Method", lbl_loc: "Location", btn: "Post Job Now", success: "Job Posted!", view: "View Jobs" },
+            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", why_us: "لماذا نحن", how: "كيف يعمل", post: "أضف وظيفة" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }, title: "نشر وظيفة جديدة", lbl_title: "عنوان الوظيفة", ph_title: "مثال: مصمم شعار", lbl_pay: "طريقة الدفع", lbl_loc: "الموقع", btn: "انشر الآن", success: "تم النشر!", view: "تصفح الوظائف" }
         };
 
         function Header({ lang, t, toggleLang }) {
             const [isOpen, setIsOpen] = React.useState(false);
             return (
                 <header>
-                    <div className="container flex justify-between items-center">
-                        <div className="logo flex items-center gap-3">
-                            <i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i>
-                            <h1>NileLancers</h1>
-                        </div>
-                        <nav className="hidden md:flex items-center">
-                            <a href="index.html" className="nav-link">{t.nav.home}</a>
-                            <a href="jobs.html" className="nav-link">{t.nav.services}</a>
-                            <a href="saved.html" className="nav-link">{t.nav.saved}</a>
-                            <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'العربية' : 'EN'}</button>
-                            <a href="post-job.html" className="cta-button">{t.nav.post}</a>
+                    <div className="container header-content">
+                        <div className="logo flex items-center gap-3"><i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i><h1>NileLancers</h1></div>
+                        <nav className="hidden md:block desktop-nav">
+                            <ul>
+                                <li><a href="index.html">{t.nav.home}</a></li>
+                                <li><a href="jobs.html">{t.nav.services}</a></li>
+                                <li><a href="saved.html">{t.nav.saved}</a></li>
+                                <li><a href="index.html#features">{t.nav.why_us}</a></li>
+                                <li><a href="index.html#how">{t.nav.how}</a></li>
+                                <li><button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'العربية' : 'EN'}</button></li>
+                                <li><a href="post-job.html" className="cta-button">{t.nav.post}</a></li>
+                            </ul>
                         </nav>
-                         <div className="md:hidden flex items-center gap-4">
-                             <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
-                             <button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl"><i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i></button>
+                        <div className="md:hidden flex items-center gap-4">
+                            <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
+                            <button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl"><i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i></button>
                         </div>
                     </div>
-                     {isOpen && (
-                        <div className="md:hidden bg-[var(--navy-blue)] border-t border-[var(--primary-blue)] p-4 flex flex-col gap-4 absolute w-full left-0 top-[100%]">
+                    {isOpen && (
+                        <div className="mobile-menu md:hidden">
                             <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
                             <a href="jobs.html" className="text-white font-bold">{t.nav.services}</a>
                             <a href="saved.html" className="text-white font-bold">{t.nav.saved}</a>
+                            <a href="index.html#features" className="text-white">{t.nav.why_us}</a>
+                            <a href="index.html#how" className="text-white">{t.nav.how}</a>
                             <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
                         </div>
                     )}
@@ -95,25 +98,15 @@
                         <div className="footer-col">
                             <div className="footer-logo">NileLancers</div>
                             <p className="text-sm text-gray-400 mb-4">{t.footer.desc}</p>
-                            <div className="social-icons">
-                                <a href="#"><i className="fab fa-facebook-f"></i></a>
-                                <a href="#"><i className="fab fa-twitter"></i></a>
-                                <a href="#"><i className="fab fa-linkedin-in"></i></a>
-                            </div>
+                            <div className="social-icons"><a href="#"><i className="fab fa-facebook-f"></i></a><a href="#"><i className="fab fa-twitter"></i></a><a href="#"><i className="fab fa-linkedin-in"></i></a></div>
                         </div>
                         <div className="footer-col">
                             <h4>{t.footer.quick}</h4>
-                            <ul>
-                                <li><a href="index.html">{t.nav.home}</a></li>
-                                <li><a href="jobs.html">{t.nav.services}</a></li>
-                            </ul>
+                            <ul><li><a href="index.html">{t.nav.home}</a></li><li><a href="jobs.html">{t.nav.services}</a></li><li><a href="index.html#how">{t.nav.how}</a></li></ul>
                         </div>
                         <div className="footer-col">
                             <h4>{t.footer.contact}</h4>
-                            <ul>
-                                <li><i className="fas fa-envelope mr-2 text-[var(--secondary-blue)]"></i> info@nilelancers.com</li>
-                                <li><i className="fas fa-map-marker-alt mr-2 text-[var(--secondary-blue)]"></i> Cairo, Egypt</li>
-                            </ul>
+                            <ul><li><i className="fas fa-envelope mr-2"></i> info@nilelancers.com</li><li><i className="fas fa-map-marker-alt mr-2"></i> Cairo, Egypt</li></ul>
                         </div>
                     </div>
                     <div className="text-center mt-12 pt-5 border-t border-gray-700 text-sm text-gray-500">{t.footer.rights}</div>
@@ -124,23 +117,9 @@
         function PostJobApp() {
             const [step, setStep] = React.useState(1);
             const [lang, setLang] = React.useState('en');
-
-            React.useEffect(() => {
-                setLang(localStorage.getItem('nile_lang') || 'en');
-                document.dir = localStorage.getItem('nile_lang') === 'ar' ? 'rtl' : 'ltr';
-            }, []);
-
-            const toggleLang = () => {
-                const newLang = lang === 'en' ? 'ar' : 'en';
-                setLang(newLang); localStorage.setItem('nile_lang', newLang);
-                document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
-            };
-
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                setTimeout(() => setStep(2), 1000);
-            };
-
+            React.useEffect(() => { setLang(localStorage.getItem('nile_lang') || 'en'); document.dir = localStorage.getItem('nile_lang') === 'ar' ? 'rtl' : 'ltr'; }, []);
+            const toggleLang = () => { const newLang = lang === 'en' ? 'ar' : 'en'; setLang(newLang); localStorage.setItem('nile_lang', newLang); document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; };
+            const handleSubmit = (e) => { e.preventDefault(); setTimeout(() => setStep(2), 1000); };
             const t = translations[lang];
 
             if (step === 2) {
@@ -165,26 +144,10 @@
                     <div className="container py-12 flex-grow">
                         <h1 className="text-3xl font-bold text-white text-center mb-10">{t.title}</h1>
                         <form onSubmit={handleSubmit} className="form-card space-y-6">
-                            <div>
-                                <label>{t.lbl_title}</label>
-                                <input type="text" className="input-field" placeholder={t.ph_title} required />
-                            </div>
+                            <div><label>{t.lbl_title}</label><input type="text" className="input-field" placeholder={t.ph_title} required /></div>
                             <div className="grid md:grid-cols-2 gap-6">
-                                <div>
-                                    <label>{t.lbl_pay}</label>
-                                    <select className="input-field">
-                                        <option>Vodafone Cash</option>
-                                        <option>Instapay</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label>{t.lbl_loc}</label>
-                                    <select className="input-field">
-                                        <option>Remote (Egypt)</option>
-                                        <option>Cairo</option>
-                                        <option>Alexandria</option>
-                                    </select>
-                                </div>
+                                <div><label>{t.lbl_pay}</label><select className="input-field"><option>Vodafone Cash</option><option>Instapay</option></select></div>
+                                <div><label>{t.lbl_loc}</label><select className="input-field"><option>Remote (Egypt)</option><option>Cairo</option><option>Alexandria</option></select></div>
                             </div>
                             <button type="submit" className="cta-button mt-6 w-full">{t.btn}</button>
                         </form>
