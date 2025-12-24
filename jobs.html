@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Services - NileLancers</title>
+    
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* SHARED STYLES */
         :root { --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; --transition: all 0.4s ease; }
@@ -74,38 +77,21 @@
     <script>
         const JobsAPI = {
           getMockJobs(query = '') {
-            const allJobs = [
-              { 
-                id: 'l1', title: 'Wedding Photographer Needed', company: 'Ahmed Photography', budget: 'EGP 8,000', type: 'On-Site', 
-                description: 'We are looking for a professional photographer for a wedding in Maadi next Friday.', 
-                location: 'Cairo, Maadi', skills: ['Photography', 'Events'], source: 'NileLancers Local', isLocal: true, link: '#',
-                image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80'
-              },
-              { 
-                id: 'l2', title: 'React Native Dev for Delivery App', company: 'Talabat Clone Startup', budget: 'EGP 25,000', type: 'Project', 
-                description: 'Build a local food delivery app tracking drivers in real-time.', 
-                location: 'Alexandria', skills: ['React Native', 'Maps'], source: 'NileLancers Local', isLocal: true, link: '#',
-                image: 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=800&q=80' 
-              },
-              { 
-                id: 'g1', title: 'Build E-commerce Website', company: 'Global Retail Inc.', budget: '$2,500', type: 'Fixed Price', 
-                description: 'Looking for a full-stack developer to build a custom e-commerce platform.', 
-                location: 'Remote (Global)', skills: ['React', 'Stripe'], source: 'Upwork', isLocal: false, link: 'https://www.upwork.com',
-                image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=800&q=80'
-              },
-              { 
-                id: 'g2', title: 'Logo Design for AI Startup', company: 'StartupX', budget: '$150', type: 'Fixed Price', 
-                description: 'Modern, minimalist logo design needed.', 
-                location: 'Remote', skills: ['Logo Design'], source: 'Fiverr', isLocal: false, link: 'https://www.fiverr.com',
-                image: 'https://images.unsplash.com/photo-1626785774573-4b7993125120?auto=format&fit=crop&w=800&q=80'
-              },
-              { 
-                id: 'g3', title: 'Python Data Scraping', company: 'DataCorp', budget: '$500', type: 'Fixed Price', 
-                description: 'Scrape real estate data from 3 websites.', 
-                location: 'Remote', skills: ['Python', 'Scraping'], source: 'Freelancer', isLocal: false, link: 'https://www.freelancer.com',
-                image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80' 
-              }
+            // 1. Static Jobs
+            const staticJobs = [
+              { id: 'l1', title: 'Wedding Photographer Needed', company: 'Ahmed Photography', budget: 'EGP 8,000', type: 'On-Site', description: 'We are looking for a professional photographer for a wedding in Maadi next Friday.', location: 'Cairo, Maadi', skills: ['Photography', 'Events'], source: 'NileLancers Local', isLocal: true, link: '#', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80' },
+              { id: 'l2', title: 'React Native Dev for Delivery App', company: 'Talabat Clone Startup', budget: 'EGP 25,000', type: 'Project', description: 'Build a local food delivery app tracking drivers in real-time.', location: 'Alexandria', skills: ['React Native', 'Maps'], source: 'NileLancers Local', isLocal: true, link: '#', image: 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=800&q=80' },
+              { id: 'g1', title: 'Build E-commerce Website', company: 'Global Retail Inc.', budget: '$2,500', type: 'Fixed Price', description: 'Looking for a full-stack developer to build a custom e-commerce platform.', location: 'Remote (Global)', skills: ['React', 'Stripe'], source: 'Upwork', isLocal: false, link: 'https://www.upwork.com', image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=800&q=80' },
+              { id: 'g2', title: 'Logo Design for AI Startup', company: 'StartupX', budget: '$150', type: 'Fixed Price', description: 'Modern, minimalist logo design needed.', location: 'Remote', skills: ['Logo Design'], source: 'Fiverr', isLocal: false, link: 'https://www.fiverr.com', image: 'https://images.unsplash.com/photo-1626785774573-4b7993125120?auto=format&fit=crop&w=800&q=80' },
+              { id: 'g3', title: 'Python Data Scraping', company: 'DataCorp', budget: '$500', type: 'Fixed Price', description: 'Scrape real estate data from 3 websites.', location: 'Remote', skills: ['Python', 'Scraping'], source: 'Freelancer', isLocal: false, link: 'https://www.freelancer.com', image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80' }
             ];
+
+            // 2. Fetch Posted Jobs from LocalStorage
+            const postedJobs = JSON.parse(localStorage.getItem('user_posted_jobs') || '[]');
+            
+            // 3. Combine
+            const allJobs = [...postedJobs, ...staticJobs];
+
             if (!query) return allJobs;
             return allJobs.filter(job => job.title.toLowerCase().includes(query.toLowerCase()));
           },
