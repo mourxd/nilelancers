@@ -9,7 +9,6 @@
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,27 +20,21 @@
         body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
         body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
         
-        /* HEADER */
         header { background: rgba(0, 15, 40, 0.95); backdrop-filter: blur(10px); padding: 15px 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary-blue); }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         .header-content { display: flex; justify-content: space-between; align-items: center; }
         .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; transition: var(--transition); }
         .logo:hover { transform: translateY(-2px); }
         .logo h1 { font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
-        
-        /* NAV */
         .desktop-nav ul { display: flex; align-items: center; gap: 30px; margin: 0; padding: 0; }
         .desktop-nav li { display: flex; align-items: center; }
         .desktop-nav a { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 15px; transition: var(--transition); position: relative; padding-bottom: 5px; }
         .desktop-nav a:hover { color: var(--secondary-blue); }
-        
-        /* BUTTONS */
         .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; border: none; cursor: pointer; transition: var(--transition); white-space: nowrap; }
         .cta-button:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 116, 217, 0.4); color: var(--navy-blue); }
         .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 8px 20px; border-radius: 30px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; font-size: 14px; transition: var(--transition); white-space: nowrap; }
         .lang-btn:hover { background: var(--accent-gold); color: var(--dark-navy); }
-
-        /* FOOTER */
+        
         footer { background: rgba(0, 15, 40, 0.95); color: var(--text-light); padding: 80px 0 30px; border-top: 2px solid var(--primary-blue); margin-top: auto; }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 50px; }
         .footer-logo { font-size: 34px; font-weight: 800; margin-bottom: 25px; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -53,7 +46,6 @@
         .social-icons a { width: 45px; height: 45px; background: rgba(255,255,255,0.1); display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; transition: 0.3s; color: white; }
         .social-icons a:hover { background: var(--primary-blue); transform: translateY(-5px); }
 
-        /* JOBS STYLES */
         .search-wrapper { margin-bottom: 40px; text-align: center; }
         .search-container { background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 50px; border: 1px solid rgba(127, 219, 255, 0.1); backdrop-filter: blur(10px); display: inline-flex; gap: 10px; width: 100%; max-width: 600px; align-items: center; }
         .search-input { flex: 1; padding: 12px 20px; border-radius: 40px; border: none; background: transparent; color: white; outline: none; font-size: 16px; }
@@ -72,12 +64,12 @@
         .badge-global { background: rgba(255, 255, 255, 0.1); color: #ccc; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
         .price-tag { font-size: 20px; font-weight: 800; color: var(--accent-gold); }
 
-        /* MODAL & TOAST */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: var(--dark-navy); border: 1px solid var(--primary-blue); border-radius: 20px; width: 100%; max-width: 500px; padding: 30px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         .close-modal { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 24px; cursor: pointer; }
         .detail-meta-box { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 20px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; }
         .meta-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .meta-item:last-child { margin-bottom: 0; }
         .meta-icon { width: 40px; height: 40px; background: rgba(0, 116, 217, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--secondary-blue); font-size: 18px; }
         
         .toast { position: fixed; bottom: 30px; right: 30px; background: var(--dark-navy); border-left: 5px solid var(--accent-green); color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(100px); opacity: 0; transition: all 0.4s; z-index: 3000; display: flex; align-items: center; gap: 15px; }
@@ -91,7 +83,6 @@
 
     <script>
         // --- 1. SAFE SUPABASE INITIALIZATION ---
-        // Even if this fails, the app will not crash.
         const SUPABASE_URL = 'https://hnzxjhwpqmdkosgalseq.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhuenhqaHdwcW1ka29zZ2Frc2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NTU5OTgsImV4cCI6MjA4MjEzMTk5OH0.h-FylEeaWzNQpK_hcvcm9-GcksRbKW5xbnzimzsiP7Y';
         
@@ -124,18 +115,6 @@
                 description: 'Looking for a full-stack developer.', 
                 location: 'Remote (Global)', category: 'Development', skills: ['React', 'Stripe'], source: 'Upwork', isLocal: false, link: 'https://www.upwork.com',
                 image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=800&q=80'
-              },
-              { 
-                id: 'g2', title: 'Logo Design for AI Startup', company: 'StartupX', budget: '$150', type: 'Fixed Price', 
-                description: 'Modern logo design needed.', 
-                location: 'Remote', category: 'Design', skills: ['Logo'], source: 'Fiverr', isLocal: false, link: 'https://www.fiverr.com',
-                image: 'https://images.unsplash.com/photo-1626785774573-4b7993125120?auto=format&fit=crop&w=800&q=80'
-              },
-              { 
-                id: 'g3', title: 'Python Data Scraping', company: 'DataCorp', budget: '$500', type: 'Fixed Price', 
-                description: 'Scrape real estate data.', 
-                location: 'Remote', category: 'Development', skills: ['Python'], source: 'Freelancer', isLocal: false, link: 'https://www.freelancer.com',
-                image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80' 
               }
             ];
 
@@ -254,7 +233,6 @@
             );
         }
 
-        // --- MAIN APP ---
         function JobsApp() {
             const [jobs, setJobs] = React.useState([]);
             const [filteredJobs, setFilteredJobs] = React.useState([]);
@@ -314,14 +292,11 @@
                             <div className="job-card" style={{cursor: 'default', background: 'rgba(0,0,0,0.6)'}}>
                                 <h1 className="text-3xl font-bold text-white mb-6">{selectedJob.title}</h1>
                                 <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="h-80 rounded-xl overflow-hidden border border-white/10 shadow-lg">
-                                        <img src={selectedJob.image} className="w-full h-full object-cover" />
-                                    </div>
+                                    <div className="h-80 rounded-xl overflow-hidden border border-white/10 shadow-lg"><img src={selectedJob.image} className="w-full h-full object-cover" /></div>
                                     <div>
                                         <div className="detail-meta-box">
-                                            <div className="meta-item"><div className="meta-icon"><i className="fas fa-building"></i></div><div><p className="text-xs text-gray-400 uppercase">Client</p><p className="font-bold text-white">{selectedJob.company}</p></div></div>
-                                            <div className="meta-item"><div className="meta-icon"><i className="fas fa-map-marker-alt"></i></div><div><p className="text-xs text-gray-400 uppercase">Location</p><p className="font-bold text-white">{selectedJob.location}</p></div></div>
-                                            <div className="meta-item"><div className="meta-icon"><i className="fas fa-briefcase"></i></div><div><p className="text-xs text-gray-400 uppercase">Work Type</p><p className="font-bold text-white">{selectedJob.type}</p></div></div>
+                                            <div className="meta-item"><div className="meta-icon"><i className="fas fa-building"></i></div><div><p className="text-xs text-gray-400">Client</p><p className="font-bold text-white">{selectedJob.company}</p></div></div>
+                                            <div className="meta-item"><div className="meta-icon"><i className="fas fa-map-marker-alt"></i></div><div><p className="text-xs text-gray-400">Location</p><p className="font-bold text-white">{selectedJob.location}</p></div></div>
                                         </div>
                                         <p className="price-tag text-4xl mb-6">{selectedJob.budget}</p>
                                         <div className="flex gap-4">
@@ -344,14 +319,7 @@
                 <div className="min-h-screen flex flex-col">
                     <Header lang={lang} t={t} toggleLang={toggleLang} />
                     <div className="container py-12 flex-grow">
-                        <div className="mb-10 text-center">
-                            <h1 className="text-4xl font-bold text-white mb-4">{t.search_title}</h1>
-                            <p className="text-gray-400 mb-8">{t.search_sub}</p>
-                            <div className="search-wrapper">
-                                <div className="search-container mx-auto"><input type="text" placeholder="Search..." className="search-input" onChange={handleSearch} /><button className="search-btn"><i className="fas fa-search"></i></button></div>
-                                <div className="filters-container">{categories.map(cat => (<button key={cat} className={`filter-pill ${activeCategory === cat ? 'active' : ''}`} onClick={() => handleCategoryClick(cat)}>{cat}</button>))}</div>
-                            </div>
-                        </div>
+                        <div className="mb-10 text-center"><h1 className="text-4xl font-bold text-white mb-4">{t.search_title}</h1><p className="text-gray-400 mb-8">{t.search_sub}</p><div className="search-wrapper"><div className="search-container mx-auto"><input type="text" placeholder="Search..." className="search-input" onChange={handleSearch} /><button className="search-btn"><i className="fas fa-search"></i></button></div><div className="filters-container">{categories.map(cat => (<button key={cat} className={`filter-pill ${activeCategory === cat ? 'active' : ''}`} onClick={() => handleCategoryClick(cat)}>{cat}</button>))}</div></div></div>
                         <div>{filteredJobs.map(job => <JobCard key={job.id} job={job} onClick={setSelectedJob} onToggleSave={toggleSave} isSaved={savedJobs.some(j => j.id === job.id)} t={t} />)}</div>
                     </div>
                     <Footer t={t} />
