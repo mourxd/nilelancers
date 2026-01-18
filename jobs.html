@@ -12,7 +12,6 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="utils/jobsAPI.js"></script>
     <script type="text/babel" src="components/Header.js"></script>
     <script type="text/babel" src="components/Footer.js"></script>
 
@@ -115,9 +114,19 @@
 <body>
     <div id="root"></div>
     <script type="text/babel">
+        const JobsAPI = {
+            fetchAllJobs: async (query = '') => {
+                const jobs = [
+                    { id: 'j1', title: 'Need a Full-Stack Web Developer', company: 'Innovatech Solutions', source: 'Upwork', budget: '$5k-$8k', type: 'Full-time', location: 'Remote (Global)', category: 'Development', image: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=600&q=60', description: 'Detailed job description here.', isLocal: false, link: '#' },
+                    { id: 'j2', title: 'Creative Graphic Designer for Branding', company: 'Creative Minds', source: 'Fiverr', budget: '$1.2k', type: 'Project', location: 'Remote', category: 'Design', image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=60', description: 'Detailed job description here.', isLocal: false, link: '#' },
+                    { id: 'j3', title: 'Local Photographer for Event', company: 'Cairo Events', source: 'NileLancers', budget: 'EGP 8,000', type: 'Part-time', location: 'Cairo, Egypt', category: 'Photography', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=60', description: 'We need a skilled photographer for a corporate event next month. Must have experience with low-light photography.', isLocal: true, link: '#' }
+                ];
+                return jobs.filter(j => j.title.toLowerCase().includes(query.toLowerCase()));
+            }
+        };
         const jobTranslations = {
-            en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job", login: "Login", signup: "Sign Up", logout: "Logout" }, search_title: "Browse Services", search_sub: "Find opportunities from Upwork, Fiverr, and Local Clients.", search_btn: "Search", details_apply: "Apply Now", details_view: "View on", footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." } },
-            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة", login: "تسجيل دخول", signup: "إنشاء حساب", logout: "خروج" }, search_title: "تصفح الخدمات", search_sub: "اعثر على فرص من Upwork و Fiverr وعملاء محليين.", search_btn: "بحث", details_apply: "قدم الآن", details_view: "عرض على", footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." } }
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job", login: "Login", signup: "Sign Up", logout: "Logout", how: "How it Works" }, search_title: "Browse Services", search_sub: "Find opportunities from Upwork, Fiverr, and Local Clients.", search_btn: "Search", details_apply: "Apply Now", details_view: "View on", footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." } },
+            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة", login: "تسجيل دخول", signup: "إنشاء حساب", logout: "خروج", how: "How it Works" }, search_title: "تصفح الخدمات", search_sub: "اعثر على فرص من Upwork و Fiverr وعملاء محليين.", search_btn: "بحث", details_apply: "قدم الآن", details_view: "عرض على", footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." } }
         };
 
         /* --- TOAST COMPONENT --- */

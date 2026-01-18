@@ -11,13 +11,23 @@ function Header({ lang, t, toggleLang, activeLink }) {
         setTheme(saved);
         document.documentElement.setAttribute('data-theme', saved);
         
-        const u = JSON.parse(localStorage.getItem('nile_user'));
-        setUser(u);
+        try {
+            const u = JSON.parse(localStorage.getItem('nile_user'));
+            setUser(u);
+        } catch (e) {
+            console.error('Error parsing user from localStorage', e);
+            setUser(null);
+        }
         
         // Load Notifications
         const loadNotifs = () => {
-            const savedNotifs = JSON.parse(localStorage.getItem('nile_notifications') || '[]');
-            setNotifs(savedNotifs);
+            try {
+                const savedNotifs = JSON.parse(localStorage.getItem('nile_notifications') || '[]');
+                setNotifs(savedNotifs);
+            } catch (e) {
+                console.error('Error parsing notifications from localStorage', e);
+                setNotifs([]);
+            }
         };
         loadNotifs();
         const interval = setInterval(loadNotifs, 2000);
