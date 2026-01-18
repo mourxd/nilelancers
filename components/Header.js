@@ -1,14 +1,20 @@
-function Header({ lang, t, toggleLang }) {
-    const [theme, setTheme] = React.useState('dark');
+// --- SHARED HEADER ---
+function Header({ lang, t, toggleLang, activeLink }) {
     const [isOpen, setIsOpen] = React.useState(false);
+    const [theme, setTheme] = React.useState('dark');
     const [notifs, setNotifs] = React.useState([]);
     const [showNotifs, setShowNotifs] = React.useState(false);
+    const [user, setUser] = React.useState(null);
 
     React.useEffect(() => {
         const saved = localStorage.getItem('nile_theme') || 'dark';
         setTheme(saved);
         document.documentElement.setAttribute('data-theme', saved);
         
+        const u = JSON.parse(localStorage.getItem('nile_user'));
+        setUser(u);
+        
+        // Load Notifications
         const loadNotifs = () => {
             const savedNotifs = JSON.parse(localStorage.getItem('nile_notifications') || '[]');
             setNotifs(savedNotifs);
@@ -35,20 +41,37 @@ function Header({ lang, t, toggleLang }) {
         }
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('nile_user');
+        window.location.href = 'index.html';
+    };
+
+    const getLinkClass = (name) => activeLink === name ? "text-[var(--secondary-blue)] font-bold" : "text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold";
+    const getMobileLinkClass = (name) => activeLink === name ? "text-[var(--accent-gold)] font-bold" : "text-white font-bold";
+
     return (
         <header>
             <div className="container header-content">
-                <a href="index.html" className="logo"><i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i><h1>NileLancers</h1></a>
+                <a href="index.html" className="logo">
+                    <i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i>
+                    <h1>NileLancers</h1>
+                </a>
                 <nav className="hidden md:flex items-center gap-6">
-                    <a href="index.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.home}</a>
-                    <a href="jobs.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.services}</a>
-                    <a href="saved.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.saved}</a>
-                    <a href="client-dashboard.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.dashboard}</a>
-                    <a href="wallet.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.wallet}</a>
-                    <a href="profile.html" className="text-[var(--secondary-blue)] font-bold">{t.nav.profile}</a>
-                    <a href="settings.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.settings}</a>
+                    <a href="index.html" className={getLinkClass('home')}>{t.nav.home}</a>
+                    <a href="jobs.html" className={getLinkClass('services')}>{t.nav.services}</a>                            
+                    
+                    {user ? (
+                        <>
+                            <a href="saved.html" className={getLinkClass('saved')}>{t.nav.saved}</a>
+                            <a href="client-dashboard.html" className={getLinkClass('dashboard')}>{t.nav.dashboard}</a>
+                            <a href="wallet.html" className={getLinkClass('wallet')}>{t.nav.wallet}</a>
+                            <a href="profile.html" className={getLinkClass('profile')}>{t.nav.profile}</a>
+                            <a href="settings.html" className={getLinkClass('settings')}>{t.nav.settings}</a>
+                        </>
+                    ) : null}
                     
                     {/* Notification Bell */}
+                    {user && (
                     <div className="relative">
                         <button onClick={handleNotifClick} className="notif-btn">
                             <i className="fas fa-bell"></i>
@@ -64,12 +87,22 @@ function Header({ lang, t, toggleLang }) {
                                     </div>
                                 ))
                             }
-                         </div>
+                        </div>
                     </div>
+                    )}
 
                     <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'AR' : 'EN'}</button>
                     <button onClick={toggleTheme} className="lang-btn px-3"><i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i></button>
-                    <a href="post-job.html" className="cta-button">{t.nav.post}</a>
+                    
+                    {user ? (
+                        <button onClick={handleLogout} className="text-[var(--text-light)] hover:text-red-500 font-bold"><i className="fas fa-sign-out-alt"></i></button>
+                    ) : (
+                        <>
+                            <a href="login.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.login}</a>
+                            <a href="signup.html" className="cta-button">{t.nav.signup}</a>
+                        </>
+                    )}
+                    {user && <a href="post-job.html" className="cta-button">{t.nav.post}</a>}
                 </nav>
                 <div className="md:hidden flex items-center gap-4">
                     <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
@@ -78,14 +111,24 @@ function Header({ lang, t, toggleLang }) {
             </div>
             {isOpen && (
                 <div className="mobile-menu md:hidden">
-                    <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
-                    <a href="jobs.html" className="text-white font-bold">{t.nav.services}</a>
-                    <a href="saved.html" className="text-white font-bold">{t.nav.saved}</a>
-                    <a href="client-dashboard.html" className="text-white font-bold">{t.nav.dashboard}</a>
-                    <a href="wallet.html" className="text-white font-bold">{t.nav.wallet}</a>
-                    <a href="profile.html" className="text-[var(--accent-gold)] font-bold">{t.nav.profile}</a>
-                    <a href="settings.html" className="text-white font-bold">{t.nav.settings}</a>
-                    <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
+                    <a href="index.html" className={getMobileLinkClass('home')}>{t.nav.home}</a>
+                    <a href="jobs.html" className={getMobileLinkClass('services')}>{t.nav.services}</a>
+                    {user ? (
+                        <>
+                            <a href="saved.html" className={getMobileLinkClass('saved')}>{t.nav.saved}</a>
+                            <a href="client-dashboard.html" className={getMobileLinkClass('dashboard')}>{t.nav.dashboard}</a>
+                            <a href="wallet.html" className={getMobileLinkClass('wallet')}>{t.nav.wallet}</a>
+                            <a href="profile.html" className={getMobileLinkClass('profile')}>{t.nav.profile}</a>
+                            <a href="settings.html" className={getMobileLinkClass('settings')}>{t.nav.settings}</a>
+                            <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
+                            <button onClick={handleLogout} className="text-red-400 font-bold text-left">{t.nav.logout}</button>
+                        </>
+                    ) : (
+                        <>
+                            <a href="login.html" className="text-white font-bold">{t.nav.login}</a>
+                            <a href="signup.html" className="cta-button text-center">{t.nav.signup}</a>
+                        </>
+                    )}
                 </div>
             )}
         </header>

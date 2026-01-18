@@ -10,6 +10,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <script type="text/babel" src="components/Header.js"></script>
+    <script type="text/babel" src="components/Footer.js"></script>
     <style>
         :root { 
             --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; 
@@ -80,101 +82,6 @@
             en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job" }, title: "My Applications", th: { job: "Job Details", date: "Date Applied", status: "Status", action: "Action" }, status: { pending: "Pending", interview: "Interviewing", rejected: "Rejected", accepted: "Accepted" } },
             ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة" }, title: "طلبات التوظيف", th: { job: "تفاصيل الوظيفة", date: "تاريخ التقديم", status: "الحالة", action: "إجراء" }, status: { pending: "قيد الانتظار", interview: "مقابلة", rejected: "مرفوض", accepted: "مقبول" } }
         };
-
-        function Header({ lang, t, toggleLang }) {
-            const [theme, setTheme] = React.useState('dark');
-            const [isOpen, setIsOpen] = React.useState(false);
-            const [notifs, setNotifs] = React.useState([]);
-            const [showNotifs, setShowNotifs] = React.useState(false);
-
-            React.useEffect(() => {
-                const saved = localStorage.getItem('nile_theme') || 'dark';
-                setTheme(saved);
-                document.documentElement.setAttribute('data-theme', saved);
-                
-                // Load Notifications
-                const loadNotifs = () => {
-                    const savedNotifs = JSON.parse(localStorage.getItem('nile_notifications') || '[]');
-                    setNotifs(savedNotifs);
-                };
-                loadNotifs();
-                const interval = setInterval(loadNotifs, 2000);
-                return () => clearInterval(interval);
-            }, []);
-
-            const toggleTheme = () => {
-                const newTheme = theme === 'dark' ? 'light' : 'dark';
-                setTheme(newTheme);
-                localStorage.setItem('nile_theme', newTheme);
-                document.documentElement.setAttribute('data-theme', newTheme);
-            };
-
-            const unreadCount = notifs.filter(n => !n.read).length;
-            const handleNotifClick = () => {
-                setShowNotifs(!showNotifs);
-                if (!showNotifs && unreadCount > 0) {
-                    const updated = notifs.map(n => ({...n, read: true}));
-                    setNotifs(updated);
-                    localStorage.setItem('nile_notifications', JSON.stringify(updated));
-                }
-            };
-
-            return (
-                <header>
-                    <div className="container header-content">
-                        <a href="index.html" className="logo"><i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i><h1>NileLancers</h1></a>
-                        <nav className="hidden md:block desktop-nav">
-                            <a href="index.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.home}</a>
-                            <a href="jobs.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.services}</a>
-                            <a href="saved.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.saved}</a>
-                            <a href="client-dashboard.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.dashboard}</a>
-                            <a href="wallet.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.wallet}</a>
-                            <a href="profile.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.profile}</a>
-                            <a href="settings.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.settings}</a>
-                            
-                            {/* Notification Bell */}
-                            <div className="relative">
-                                <button onClick={handleNotifClick} className="notif-btn">
-                                    <i className="fas fa-bell"></i>
-                                    {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
-                                </button>
-                                <div className={`notif-dropdown ${showNotifs ? 'show' : ''}`} style={{marginTop: '15px'}}>
-                                    <h4 className="p-2 font-bold text-white border-b border-gray-700">Notifications</h4>
-                                    {notifs.length === 0 ? <div className="p-4 text-center text-gray-500">No notifications</div> : 
-                                        notifs.slice(0, 5).map(n => (
-                                            <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`}>
-                                                <p>{n.text}</p>
-                                                <span className="text-xs text-gray-500">{new Date(n.time).toLocaleTimeString()}</span>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            </div>
-
-                            <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'AR' : 'EN'}</button>
-                            <button onClick={toggleTheme} className="lang-btn px-3"><i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i></button>
-                            <a href="post-job.html" className="cta-button">{t.nav.post}</a>
-                        </nav>
-                        <div className="md:hidden flex items-center gap-4">
-                            <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
-                            <button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl"><i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i></button>
-                        </div>
-                    </div>
-                    {isOpen && (
-                        <div className="mobile-menu md:hidden">
-                            <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
-                            <a href="jobs.html" className="text-white font-bold">{t.nav.services}</a>
-                            <a href="saved.html" className="text-white font-bold">{t.nav.saved}</a>
-                            <a href="client-dashboard.html" className="text-white font-bold">{t.nav.dashboard}</a>
-                            <a href="wallet.html" className="text-white font-bold">{t.nav.wallet}</a>
-                            <a href="profile.html" className="text-white font-bold">{t.nav.profile}</a>
-                            <a href="settings.html" className="text-white font-bold">{t.nav.settings}</a>
-                            <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
-                        </div>
-                    )}
-                </header>
-            );
-        }
 
         function ChatModal({ isOpen, onClose, client }) {
             const [msg, setMsg] = React.useState('');
@@ -252,7 +159,7 @@
 
             return (
                 <div className="min-h-screen flex flex-col">
-                    <Header lang={lang} t={t} toggleLang={toggleLang} />
+                    <Header lang={lang} t={t} toggleLang={toggleLang} activeLink="dashboard" />
                     
                     <div className="container py-12 flex-grow">
                         <h1 className="text-3xl font-bold text-[var(--text-light)] mb-8">{t.title}</h1>
@@ -290,11 +197,7 @@
                     </div>
                     
                     {/* Footer Reuse */}
-                    <footer>
-                        <div className="container text-center text-gray-500 text-sm py-8 border-t border-[var(--primary-blue)] mt-auto">
-                            © 2025 NileLancers. All rights reserved.
-                        </div>
-                    </footer>
+                    <Footer t={t} />
 
                     <ChatModal isOpen={!!activeChat} onClose={() => setActiveChat(null)} client={activeChat} />
                 </div>

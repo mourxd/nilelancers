@@ -9,6 +9,8 @@
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/babel" src="components/Header.js"></script>
+    <script type="text/babel" src="components/Footer.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -72,100 +74,6 @@
             en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job" }, title: "Client Dashboard", stats: { active: "Active Jobs", apps: "Total Applications", hired: "Hired" }, jobs: "Your Posted Jobs", no_jobs: "You haven't posted any jobs yet.", view_apps: "View Applications", applicants: "Applicants for", rate_title: "Rate Freelancer", rate_desc: "How was your experience working with", submit_review: "Submit Review" },
             ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة" }, title: "لوحة تحكم العميل", stats: { active: "وظائف نشطة", apps: "إجمالي الطلبات", hired: "تم التوظيف" }, jobs: "وظائفك المنشورة", no_jobs: "لم تقم بنشر أي وظائف بعد.", view_apps: "عرض الطلبات", applicants: "المتقدمين لـ", rate_title: "تقييم المستقل", rate_desc: "كيف كانت تجربتك مع", submit_review: "إرسال التقييم" }
         };
-
-        function Header({ lang, t, toggleLang }) {
-            const [theme, setTheme] = React.useState('dark');
-            const [isOpen, setIsOpen] = React.useState(false);
-            const [notifs, setNotifs] = React.useState([]);
-            const [showNotifs, setShowNotifs] = React.useState(false);
-
-            React.useEffect(() => {
-                const savedTheme = localStorage.getItem('nile_theme') || 'dark';
-                setTheme(savedTheme);
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                
-                const loadNotifs = () => {
-                    const savedNotifs = JSON.parse(localStorage.getItem('nile_notifications') || '[]');
-                    setNotifs(savedNotifs);
-                };
-                loadNotifs();
-                const interval = setInterval(loadNotifs, 2000);
-                return () => clearInterval(interval);
-            }, []);
-
-            const toggleTheme = () => {
-                const newTheme = theme === 'dark' ? 'light' : 'dark';
-                setTheme(newTheme);
-                localStorage.setItem('nile_theme', newTheme);
-                document.documentElement.setAttribute('data-theme', newTheme);
-            };
-
-            const unreadCount = notifs.filter(n => !n.read).length;
-            const handleNotifClick = () => {
-                setShowNotifs(!showNotifs);
-                if (!showNotifs && unreadCount > 0) {
-                    const updated = notifs.map(n => ({...n, read: true}));
-                    setNotifs(updated);
-                    localStorage.setItem('nile_notifications', JSON.stringify(updated));
-                }
-            };
-
-            return (
-                <header>
-                    <div className="container header-content">
-                        <a href="index.html" className="logo"><i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i><h1>NileLancers</h1></a>
-                        <nav className="hidden md:flex items-center gap-6">
-                            <a href="index.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.home}</a>
-                            <a href="jobs.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.services}</a>
-                            <a href="saved.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.saved}</a>
-                            <a href="client-dashboard.html" className="text-[var(--secondary-blue)] font-bold">{t.nav.dashboard}</a>
-                            <a href="wallet.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.wallet}</a>
-                            <a href="profile.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.profile}</a>
-                            <a href="settings.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.settings}</a>
-                            
-                            {/* Notification Bell */}
-                            <div className="relative">
-                                <button onClick={handleNotifClick} className="notif-btn">
-                                    <i className="fas fa-bell"></i>
-                                    {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
-                                </button>
-                                <div className={`notif-dropdown ${showNotifs ? 'show' : ''}`} style={{marginTop: '15px'}}>
-                                    <h4 className="p-2 font-bold text-[var(--text-light)] border-b border-[var(--glass-border)]">Notifications</h4>
-                                    {notifs.length === 0 ? <div className="p-4 text-center text-gray-500">No notifications</div> : 
-                                        notifs.slice(0, 5).map(n => (
-                                            <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`}>
-                                                <p>{n.text}</p>
-                                                <span className="text-xs text-gray-500">{new Date(n.time).toLocaleTimeString()}</span>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            </div>
-
-                            <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'AR' : 'EN'}</button>
-                            <button onClick={toggleTheme} className="lang-btn px-3"><i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i></button>
-                            <a href="post-job.html" className="cta-button">{t.nav.post}</a>
-                        </nav>
-                        <div className="md:hidden flex items-center gap-4">
-                            <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
-                            <button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl"><i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i></button>
-                        </div>
-                    </div>
-                    {isOpen && (
-                        <div className="mobile-menu md:hidden">
-                            <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
-                            <a href="jobs.html" className="text-white font-bold">{t.nav.services}</a>
-                            <a href="saved.html" className="text-white font-bold">{t.nav.saved}</a>
-                            <a href="client-dashboard.html" className="text-[var(--accent-gold)] font-bold">{t.nav.dashboard}</a>
-                            <a href="wallet.html" className="text-white font-bold">{t.nav.wallet}</a>
-                            <a href="profile.html" className="text-white font-bold">{t.nav.profile}</a>
-                            <a href="settings.html" className="text-white font-bold">{t.nav.settings}</a>
-                            <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
-                        </div>
-                    )}
-                </header>
-            );
-        }
 
         function RatingModal({ isOpen, onClose, freelancerName, onSubmit, t }) {
             const [rating, setRating] = React.useState(0);
@@ -251,7 +159,7 @@
 
             return (
                 <div className="min-h-screen flex flex-col">
-                    <Header lang={lang} t={t} toggleLang={toggleLang} />
+                    <Header lang={lang} t={t} toggleLang={toggleLang} activeLink="dashboard" />
                     
                     <div className="container py-12 flex-grow">
                         <h1 className="text-3xl font-bold text-[var(--text-light)] mb-8">{t.title}</h1>
@@ -342,6 +250,7 @@
                         onSubmit={handleRatingSubmit}
                         t={t}
                     />
+                    <Footer t={t} />
                 </div>
             );
         }

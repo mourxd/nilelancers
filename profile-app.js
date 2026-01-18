@@ -38,7 +38,7 @@ function ProfileApp() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Header lang={lang} t={t} toggleLang={toggleLang} />
+            <Header lang={lang} t={t} toggleLang={toggleLang} activeLink="profile" />
             
             <div className="container py-12 flex-grow">
                 {/* Profile Header */}
@@ -121,7 +121,7 @@ function ProfileApp() {
                 </div>
             </div>
             
-            <Footer />
+            <Footer t={t} />
         </div>
     );
 }

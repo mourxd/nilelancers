@@ -2,7 +2,7 @@
 const Auth = {
   getUser() {
     try {
-      const user = localStorage.getItem('nl_user');
+      const user = localStorage.getItem('nile_user');
       return user ? JSON.parse(user) : null;
     } catch (e) {
       console.error('Error parsing user data', e);
@@ -20,12 +20,12 @@ const Auth = {
       skills: ['Photoshop', 'Illustrator', 'Figma', 'UI/UX'],
       avatar: 'https://ui-avatars.com/api/?name=Ahmed+Hassan&background=0D8ABC&color=fff'
     };
-    localStorage.setItem('nl_user', JSON.stringify(mockUser));
+    localStorage.setItem('nile_user', JSON.stringify(mockUser));
     return mockUser;
   },
 
   logout() {
-    localStorage.removeItem('nl_user');
+    localStorage.removeItem('nile_user');
     window.location.href = 'index.html';
   },
 
@@ -36,7 +36,7 @@ const Auth = {
     if (updates.name && updates.name !== user.name) {
         updated.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(updates.name)}&background=0D8ABC&color=fff`;
     }
-    localStorage.setItem('nl_user', JSON.stringify(updated));
+    localStorage.setItem('nile_user', JSON.stringify(updated));
     return updated;
   }
 };

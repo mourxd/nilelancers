@@ -12,6 +12,8 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <script type="text/babel" src="components/Header.js"></script>
+    <script type="text/babel" src="components/Footer.js"></script>
 
     <style>
         /* SHARED STYLES */
@@ -103,126 +105,6 @@
             en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." }, title: "Saved Services", empty: "No saved jobs yet", empty_btn: "Browse Jobs", details_apply: "Apply Now", details_view: "View on" },
             ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }, title: "الخدمات المحفوظة", empty: "لا توجد وظائف محفوظة", empty_btn: "تصفح الوظائف", details_apply: "قدم الآن", details_view: "عرض على" }
         };
-
-        function Header({ lang, t, toggleLang }) {
-            const [isOpen, setIsOpen] = React.useState(false);
-            const [theme, setTheme] = React.useState('dark');
-            const [notifs, setNotifs] = React.useState([]);
-            const [showNotifs, setShowNotifs] = React.useState(false);
-
-            React.useEffect(() => {
-                const saved = localStorage.getItem('nile_theme') || 'dark';
-                setTheme(saved);
-                document.documentElement.setAttribute('data-theme', saved);
-                
-                const loadNotifs = () => {
-                    const savedNotifs = JSON.parse(localStorage.getItem('nile_notifications') || '[]');
-                    setNotifs(savedNotifs);
-                };
-                loadNotifs();
-                const interval = setInterval(loadNotifs, 2000);
-                return () => clearInterval(interval);
-            }, []);
-
-            const toggleTheme = () => {
-                const newTheme = theme === 'dark' ? 'light' : 'dark';
-                setTheme(newTheme);
-                localStorage.setItem('nile_theme', newTheme);
-                document.documentElement.setAttribute('data-theme', newTheme);
-            };
-
-            const unreadCount = notifs.filter(n => !n.read).length;
-            const handleNotifClick = () => {
-                setShowNotifs(!showNotifs);
-                if (!showNotifs && unreadCount > 0) {
-                    const updated = notifs.map(n => ({...n, read: true}));
-                    setNotifs(updated);
-                    localStorage.setItem('nile_notifications', JSON.stringify(updated));
-                }
-            };
-
-            return (
-                <header>
-                    <div className="container header-content">
-                        <a href="index.html" className="logo">
-                            <i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i>
-                            <h1>NileLancers</h1>
-                        </a>
-                        <nav className="hidden md:flex items-center gap-6">
-                            <a href="index.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.home}</a>
-                            <a href="jobs.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.services}</a>
-                            <a href="saved.html" className="text-[var(--secondary-blue)] font-bold">{t.nav.saved}</a>
-                            <a href="client-dashboard.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.dashboard}</a>
-                            <a href="wallet.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.wallet}</a>
-                            <a href="profile.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.profile}</a>
-                            <a href="settings.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.settings}</a>
-                            
-                            {/* Notification Bell */}
-                            <div className="relative">
-                                <button onClick={handleNotifClick} className="notif-btn">
-                                    <i className="fas fa-bell"></i>
-                                    {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
-                                </button>
-                                <div className={`notif-dropdown ${showNotifs ? 'show' : ''}`} style={{marginTop: '15px'}}>
-                                    <h4 className="p-2 font-bold text-white border-b border-gray-700">Notifications</h4>
-                                    {notifs.length === 0 ? <div className="p-4 text-center text-gray-500">No notifications</div> : 
-                                        notifs.slice(0, 5).map(n => (
-                                            <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`}>
-                                                <p>{n.text}</p>
-                                                <span className="text-xs text-gray-500">{new Date(n.time).toLocaleTimeString()}</span>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            </div>
-
-                            <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'AR' : 'EN'}</button>
-                            <button onClick={toggleTheme} className="lang-btn px-3"><i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i></button>
-                            <a href="post-job.html" className="cta-button">{t.nav.post}</a>
-                        </nav>
-                        <div className="md:hidden flex items-center gap-4">
-                            <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
-                            <button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl"><i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i></button>
-                        </div>
-                    </div>
-                    {isOpen && (
-                        <div className="mobile-menu md:hidden">
-                            <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
-                            <a href="jobs.html" className="text-white font-bold">{t.nav.services}</a>
-                            <a href="saved.html" className="text-[var(--accent-gold)] font-bold">{t.nav.saved}</a>
-                            <a href="client-dashboard.html" className="text-white font-bold">{t.nav.dashboard}</a>
-                            <a href="wallet.html" className="text-white font-bold">{t.nav.wallet}</a>
-                            <a href="profile.html" className="text-white font-bold">{t.nav.profile}</a>
-                            <a href="settings.html" className="text-white font-bold">{t.nav.settings}</a>
-                            <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
-                        </div>
-                    )}
-                </header>
-            );
-        }
-
-        function Footer({ t }) {
-            return (
-                <footer>
-                    <div className="container footer-grid">
-                        <div className="footer-col">
-                            <div className="footer-logo">NileLancers</div>
-                            <p className="text-sm text-gray-400 mb-4">{t.footer.desc}</p>
-                            <div className="social-icons"><a href="#"><i className="fab fa-facebook-f"></i></a><a href="#"><i className="fab fa-twitter"></i></a><a href="#"><i className="fab fa-linkedin-in"></i></a></div>
-                        </div>
-                        <div className="footer-col">
-                            <h4>{t.footer.quick}</h4>
-                            <ul><li><a href="index.html">{t.nav.home}</a></li><li><a href="jobs.html">{t.nav.services}</a></li><li><a href="index.html#how">{t.nav.how}</a></li></ul>
-                        </div>
-                        <div className="footer-col">
-                            <h4>{t.footer.contact}</h4>
-                            <ul><li><i className="fas fa-envelope mr-2"></i> info@nilelancers.com</li><li><i className="fas fa-map-marker-alt mr-2"></i> Cairo, Egypt</li></ul>
-                        </div>
-                    </div>
-                    <div className="text-center mt-12 pt-5 border-t border-gray-700 text-sm text-gray-500">{t.footer.rights}</div>
-                </footer>
-            );
-        }
 
         /* --- TOAST COMPONENT --- */
         function Toast({ show, message }) {
@@ -320,7 +202,7 @@
             if (selectedJob) {
                 return (
                     <div className="min-h-screen flex flex-col">
-                        <Header lang={lang} t={t} toggleLang={toggleLang} />
+                        <Header lang={lang} t={t} toggleLang={toggleLang} activeLink="saved" />
                         <div className="container py-12 flex-grow">
                             <button onClick={() => setSelectedJob(null)} className="text-gray-400 hover:text-white mb-6 flex items-center gap-2"><i className="fas fa-arrow-left"></i> Back</button>
                             <div className="job-card" style={{cursor: 'default', background: 'var(--glass-bg)'}}>
@@ -370,7 +252,7 @@
 
             return (
                 <div className="min-h-screen flex flex-col">
-                    <Header lang={lang} t={t} toggleLang={toggleLang} />
+                    <Header lang={lang} t={t} toggleLang={toggleLang} activeLink="saved" />
                     <div className="container py-12 flex-grow">
                         <h1 className="text-3xl font-bold text-[var(--text-light)] mb-8 border-b border-gray-700 pb-4">{t.title}</h1>
                         {savedJobs.length === 0 ? (
