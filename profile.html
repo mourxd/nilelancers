@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelancer Profile - NileLancers</title>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; 
+            --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; 
+            --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; 
+            --glass-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.4s ease; 
+        }
+        [data-theme="light"] {
+            --navy-blue: #e2e8f0; --dark-navy: #f8fafc; --light-navy: #ffffff;
+            --text-light: #1a202c; --text-gray: #4a5568;
+            --primary-blue: #0056b3; --secondary-blue: #0074D9;
+            --glass-bg: rgba(255, 255, 255, 0.8); --glass-border: rgba(0, 0, 0, 0.1);
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
+        
+        /* HEADER & FOOTER (Shared) */
+        header { background: rgba(0, 15, 40, 0.95); backdrop-filter: blur(10px); padding: 15px 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary-blue); }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; transition: var(--transition); }
+        .logo h1 { font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
+        .desktop-nav ul { display: flex; align-items: center; gap: 30px; margin: 0; padding: 0; }
+        .desktop-nav a { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 15px; transition: var(--transition); }
+        .desktop-nav a:hover { color: var(--secondary-blue); }
+        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; border: none; cursor: pointer; transition: var(--transition); }
+        .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 8px 20px; border-radius: 30px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; }
+        footer { background: rgba(0, 15, 40, 0.95); color: var(--text-light); padding: 80px 0 30px; border-top: 2px solid var(--primary-blue); margin-top: auto; }
+        
+        /* PROFILE SPECIFIC */
+        .profile-header { background: var(--glass-bg); border-radius: 20px; padding: 40px; border: 1px solid var(--glass-border); backdrop-filter: blur(10px); display: flex; flex-wrap: wrap; gap: 30px; align-items: center; margin-bottom: 40px; }
+        .avatar-container { position: relative; width: 150px; height: 150px; }
+        .avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid var(--accent-gold); }
+        .online-status { position: absolute; bottom: 10px; right: 10px; width: 20px; height: 20px; background: var(--accent-green); border-radius: 50%; border: 3px solid var(--dark-navy); }
+        .stat-box { background: rgba(0,0,0,0.3); padding: 15px 25px; border-radius: 10px; text-align: center; border: 1px solid var(--glass-border); }
+        .skill-tag { background: rgba(127, 219, 255, 0.1); color: var(--secondary-blue); padding: 8px 15px; border-radius: 20px; font-size: 14px; margin-right: 10px; margin-bottom: 10px; display: inline-block; border: 1px solid var(--glass-border); }
+        
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .portfolio-item { position: relative; border-radius: 15px; overflow: hidden; height: 200px; cursor: pointer; }
+        .portfolio-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .portfolio-item:hover img { transform: scale(1.1); }
+        .portfolio-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; }
+        .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+        
+        .review-card { background: var(--glass-bg); padding: 20px; border-radius: 15px; margin-bottom: 15px; border-left: 4px solid var(--accent-gold); }
+        
+        .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: var(--dark-navy); border-bottom: 2px solid var(--accent-gold); padding: 20px; display: flex; flex-direction: column; gap: 15px; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* NOTIFICATION STYLES */
+        .notif-btn { position: relative; cursor: pointer; margin-right: 15px; color: var(--text-light); font-size: 20px; }
+        .notif-badge { position: absolute; top: -5px; right: -5px; background: red; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .notif-dropdown { position: absolute; top: 150%; right: 0; width: 300px; background: var(--dark-navy); border: 1px solid var(--glass-border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; padding: 10px; display: none; }
+        .notif-dropdown.show { display: block; }
+        .notif-item { padding: 10px; border-bottom: 1px solid var(--glass-border); font-size: 13px; color: var(--text-gray); }
+        .notif-item.unread { background: rgba(255, 215, 0, 0.1); border-left: 3px solid var(--accent-gold); }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const translations = {
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job" }, role: "Senior Full Stack Developer", loc: "Cairo, Egypt", rate: "$45/hr", hire: "Hire Me", stats: { jobs: "Jobs Done", hours: "Hours Worked", rating: "Rating" }, headers: { about: "About Me", skills: "Skills", port: "Portfolio", rev: "Reviews" } },
+            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة" }, role: "مطور ويب شامل", loc: "القاهرة، مصر", rate: "45$/ساعة", hire: "وظفني", stats: { jobs: "وظيفة منجزة", hours: "ساعة عمل", rating: "التقييم" }, headers: { about: "نبذة عني", skills: "المهارات", port: "معرض الأعمال", rev: "التقييمات" } }
+        };
+
+        function Header({ lang, t, toggleLang }) {
+            const [theme, setTheme] = React.useState('dark');
+            const [isOpen, setIsOpen] = React.useState(false);
+            const [notifs, setNotifs] = React.useState([]);
+            const [showNotifs, setShowNotifs] = React.useState(false);
+
+            React.useEffect(() => {
+                const saved = localStorage.getItem('nile_theme') || 'dark';
+                setTheme(saved);
+                document.documentElement.setAttribute('data-theme', saved);
+                
+                const loadNotifs = () => {
+                    const savedNotifs = JSON.parse(localStorage.getItem('nile_notifications') || '[]');
+                    setNotifs(savedNotifs);
+                };
+                loadNotifs();
+                const interval = setInterval(loadNotifs, 2000);
+                return () => clearInterval(interval);
+            }, []);
+
+            const toggleTheme = () => {
+                const newTheme = theme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+                localStorage.setItem('nile_theme', newTheme);
+                document.documentElement.setAttribute('data-theme', newTheme);
+            };
+
+            const unreadCount = notifs.filter(n => !n.read).length;
+            const handleNotifClick = () => {
+                setShowNotifs(!showNotifs);
+                if (!showNotifs && unreadCount > 0) {
+                    const updated = notifs.map(n => ({...n, read: true}));
+                    setNotifs(updated);
+                    localStorage.setItem('nile_notifications', JSON.stringify(updated));
+                }
+            };
+
+            return (
+                <header>
+                    <div className="container header-content">
+                        <a href="index.html" className="logo"><i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i><h1>NileLancers</h1></a>
+                        <nav className="hidden md:flex items-center gap-6">
+                            <a href="index.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.home}</a>
+                            <a href="jobs.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.services}</a>
+                            <a href="saved.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.saved}</a>
+                            <a href="client-dashboard.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.dashboard}</a>
+                            <a href="wallet.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.wallet}</a>
+                            <a href="profile.html" className="text-[var(--secondary-blue)] font-bold">{t.nav.profile}</a>
+                            <a href="settings.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.settings}</a>
+                            
+                            {/* Notification Bell */}
+                            <div className="relative">
+                                <button onClick={handleNotifClick} className="notif-btn">
+                                    <i className="fas fa-bell"></i>
+                                    {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
+                                </button>
+                                <div className={`notif-dropdown ${showNotifs ? 'show' : ''}`} style={{marginTop: '15px'}}>
+                                    <h4 className="p-2 font-bold text-white border-b border-gray-700">Notifications</h4>
+                                    {notifs.length === 0 ? <div className="p-4 text-center text-gray-500">No notifications</div> : 
+                                        notifs.slice(0, 5).map(n => (
+                                            <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`}>
+                                                <p>{n.text}</p>
+                                                <span className="text-xs text-gray-500">{new Date(n.time).toLocaleTimeString()}</span>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+
+                            <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'AR' : 'EN'}</button>
+                            <button onClick={toggleTheme} className="lang-btn px-3"><i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i></button>
+                            <a href="post-job.html" className="cta-button">{t.nav.post}</a>
+                        </nav>
+                        <div className="md:hidden flex items-center gap-4">
+                            <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
+                            <button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl"><i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i></button>
+                        </div>
+                    </div>
+                    {isOpen && (
+                        <div className="mobile-menu md:hidden">
+                            <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
+                            <a href="jobs.html" className="text-white font-bold">{t.nav.services}</a>
+                            <a href="saved.html" className="text-white font-bold">{t.nav.saved}</a>
+                            <a href="client-dashboard.html" className="text-white font-bold">{t.nav.dashboard}</a>
+                            <a href="wallet.html" className="text-white font-bold">{t.nav.wallet}</a>
+                            <a href="profile.html" className="text-[var(--accent-gold)] font-bold">{t.nav.profile}</a>
+                            <a href="settings.html" className="text-white font-bold">{t.nav.settings}</a>
+                            <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
+                        </div>
+                    )}
+                </header>
+            );
+        }
+
+        function ProfileApp() {
+            const [lang, setLang] = React.useState('en');
+            React.useEffect(() => { 
+                const saved = localStorage.getItem('nile_lang') || 'en'; 
+                setLang(saved); 
+                document.dir = saved === 'ar' ? 'rtl' : 'ltr'; 
+            }, []);
+            
+            const toggleLang = () => { 
+                const newLang = lang === 'en' ? 'ar' : 'en'; 
+                setLang(newLang); 
+                localStorage.setItem('nile_lang', newLang); 
+                document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; 
+            };
+
+            const t = translations[lang];
+
+            // Mock Data
+            const user = {
+                name: "Omar Sherif",
+                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+                skills: ["React.js", "Node.js", "Tailwind CSS", "MongoDB", "UI/UX", "Arabic Translation"],
+                portfolio: [
+                    { id: 1, img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=60", title: "E-commerce App" },
+                    { id: 2, img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=60", title: "Analytics Dashboard" },
+                    { id: 3, img: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&w=500&q=60", title: "Portfolio Site" }
+                ],
+                reviews: [
+                    { id: 1, client: "TechCorp", text: "Omar is an exceptional developer. Delivered on time and code was clean.", stars: 5 },
+                    { id: 2, client: "StartUp Inc", text: "Great communication and very skilled in React.", stars: 5 }
+                ]
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col">
+                    <Header lang={lang} t={t} toggleLang={toggleLang} />
+                    
+                    <div className="container py-12 flex-grow">
+                        {/* Profile Header */}
+                        <div className="profile-header">
+                            <div className="avatar-container">
+                                <img src={user.image} alt={user.name} className="avatar" />
+                                <div className="online-status"></div>
+                            </div>
+                            <div className="flex-1">
+                                <h1 className="text-3xl font-bold text-[var(--text-light)] mb-2">{user.name} <i className="fas fa-check-circle text-[var(--secondary-blue)] text-xl ml-2"></i></h1>
+                                <p className="text-[var(--accent-gold)] text-lg mb-1">{t.role}</p>
+                                <p className="text-gray-400 mb-4"><i className="fas fa-map-marker-alt mr-2"></i> {t.loc}</p>
+                                <div className="flex gap-4">
+                                    <button className="cta-button">{t.hire}</button>
+                                    <button className="px-6 py-2 border border-white rounded-full text-white hover:bg-white hover:text-black transition">{t.rate}</button>
+                                </div>
+                            </div>
+                            <div className="flex gap-4 text-center w-full md:w-auto mt-4 md:mt-0">
+                                <div className="stat-box">
+                                    <h3 className="text-2xl font-bold text-[var(--text-light)]">100%</h3>
+                                    <p className="text-xs text-gray-400">Success</p>
+                                </div>
+                                <div className="stat-box">
+                                    <h3 className="text-2xl font-bold text-[var(--text-light)]">42</h3>
+                                    <p className="text-xs text-gray-400">{t.stats.jobs}</p>
+                                </div>
+                                <div className="stat-box">
+                                    <h3 className="text-2xl font-bold text-[var(--accent-gold)]">5.0 <i className="fas fa-star text-xs"></i></h3>
+                                    <p className="text-xs text-gray-400">{t.stats.rating}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid md:grid-cols-3 gap-8">
+                            {/* Left Column */}
+                            <div className="md:col-span-1 space-y-8">
+                                <div className="bg-[var(--glass-bg)] p-6 rounded-xl border border-[var(--glass-border)]">
+                                    <h3 className="text-xl font-bold text-[var(--text-light)] mb-4 border-b border-[var(--glass-border)] pb-2">{t.headers.about}</h3>
+                                    <p className="text-[var(--text-gray)] text-sm leading-relaxed">
+                                        Passionate Full Stack Developer with 5+ years of experience building scalable web applications. Specialized in the MERN stack and modern UI/UX principles.
+                                    </p>
+                                </div>
+                                <div className="bg-[var(--glass-bg)] p-6 rounded-xl border border-[var(--glass-border)]">
+                                    <h3 className="text-xl font-bold text-[var(--text-light)] mb-4 border-b border-[var(--glass-border)] pb-2">{t.headers.skills}</h3>
+                                    <div>{user.skills.map(skill => <span key={skill} className="skill-tag">{skill}</span>)}</div>
+                                </div>
+                            </div>
+
+                            {/* Right Column */}
+                            <div className="md:col-span-2 space-y-8">
+                                <div>
+                                    <h3 className="text-2xl font-bold text-[var(--text-light)] mb-6">{t.headers.port}</h3>
+                                    <div className="portfolio-grid">
+                                        {user.portfolio.map(item => (
+                                            <div key={item.id} className="portfolio-item">
+                                                <img src={item.img} alt={item.title} />
+                                                <div className="portfolio-overlay">
+                                                    <span className="text-white font-bold">{item.title}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-2xl font-bold text-[var(--text-light)] mb-6">{t.headers.rev}</h3>
+                                    {user.reviews.map(rev => (
+                                        <div key={rev.id} className="review-card">
+                                            <div className="flex justify-between mb-2">
+                                                <h4 className="font-bold text-[var(--text-light)]">{rev.client}</h4>
+                                                <div className="text-[var(--accent-gold)]">
+                                                    {[...Array(rev.stars)].map((_, i) => <i key={i} className="fas fa-star"></i>)}
+                                                </div>
+                                            </div>
+                                            <p className="text-[var(--text-gray)] text-sm">"{rev.text}"</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Footer Reuse */}
+                    <footer>
+                        <div className="container text-center text-gray-500 text-sm">
+                            © 2025 NileLancers. All rights reserved.
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ProfileApp />);
+    </script>
+</body>
+</html>

@@ -11,7 +11,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; --text-light: #ffffff; --text-gray: #f0f0f0; --transition: all 0.4s ease; }
+        :root { 
+            --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; 
+            --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; 
+            --text-light: #ffffff; --text-gray: #f0f0f0; 
+            --glass-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.4s ease; 
+        }
+        [data-theme="light"] {
+            --navy-blue: #e2e8f0; --dark-navy: #f8fafc; --light-navy: #ffffff;
+            --text-light: #1a202c; --text-gray: #4a5568;
+            --primary-blue: #0056b3; --secondary-blue: #0074D9;
+            --glass-bg: rgba(255, 255, 255, 0.8); --glass-border: rgba(0, 0, 0, 0.1);
+        }
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
         body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
@@ -45,29 +57,37 @@
         .section-title:after { content: ''; position: absolute; width: 100px; height: 5px; background: linear-gradient(to right, var(--primary-blue), var(--accent-gold)); bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 5px; }
         
         .services-grid, .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; }
-        .service-card, .feature-item { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 40px 25px; text-align: center; border: 1px solid rgba(127, 219, 255, 0.1); backdrop-filter: blur(10px); transition: var(--transition); }
-        .service-card:hover, .feature-item:hover { transform: translateY(-15px); border-color: rgba(127, 219, 255, 0.3); background: rgba(255, 255, 255, 0.08); }
+        .service-card, .feature-item { background: var(--glass-bg); border-radius: 15px; padding: 40px 25px; text-align: center; border: 1px solid var(--glass-border); backdrop-filter: blur(10px); transition: var(--transition); }
+        .service-card:hover, .feature-item:hover { transform: translateY(-15px); border-color: var(--secondary-blue); background: var(--glass-border); }
         .service-icon, .feature-icon { font-size: 50px; color: var(--secondary-blue); margin-bottom: 25px; }
         .feature-icon { color: var(--accent-gold); }
 
-        .how-it-works { background: rgba(0, 21, 41, 0.7); }
+        .how-it-works { background: var(--dark-navy); opacity: 0.9; }
         .steps-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; }
-        .step-card { flex: 1; min-width: 250px; text-align: center; padding: 40px 25px; background: rgba(255, 255, 255, 0.05); border-radius: 15px; border: 1px solid rgba(127, 219, 255, 0.1); transition: var(--transition); }
+        .step-card { flex: 1; min-width: 250px; text-align: center; padding: 40px 25px; background: var(--glass-bg); border-radius: 15px; border: 1px solid var(--glass-border); transition: var(--transition); }
         .step-number { width: 70px; height: 70px; background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; margin: 0 auto 25px; border: 3px solid var(--accent-gold); }
 
         .testimonial-container { max-width: 900px; margin: 0 auto; position: relative; }
-        .testimonial-card { background: rgba(255, 255, 255, 0.05); padding: 50px; border-radius: 20px; border: 1px solid rgba(127, 219, 255, 0.1); backdrop-filter: blur(10px); animation: fadeIn 0.5s ease-in-out; }
+        .testimonial-card { background: var(--glass-bg); padding: 50px; border-radius: 20px; border: 1px solid var(--glass-border); backdrop-filter: blur(10px); animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .client-info { display: flex; align-items: center; margin-top: 30px; }
         .client-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--dark-navy); margin-right: 20px; border: 2px solid var(--accent-gold); }
 
-        .registration { background: rgba(0, 21, 41, 0.7); text-align: center; }
+        .registration { background: var(--dark-navy); opacity: 0.9; text-align: center; }
         .reg-options { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 60px; }
-        .reg-card { background: rgba(255, 255, 255, 0.05); padding: 50px 35px; border-radius: 20px; width: 100%; max-width: 450px; border: 1px solid rgba(127, 219, 255, 0.1); transition: var(--transition); text-align: left; }
+        .reg-card { background: var(--glass-bg); padding: 50px 35px; border-radius: 20px; width: 100%; max-width: 450px; border: 1px solid var(--glass-border); transition: var(--transition); text-align: left; }
         .reg-card:hover { transform: translateY(-15px); }
         .reg-list { list-style: none; padding: 0; margin-bottom: 35px; }
-        .reg-list li { margin-bottom: 15px; padding-left: 30px; position: relative; color: #ccc; }
+        .reg-list li { margin-bottom: 15px; padding-left: 30px; position: relative; color: var(--text-gray); }
         .reg-list i { position: absolute; left: 0; top: 5px; }
+
+        /* NOTIFICATION STYLES */
+        .notif-btn { position: relative; cursor: pointer; margin-right: 15px; color: var(--text-light); font-size: 20px; }
+        .notif-badge { position: absolute; top: -5px; right: -5px; background: red; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .notif-dropdown { position: absolute; top: 150%; right: 0; width: 300px; background: var(--dark-navy); border: 1px solid var(--glass-border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; padding: 10px; display: none; }
+        .notif-dropdown.show { display: block; }
+        .notif-item { padding: 10px; border-bottom: 1px solid var(--glass-border); font-size: 13px; color: var(--text-gray); }
+        .notif-item.unread { background: rgba(255, 215, 0, 0.1); border-left: 3px solid var(--accent-gold); }
 
         footer { background: rgba(0, 15, 40, 0.95); color: var(--text-light); padding: 80px 0 30px; border-top: 2px solid var(--primary-blue); }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 50px; }
@@ -90,21 +110,21 @@
         // TRANSLATIONS
         const translations = {
             en: {
-                nav: { home: "Home", services: "Services", saved: "Saved", why_us: "Why Us", how: "How It Works", post: "Post Job" },
+                nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", why_us: "Why Us", how: "How It Works", post: "Post Job", login: "Login", signup: "Sign Up", logout: "Logout" },
                 hero: { title: "Elevate Your Freelance Career with NileLancers", desc: "Connect with top talent and premium clients across the globe. NileLancers provides the perfect platform for freelancers and businesses to collaborate.", btn_start: "Start Journey", btn_hire: "Hire Talent" },
-                services: { title: "Premium Services", s1: "Web Development", s2: "App Development", s3: "UI/UX Design", s4: "Digital Marketing", s5: "Video Production", s6: "Content Writing", desc: "Professional services." },
-                features: { title: "Why Choose NileLancers", f1: "Secure Payments", f2: "Vetted Talent", f3: "24/7 Support", f4: "Global Reach", desc: "Quality you can trust." },
-                how: { title: "How It Works", st1: "Create Account", st2: "Find Match", st3: "Collaborate", st4: "Pay Securely", desc: "Simple steps to success." },
+                services: { title: "Premium Services", s1: "Web Development", s1_desc: "Modern websites using React & Node.", s2: "App Development", s2_desc: "Native & Cross-platform mobile apps.", s3: "UI/UX Design", s3_desc: "User-centered interfaces.", s4: "Digital Marketing", s4_desc: "SEO, SEM & Social Media.", s5: "Video Production", s5_desc: "Editing & Motion Graphics.", s6: "Content Writing", s6_desc: "SEO-optimized blogs & copy.", desc: "Professional services." },
+                features: { title: "Why Choose NileLancers", f1: "Secure Payments", f1_desc: "Your money is held safely until approval.", f2: "Vetted Talent", f2_desc: "Top 5% of freelancers in the region.", f3: "24/7 Support", f3_desc: "Round-the-clock assistance.", f4: "Global Reach", f4_desc: "Connect with clients worldwide.", desc: "Quality you can trust." },
+                how: { title: "How It Works", st1: "Create Account", st1_desc: "Sign up in seconds.", st2: "Find Match", st2_desc: "Browse jobs or talent.", st3: "Collaborate", st3_desc: "Work via our secure room.", st4: "Pay Securely", st4_desc: "Release funds when satisfied.", desc: "Simple steps to success." },
                 testi: { title: "Success Stories", t1: "NileLancers transformed my agency.", t2: "Tripled my income in a year.", t3: "Found reliable talent instantly." },
                 reg: { title: "Ready to Begin?", free_title: "For Freelancers", client_title: "For Businesses", btn_free: "Join as Freelancer", btn_client: "Hire Talent", l1: "High-paying projects", l2: "Secure payments", l3: "Top 5% talent", l4: "Project tools" },
                 footer: { desc: "The premier freelance platform connecting global talent with innovative businesses.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers. All rights reserved." }
             },
             ar: {
-                nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", why_us: "لماذا نحن", how: "كيف يعمل", post: "أضف وظيفة" },
+                nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", why_us: "لماذا نحن", how: "كيف يعمل", post: "أضف وظيفة", login: "تسجيل دخول", signup: "إنشاء حساب", logout: "خروج" },
                 hero: { title: "ارتقِ بمسيرتك المهنية مع نايل لانسرز", desc: "تواصل مع أفضل المواهب والعملاء المميزين حول العالم. المنصة المثالية للمستقلين والشركات للتعاون والنجاح.", btn_start: "ابدأ رحلتك", btn_hire: "وظف موهبة" },
-                services: { title: "خدمات متميزة", s1: "تطوير المواقع", s2: "تطوير التطبيقات", s3: "تصميم واجهات", s4: "التسويق الرقمي", s5: "إنتاج الفيديو", s6: "كتابة المحتوى", desc: "خدمات احترافية." },
-                features: { title: "لماذا نايل لانسرز", f1: "دفع آمن", f2: "مواهب موثقة", f3: "دعم 24/7", f4: "وصول عالمي", desc: "جودة يمكنك الوثوق بها." },
-                how: { title: "كيف يعمل الموقع", st1: "أنشئ حساب", st2: "اعثر على فرصة", st3: "تعاون", st4: "ادفع بأمان", desc: "خطوات بسيطة للنجاح." },
+                services: { title: "خدمات متميزة", s1: "تطوير المواقع", s1_desc: "مواقع عصرية باستخدام React.", s2: "تطوير التطبيقات", s2_desc: "تطبيقات أندرويد و iOS.", s3: "تصميم واجهات", s3_desc: "واجهات مستخدم جذابة.", s4: "التسويق الرقمي", s4_desc: "تحسين محركات البحث وإعلانات.", s5: "إنتاج الفيديو", s5_desc: "مونتاج وجرافيك.", s6: "كتابة المحتوى", s6_desc: "محتوى إبداعي وتسويقي.", desc: "خدمات احترافية." },
+                features: { title: "لماذا نايل لانسرز", f1: "دفع آمن", f1_desc: "نحفظ أموالك حتى الاستلام.", f2: "مواهب موثقة", f2_desc: "أفضل 5% من المستقلين.", f3: "دعم 24/7", f3_desc: "فريق دعم جاهز دائماً.", f4: "وصول عالمي", f4_desc: "تواصل مع عملاء حول العالم.", desc: "جودة يمكنك الوثوق بها." },
+                how: { title: "كيف يعمل الموقع", st1: "أنشئ حساب", st1_desc: "سجل في ثوانٍ.", st2: "اعثر على فرصة", st2_desc: "تصفح الوظائف أو المواهب.", st3: "تعاون", st3_desc: "اعمل من خلال غرفنا الآمنة.", st4: "ادفع بأمان", st4_desc: "حرر الدفع عند الرضا.", desc: "خطوات بسيطة للنجاح." },
                 testi: { title: "قصص نجاح", t1: "نايل لانسرز غيرت وكالتي.", t2: "ضاعفت دخلي ثلاث مرات.", t3: "وجدت مواهب موثوقة فوراً." },
                 reg: { title: "مستعد للبدء؟", free_title: "للمستقلين", client_title: "للشركات", btn_free: "انضم كمستقل", btn_client: "وظف موهبة", l1: "مشاريع مربحة", l2: "دفع آمن", l3: "أفضل 5% مواهب", l4: "أدوات إدارة" },
                 footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }
@@ -121,6 +141,51 @@
         // --- SHARED HEADER ---
         function Header({ lang, t, toggleLang }) {
             const [isOpen, setIsOpen] = React.useState(false);
+            const [theme, setTheme] = React.useState('dark');
+            const [notifs, setNotifs] = React.useState([]);
+            const [showNotifs, setShowNotifs] = React.useState(false);
+            const [user, setUser] = React.useState(null);
+
+            React.useEffect(() => {
+                const saved = localStorage.getItem('nile_theme') || 'dark';
+                setTheme(saved);
+                document.documentElement.setAttribute('data-theme', saved);
+                
+                const u = JSON.parse(localStorage.getItem('nile_user'));
+                setUser(u);
+                
+                // Load Notifications
+                const loadNotifs = () => {
+                    const savedNotifs = JSON.parse(localStorage.getItem('nile_notifications') || '[]');
+                    setNotifs(savedNotifs);
+                };
+                loadNotifs();
+                const interval = setInterval(loadNotifs, 2000);
+                return () => clearInterval(interval);
+            }, []);
+
+            const toggleTheme = () => {
+                const newTheme = theme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+                localStorage.setItem('nile_theme', newTheme);
+                document.documentElement.setAttribute('data-theme', newTheme);
+            };
+
+            const unreadCount = notifs.filter(n => !n.read).length;
+            const handleNotifClick = () => {
+                setShowNotifs(!showNotifs);
+                if (!showNotifs && unreadCount > 0) {
+                    const updated = notifs.map(n => ({...n, read: true}));
+                    setNotifs(updated);
+                    localStorage.setItem('nile_notifications', JSON.stringify(updated));
+                }
+            };
+
+            const handleLogout = () => {
+                localStorage.removeItem('nile_user');
+                window.location.href = 'index.html';
+            };
+
             return (
                 <header>
                     <div className="container header-content">
@@ -128,16 +193,53 @@
                             <i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i>
                             <h1>NileLancers</h1>
                         </a>
-                        <nav className="hidden md:block desktop-nav">
-                            <ul>
-                                <li><a href="index.html" style={{color: 'var(--secondary-blue)'}}>{t.nav.home}</a></li>
-                                <li><a href="jobs.html">{t.nav.services}</a></li>
-                                <li><a href="saved.html">{t.nav.saved}</a></li>
-                                <li><a href="#features">{t.nav.why_us}</a></li>
-                                <li><a href="#how">{t.nav.how}</a></li>
-                                <li><button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'العربية' : 'EN'}</button></li>
-                                <li><a href="post-job.html" className="cta-button">{t.nav.post}</a></li>
-                            </ul>
+                        <nav className="hidden md:flex items-center gap-6">
+                            <a href="index.html" className="text-[var(--secondary-blue)] font-bold">{t.nav.home}</a>
+                            <a href="jobs.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.services}</a>                            
+                            
+                            {user ? (
+                                <>
+                                    <a href="saved.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.saved}</a>
+                                    <a href="client-dashboard.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.dashboard}</a>
+                                    <a href="wallet.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.wallet}</a>
+                                    <a href="profile.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.profile}</a>
+                                    <a href="settings.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.settings}</a>
+                                </>
+                            ) : null}
+                            
+                            {/* Notification Bell */}
+                            {user && (
+                            <div className="relative">
+                                <button onClick={handleNotifClick} className="notif-btn">
+                                    <i className="fas fa-bell"></i>
+                                    {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
+                                </button>
+                                <div className={`notif-dropdown ${showNotifs ? 'show' : ''}`} style={{marginTop: '15px'}}>
+                                    <h4 className="p-2 font-bold text-white border-b border-gray-700">Notifications</h4>
+                                    {notifs.length === 0 ? <div className="p-4 text-center text-gray-500">No notifications</div> : 
+                                        notifs.slice(0, 5).map(n => (
+                                            <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`}>
+                                                <p>{n.text}</p>
+                                                <span className="text-xs text-gray-500">{new Date(n.time).toLocaleTimeString()}</span>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                            )}
+
+                            <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'AR' : 'EN'}</button>
+                            <button onClick={toggleTheme} className="lang-btn px-3"><i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i></button>
+                            
+                            {user ? (
+                                <button onClick={handleLogout} className="text-[var(--text-light)] hover:text-red-500 font-bold"><i className="fas fa-sign-out-alt"></i></button>
+                            ) : (
+                                <>
+                                    <a href="login.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.login}</a>
+                                    <a href="signup.html" className="cta-button">{t.nav.signup}</a>
+                                </>
+                            )}
+                            {user && <a href="post-job.html" className="cta-button">{t.nav.post}</a>}
                         </nav>
                         <div className="md:hidden flex items-center gap-4">
                             <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
@@ -148,10 +250,22 @@
                         <div className="mobile-menu md:hidden">
                             <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
                             <a href="jobs.html" className="text-white font-bold">{t.nav.services}</a>
-                            <a href="saved.html" className="text-white font-bold">{t.nav.saved}</a>
-                            <a href="#features" className="text-white">{t.nav.why_us}</a>
-                            <a href="#how" className="text-white">{t.nav.how}</a>
-                            <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
+                            {user ? (
+                                <>
+                                    <a href="saved.html" className="text-white font-bold">{t.nav.saved}</a>
+                                    <a href="client-dashboard.html" className="text-white font-bold">{t.nav.dashboard}</a>
+                                    <a href="wallet.html" className="text-white font-bold">{t.nav.wallet}</a>
+                                    <a href="profile.html" className="text-white font-bold">{t.nav.profile}</a>
+                                    <a href="settings.html" className="text-white font-bold">{t.nav.settings}</a>
+                                    <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
+                                    <button onClick={handleLogout} className="text-red-400 font-bold text-left">{t.nav.logout}</button>
+                                </>
+                            ) : (
+                                <>
+                                    <a href="login.html" className="text-white font-bold">{t.nav.login}</a>
+                                    <a href="signup.html" className="cta-button text-center">{t.nav.signup}</a>
+                                </>
+                            )}
                         </div>
                     )}
                 </header>

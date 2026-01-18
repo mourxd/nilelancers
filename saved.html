@@ -15,7 +15,19 @@
 
     <style>
         /* SHARED STYLES */
-        :root { --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; --transition: all 0.4s ease; }
+        :root { 
+            --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; 
+            --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; 
+            --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; 
+            --glass-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.4s ease; 
+        }
+        [data-theme="light"] {
+            --navy-blue: #e2e8f0; --dark-navy: #f8fafc; --light-navy: #ffffff;
+            --text-light: #1a202c; --text-gray: #4a5568;
+            --primary-blue: #0056b3; --secondary-blue: #0074D9;
+            --glass-bg: rgba(255, 255, 255, 0.8); --glass-border: rgba(0, 0, 0, 0.1);
+        }
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
         body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
@@ -52,15 +64,15 @@
         .social-icons a:hover { background: var(--primary-blue); transform: translateY(-5px); }
 
         /* PAGE SPECIFIC */
-        .job-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 25px; margin-bottom: 20px; transition: var(--transition); cursor: pointer; backdrop-filter: blur(5px); }
-        .job-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.08); border-color: var(--accent-gold); }
-        .job-card.local { border-left: 5px solid var(--accent-green); background: linear-gradient(90deg, rgba(46, 204, 113, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%); }
+        .job-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 25px; margin-bottom: 20px; transition: var(--transition); cursor: pointer; backdrop-filter: blur(5px); }
+        .job-card:hover { transform: translateY(-5px); background: var(--glass-border); border-color: var(--accent-gold); }
+        .job-card.local { border-left: 5px solid var(--accent-green); background: linear-gradient(90deg, rgba(46, 204, 113, 0.1) 0%, var(--glass-bg) 100%); }
         .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: var(--dark-navy); border-bottom: 2px solid var(--accent-gold); padding: 20px; display: flex; flex-direction: column; gap: 15px; animation: slideDown 0.3s ease; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .price-tag { font-size: 20px; font-weight: 800; color: var(--accent-gold); }
 
         /* DETAIL & MODAL STYLES (Added for Saved Page) */
-        .detail-meta-box { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 20px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; }
+        .detail-meta-box { background: var(--glass-bg); border-radius: 10px; padding: 20px; border: 1px solid var(--glass-border); margin-bottom: 25px; }
         .meta-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
         .meta-item:last-child { margin-bottom: 0; }
         .meta-icon { width: 40px; height: 40px; background: rgba(0, 116, 217, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--secondary-blue); font-size: 18px; }
@@ -74,18 +86,61 @@
         .toast { position: fixed; bottom: 30px; right: 30px; background: var(--dark-navy); border-left: 5px solid var(--accent-green); color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); z-index: 3000; display: flex; align-items: center; gap: 15px; }
         .toast.show { transform: translateY(0); opacity: 1; }
         .toast i { color: var(--accent-green); font-size: 20px; }
+
+        /* NOTIFICATION STYLES */
+        .notif-btn { position: relative; cursor: pointer; margin-right: 15px; color: var(--text-light); font-size: 20px; }
+        .notif-badge { position: absolute; top: -5px; right: -5px; background: red; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .notif-dropdown { position: absolute; top: 150%; right: 0; width: 300px; background: var(--dark-navy); border: 1px solid var(--glass-border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; padding: 10px; display: none; }
+        .notif-dropdown.show { display: block; }
+        .notif-item { padding: 10px; border-bottom: 1px solid var(--glass-border); font-size: 13px; color: var(--text-gray); }
+        .notif-item.unread { background: rgba(255, 215, 0, 0.1); border-left: 3px solid var(--accent-gold); }
     </style>
 </head>
 <body>
     <div id="root"></div>
     <script type="text/babel">
         const translations = {
-            en: { nav: { home: "Home", services: "Services", saved: "Saved", why_us: "Why Us", how: "How It Works", post: "Post Job" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." }, title: "Saved Services", empty: "No saved jobs yet", empty_btn: "Browse Jobs", details_apply: "Apply Now", details_view: "View on" },
-            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", why_us: "لماذا نحن", how: "كيف يعمل", post: "أضف وظيفة" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }, title: "الخدمات المحفوظة", empty: "لا توجد وظائف محفوظة", empty_btn: "تصفح الوظائف", details_apply: "قدم الآن", details_view: "عرض على" }
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." }, title: "Saved Services", empty: "No saved jobs yet", empty_btn: "Browse Jobs", details_apply: "Apply Now", details_view: "View on" },
+            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." }, title: "الخدمات المحفوظة", empty: "لا توجد وظائف محفوظة", empty_btn: "تصفح الوظائف", details_apply: "قدم الآن", details_view: "عرض على" }
         };
 
         function Header({ lang, t, toggleLang }) {
             const [isOpen, setIsOpen] = React.useState(false);
+            const [theme, setTheme] = React.useState('dark');
+            const [notifs, setNotifs] = React.useState([]);
+            const [showNotifs, setShowNotifs] = React.useState(false);
+
+            React.useEffect(() => {
+                const saved = localStorage.getItem('nile_theme') || 'dark';
+                setTheme(saved);
+                document.documentElement.setAttribute('data-theme', saved);
+                
+                const loadNotifs = () => {
+                    const savedNotifs = JSON.parse(localStorage.getItem('nile_notifications') || '[]');
+                    setNotifs(savedNotifs);
+                };
+                loadNotifs();
+                const interval = setInterval(loadNotifs, 2000);
+                return () => clearInterval(interval);
+            }, []);
+
+            const toggleTheme = () => {
+                const newTheme = theme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+                localStorage.setItem('nile_theme', newTheme);
+                document.documentElement.setAttribute('data-theme', newTheme);
+            };
+
+            const unreadCount = notifs.filter(n => !n.read).length;
+            const handleNotifClick = () => {
+                setShowNotifs(!showNotifs);
+                if (!showNotifs && unreadCount > 0) {
+                    const updated = notifs.map(n => ({...n, read: true}));
+                    setNotifs(updated);
+                    localStorage.setItem('nile_notifications', JSON.stringify(updated));
+                }
+            };
+
             return (
                 <header>
                     <div className="container header-content">
@@ -93,16 +148,37 @@
                             <i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i>
                             <h1>NileLancers</h1>
                         </a>
-                        <nav className="hidden md:block desktop-nav">
-                            <ul>
-                                <li><a href="index.html">{t.nav.home}</a></li>
-                                <li><a href="jobs.html">{t.nav.services}</a></li>
-                                <li><a href="saved.html" style={{color: 'var(--secondary-blue)'}}>{t.nav.saved}</a></li>
-                                <li><a href="index.html#features">{t.nav.why_us}</a></li>
-                                <li><a href="index.html#how">{t.nav.how}</a></li>
-                                <li><button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'العربية' : 'EN'}</button></li>
-                                <li><a href="post-job.html" className="cta-button">{t.nav.post}</a></li>
-                            </ul>
+                        <nav className="hidden md:flex items-center gap-6">
+                            <a href="index.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.home}</a>
+                            <a href="jobs.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.services}</a>
+                            <a href="saved.html" className="text-[var(--secondary-blue)] font-bold">{t.nav.saved}</a>
+                            <a href="client-dashboard.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.dashboard}</a>
+                            <a href="wallet.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.wallet}</a>
+                            <a href="profile.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.profile}</a>
+                            <a href="settings.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.settings}</a>
+                            
+                            {/* Notification Bell */}
+                            <div className="relative">
+                                <button onClick={handleNotifClick} className="notif-btn">
+                                    <i className="fas fa-bell"></i>
+                                    {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
+                                </button>
+                                <div className={`notif-dropdown ${showNotifs ? 'show' : ''}`} style={{marginTop: '15px'}}>
+                                    <h4 className="p-2 font-bold text-white border-b border-gray-700">Notifications</h4>
+                                    {notifs.length === 0 ? <div className="p-4 text-center text-gray-500">No notifications</div> : 
+                                        notifs.slice(0, 5).map(n => (
+                                            <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`}>
+                                                <p>{n.text}</p>
+                                                <span className="text-xs text-gray-500">{new Date(n.time).toLocaleTimeString()}</span>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+
+                            <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'AR' : 'EN'}</button>
+                            <button onClick={toggleTheme} className="lang-btn px-3"><i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i></button>
+                            <a href="post-job.html" className="cta-button">{t.nav.post}</a>
                         </nav>
                         <div className="md:hidden flex items-center gap-4">
                             <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
@@ -114,8 +190,10 @@
                             <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
                             <a href="jobs.html" className="text-white font-bold">{t.nav.services}</a>
                             <a href="saved.html" className="text-[var(--accent-gold)] font-bold">{t.nav.saved}</a>
-                            <a href="index.html#features" className="text-white">{t.nav.why_us}</a>
-                            <a href="index.html#how" className="text-white">{t.nav.how}</a>
+                            <a href="client-dashboard.html" className="text-white font-bold">{t.nav.dashboard}</a>
+                            <a href="wallet.html" className="text-white font-bold">{t.nav.wallet}</a>
+                            <a href="profile.html" className="text-white font-bold">{t.nav.profile}</a>
+                            <a href="settings.html" className="text-white font-bold">{t.nav.settings}</a>
                             <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
                         </div>
                     )}
@@ -189,8 +267,8 @@
             return (
                 <div onClick={() => onClick(job)} className={`job-card flex justify-between items-center ${job.isLocal ? 'local' : ''}`}>
                     <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center font-bold text-white ${job.isLocal ? 'bg-[rgba(46,204,113,0.2)] text-[var(--accent-green)]' : 'bg-gray-700'}`}>{job.isLocal ? 'NL' : job.source.substring(0, 2)}</div>
-                        <div><h3 className="text-lg font-bold text-white">{job.title}</h3><p className="text-gray-400 text-sm">{job.company} • <span className="text-[var(--accent-gold)]">{job.budget}</span></p></div>
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center font-bold text-white ${job.isLocal ? 'bg-[rgba(46,204,113,0.2)] text-[var(--accent-green)]' : 'bg-gray-700'}`}>{job.isLocal ? 'NL' : (job.source ? job.source.substring(0, 2) : 'NL')}</div>
+                        <div><h3 className="text-lg font-bold text-[var(--text-light)]">{job.title}</h3><p className="text-[var(--text-gray)] text-sm">{job.company} • <span className="text-[var(--accent-gold)]">{job.budget}</span></p></div>
                     </div>
                     <button onClick={handleRemove} className="text-red-400 hover:text-red-300 p-2"><i className="fas fa-trash"></i></button>
                 </div>
@@ -245,25 +323,25 @@
                         <Header lang={lang} t={t} toggleLang={toggleLang} />
                         <div className="container py-12 flex-grow">
                             <button onClick={() => setSelectedJob(null)} className="text-gray-400 hover:text-white mb-6 flex items-center gap-2"><i className="fas fa-arrow-left"></i> Back</button>
-                            <div className="job-card" style={{cursor: 'default', background: 'rgba(0,0,0,0.6)'}}>
-                                <h1 className="text-3xl font-bold text-white mb-6">{selectedJob.title}</h1>
+                            <div className="job-card" style={{cursor: 'default', background: 'var(--glass-bg)'}}>
+                                <h1 className="text-3xl font-bold text-[var(--text-light)] mb-6">{selectedJob.title}</h1>
                                 <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="h-80 rounded-xl overflow-hidden border border-white/10 shadow-lg">
+                                    <div className="h-80 rounded-xl overflow-hidden border border-[var(--glass-border)] shadow-lg">
                                         <img src={selectedJob.image || 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'} alt={selectedJob.title} className="w-full h-full object-cover" />
                                     </div>
                                     <div>
                                         <div className="detail-meta-box">
                                             <div className="meta-item">
                                                 <div className="meta-icon"><i className="fas fa-building"></i></div>
-                                                <div><p className="text-xs text-gray-400 uppercase">Client</p><p className="font-bold text-white">{selectedJob.company}</p></div>
+                                                <div><p className="text-xs text-gray-400 uppercase">Client</p><p className="font-bold text-[var(--text-light)]">{selectedJob.company}</p></div>
                                             </div>
                                             <div className="meta-item">
                                                 <div className="meta-icon"><i className="fas fa-map-marker-alt"></i></div>
-                                                <div><p className="text-xs text-gray-400 uppercase">Location</p><p className="font-bold text-white">{selectedJob.location || 'Remote'}</p></div>
+                                                <div><p className="text-xs text-gray-400 uppercase">Location</p><p className="font-bold text-[var(--text-light)]">{selectedJob.location || 'Remote'}</p></div>
                                             </div>
                                             <div className="meta-item">
                                                 <div className="meta-icon"><i className="fas fa-briefcase"></i></div>
-                                                <div><p className="text-xs text-gray-400 uppercase">Work Type</p><p className="font-bold text-white">{selectedJob.type || 'Project'}</p></div>
+                                                <div><p className="text-xs text-gray-400 uppercase">Work Type</p><p className="font-bold text-[var(--text-light)]">{selectedJob.type || 'Project'}</p></div>
                                             </div>
                                         </div>
 
@@ -278,7 +356,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mt-8 pt-8 border-t border-white/10 text-gray-300 leading-relaxed"><h3 className="text-white font-bold mb-3 text-xl">Description</h3>{selectedJob.description}</div>
+                                <div className="mt-8 pt-8 border-t border-[var(--glass-border)] text-[var(--text-gray)] leading-relaxed"><h3 className="text-[var(--text-light)] font-bold mb-3 text-xl">Description</h3>{selectedJob.description}</div>
                             </div>
                         </div>
                         <Footer t={t} />
@@ -294,7 +372,7 @@
                 <div className="min-h-screen flex flex-col">
                     <Header lang={lang} t={t} toggleLang={toggleLang} />
                     <div className="container py-12 flex-grow">
-                        <h1 className="text-3xl font-bold text-white mb-8 border-b border-gray-700 pb-4">{t.title}</h1>
+                        <h1 className="text-3xl font-bold text-[var(--text-light)] mb-8 border-b border-gray-700 pb-4">{t.title}</h1>
                         {savedJobs.length === 0 ? (
                             <div className="text-center py-20 border border-dashed border-gray-600 rounded-xl">
                                 <i className="far fa-bookmark text-6xl text-gray-600 mb-4"></i>

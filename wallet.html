@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wallet - NileLancers</title>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; 
+            --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; 
+            --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; 
+            --glass-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.4s ease; 
+        }
+        [data-theme="light"] {
+            --navy-blue: #e2e8f0; --dark-navy: #f8fafc; --light-navy: #ffffff;
+            --text-light: #1a202c; --text-gray: #4a5568;
+            --primary-blue: #0056b3; --secondary-blue: #0074D9;
+            --glass-bg: rgba(255, 255, 255, 0.8); --glass-border: rgba(0, 0, 0, 0.1);
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
+        
+        /* HEADER (Shared) */
+        header { background: rgba(0, 15, 40, 0.95); backdrop-filter: blur(10px); padding: 15px 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary-blue); }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; transition: var(--transition); }
+        .logo h1 { font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
+        .desktop-nav ul { display: flex; align-items: center; gap: 30px; margin: 0; padding: 0; }
+        .desktop-nav a { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 15px; transition: var(--transition); }
+        .desktop-nav a:hover { color: var(--secondary-blue); }
+        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; border: none; cursor: pointer; transition: var(--transition); }
+        .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 8px 20px; border-radius: 30px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; }
+        
+        /* WALLET STYLES */
+        .balance-card { background: linear-gradient(135deg, var(--primary-blue), var(--light-navy)); border: 1px solid var(--glass-border); padding: 40px; border-radius: 20px; text-align: center; margin-bottom: 40px; position: relative; overflow: hidden; }
+        .balance-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); transform: rotate(45deg); }
+        .balance-amount { font-size: 48px; font-weight: 800; color: white; margin: 10px 0; }
+        .withdraw-form { background: var(--glass-bg); padding: 30px; border-radius: 15px; border: 1px solid var(--glass-border); max-width: 500px; margin: 0 auto 40px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; color: var(--accent-gold); margin-bottom: 8px; font-weight: 600; }
+        .input-field { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: var(--text-light); outline: none; }
+        
+        .history-table { width: 100%; border-collapse: collapse; background: var(--glass-bg); border-radius: 15px; overflow: hidden; border: 1px solid var(--glass-border); }
+        .history-table th { background: rgba(0, 116, 217, 0.2); color: var(--secondary-blue); padding: 15px; text-align: left; }
+        .history-table td { padding: 15px; border-bottom: 1px solid var(--glass-border); color: var(--text-light); }
+        .status-completed { color: var(--accent-green); }
+        .status-pending { color: var(--accent-gold); }
+        
+        .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: var(--dark-navy); border-bottom: 2px solid var(--accent-gold); padding: 20px; display: flex; flex-direction: column; gap: 15px; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* NOTIFICATION STYLES */
+        .notif-btn { position: relative; cursor: pointer; margin-right: 15px; color: var(--text-light); font-size: 20px; }
+        .notif-badge { position: absolute; top: -5px; right: -5px; background: red; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .notif-dropdown { position: absolute; top: 150%; right: 0; width: 300px; background: var(--dark-navy); border: 1px solid var(--glass-border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; padding: 10px; display: none; }
+        .notif-dropdown.show { display: block; }
+        .notif-item { padding: 10px; border-bottom: 1px solid var(--glass-border); font-size: 13px; color: var(--text-gray); }
+        .notif-item.unread { background: rgba(255, 215, 0, 0.1); border-left: 3px solid var(--accent-gold); }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const translations = {
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job" }, title: "My Wallet", balance: "Total Balance", withdraw: "Withdraw Funds", ph_num: "Vodafone Cash Number", ph_amount: "Amount (EGP)", btn_withdraw: "Request Withdrawal", history: "Transaction History", th: { date: "Date", desc: "Description", amount: "Amount", status: "Status" } },
+            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة" }, title: "محفظتي", balance: "الرصيد الكلي", withdraw: "سحب الأموال", ph_num: "رقم فودافون كاش", ph_amount: "المبلغ (ج.م)", btn_withdraw: "طلب سحب", history: "سجل المعاملات", th: { date: "التاريخ", desc: "الوصف", amount: "المبلغ", status: "الحالة" } }
+        };
+
+        function Header({ lang, t, toggleLang }) {
+            const [theme, setTheme] = React.useState('dark');
+            const [isOpen, setIsOpen] = React.useState(false);
+            const [notifs, setNotifs] = React.useState([]);
+            const [showNotifs, setShowNotifs] = React.useState(false);
+
+            React.useEffect(() => {
+                const saved = localStorage.getItem('nile_theme') || 'dark';
+                setTheme(saved);
+                document.documentElement.setAttribute('data-theme', saved);
+                
+                const loadNotifs = () => {
+                    const savedNotifs = JSON.parse(localStorage.getItem('nile_notifications') || '[]');
+                    setNotifs(savedNotifs);
+                };
+                loadNotifs();
+                const interval = setInterval(loadNotifs, 2000);
+                return () => clearInterval(interval);
+            }, []);
+
+            const toggleTheme = () => {
+                const newTheme = theme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+                localStorage.setItem('nile_theme', newTheme);
+                document.documentElement.setAttribute('data-theme', newTheme);
+            };
+
+            const unreadCount = notifs.filter(n => !n.read).length;
+            const handleNotifClick = () => {
+                setShowNotifs(!showNotifs);
+                if (!showNotifs && unreadCount > 0) {
+                    const updated = notifs.map(n => ({...n, read: true}));
+                    setNotifs(updated);
+                    localStorage.setItem('nile_notifications', JSON.stringify(updated));
+                }
+            };
+
+            return (
+                <header>
+                    <div className="container header-content">
+                        <a href="index.html" className="logo"><i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i><h1>NileLancers</h1></a>
+                        <nav className="hidden md:flex items-center gap-6">
+                            <a href="index.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.home}</a>
+                            <a href="jobs.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.services}</a>
+                            <a href="saved.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.saved}</a>
+                            <a href="client-dashboard.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.dashboard}</a>
+                            <a href="wallet.html" className="text-[var(--secondary-blue)] font-bold">{t.nav.wallet}</a>
+                            <a href="profile.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.profile}</a>
+                            <a href="settings.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.settings}</a>
+                            
+                            {/* Notification Bell */}
+                            <div className="relative">
+                                <button onClick={handleNotifClick} className="notif-btn">
+                                    <i className="fas fa-bell"></i>
+                                    {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
+                                </button>
+                                <div className={`notif-dropdown ${showNotifs ? 'show' : ''}`} style={{marginTop: '15px'}}>
+                                    <h4 className="p-2 font-bold text-white border-b border-gray-700">Notifications</h4>
+                                    {notifs.length === 0 ? <div className="p-4 text-center text-gray-500">No notifications</div> : 
+                                        notifs.slice(0, 5).map(n => (
+                                            <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`}>
+                                                <p>{n.text}</p>
+                                                <span className="text-xs text-gray-500">{new Date(n.time).toLocaleTimeString()}</span>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+
+                            <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'AR' : 'EN'}</button>
+                            <button onClick={toggleTheme} className="lang-btn px-3"><i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i></button>
+                            <a href="post-job.html" className="cta-button">{t.nav.post}</a>
+                        </nav>
+                        <div className="md:hidden flex items-center gap-4">
+                            <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
+                            <button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl"><i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i></button>
+                        </div>
+                    </div>
+                    {isOpen && (
+                        <div className="mobile-menu md:hidden">
+                            <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
+                            <a href="jobs.html" className="text-white font-bold">{t.nav.services}</a>
+                            <a href="saved.html" className="text-white font-bold">{t.nav.saved}</a>
+                            <a href="client-dashboard.html" className="text-white font-bold">{t.nav.dashboard}</a>
+                            <a href="wallet.html" className="text-[var(--accent-gold)] font-bold">{t.nav.wallet}</a>
+                            <a href="profile.html" className="text-white font-bold">{t.nav.profile}</a>
+                            <a href="settings.html" className="text-white font-bold">{t.nav.settings}</a>
+                            <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
+                        </div>
+                    )}
+                </header>
+            );
+        }
+
+        function WalletApp() {
+            const [lang, setLang] = React.useState('en');
+            const [balance, setBalance] = React.useState(15500);
+            const [transactions, setTransactions] = React.useState([
+                { id: 1, date: '2025-01-15', desc: 'Project Payment: Logo Design', amount: 5000, type: 'in', status: 'Completed' },
+                { id: 2, date: '2025-01-10', desc: 'Withdrawal to 010xxxxxxx', amount: -2000, type: 'out', status: 'Completed' },
+                { id: 3, date: '2025-01-05', desc: 'Project Payment: Translation', amount: 12500, type: 'in', status: 'Completed' }
+            ]);
+            const [withdrawData, setWithdrawData] = React.useState({ number: '', amount: '' });
+
+            React.useEffect(() => { 
+                const saved = localStorage.getItem('nile_lang') || 'en'; 
+                setLang(saved); 
+                document.dir = saved === 'ar' ? 'rtl' : 'ltr'; 
+            }, []);
+            
+            const toggleLang = () => { 
+                const newLang = lang === 'en' ? 'ar' : 'en'; 
+                setLang(newLang); 
+                localStorage.setItem('nile_lang', newLang); 
+                document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; 
+            };
+
+            const handleWithdraw = (e) => {
+                e.preventDefault();
+                const amount = parseFloat(withdrawData.amount);
+                if (amount > balance || amount <= 0) {
+                    alert("Invalid amount");
+                    return;
+                }
+                const newTrans = {
+                    id: Date.now(),
+                    date: new Date().toISOString().split('T')[0],
+                    desc: `Withdrawal to ${withdrawData.number}`,
+                    amount: -amount,
+                    type: 'out',
+                    status: 'Pending'
+                };
+                setBalance(prev => prev - amount);
+                setTransactions([newTrans, ...transactions]);
+                setWithdrawData({ number: '', amount: '' });
+                alert("Withdrawal request submitted!");
+            };
+
+            const t = translations[lang];
+
+            return (
+                <div className="min-h-screen flex flex-col">
+                    <Header lang={lang} t={t} toggleLang={toggleLang} />
+                    
+                    <div className="container py-12 flex-grow">
+                        <h1 className="text-3xl font-bold text-[var(--text-light)] mb-8">{t.title}</h1>
+                        
+                        <div className="balance-card">
+                            <p className="text-blue-200 uppercase tracking-wider text-sm">{t.balance}</p>
+                            <h2 className="balance-amount">EGP {balance.toLocaleString()}</h2>
+                            <div className="mt-4 text-white/80"><i className="fas fa-wallet mr-2"></i> Vodafone Cash Ready</div>
+                        </div>
+
+                        <div className="grid md:grid-cols-3 gap-8">
+                            <div className="md:col-span-1">
+                                <form onSubmit={handleWithdraw} className="withdraw-form">
+                                    <h3 className="text-xl font-bold text-[var(--text-light)] mb-6 border-b border-[var(--glass-border)] pb-2">{t.withdraw}</h3>
+                                    <div className="input-group">
+                                        <label>{t.ph_num}</label>
+                                        <input type="text" className="input-field" placeholder="010xxxxxxxx" value={withdrawData.number} onChange={e => setWithdrawData({...withdrawData, number: e.target.value})} required />
+                                    </div>
+                                    <div className="input-group">
+                                        <label>{t.ph_amount}</label>
+                                        <input type="number" className="input-field" placeholder="500" value={withdrawData.amount} onChange={e => setWithdrawData({...withdrawData, amount: e.target.value})} required />
+                                    </div>
+                                    <button type="submit" className="cta-button w-full">{t.btn_withdraw}</button>
+                                </form>
+                            </div>
+
+                            <div className="md:col-span-2">
+                                <h3 className="text-xl font-bold text-[var(--text-light)] mb-4">{t.history}</h3>
+                                <div className="overflow-x-auto">
+                                    <table className="history-table">
+                                        <thead>
+                                            <tr>
+                                                <th>{t.th.date}</th>
+                                                <th>{t.th.desc}</th>
+                                                <th>{t.th.amount}</th>
+                                                <th>{t.th.status}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {transactions.map(tr => (
+                                                <tr key={tr.id}>
+                                                    <td>{tr.date}</td>
+                                                    <td>{tr.desc}</td>
+                                                    <td style={{color: tr.type === 'in' ? 'var(--accent-green)' : '#e74c3c', fontWeight: 'bold'}}>
+                                                        {tr.type === 'in' ? '+' : ''}{tr.amount.toLocaleString()} EGP
+                                                    </td>
+                                                    <td className={tr.status === 'Completed' ? 'status-completed' : 'status-pending'}>{tr.status}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <footer>
+                        <div className="container text-center text-gray-500 text-sm py-8 border-t border-[var(--primary-blue)] mt-auto">
+                            © 2025 NileLancers. All rights reserved.
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<WalletApp />);
+    </script>
+</body>
+</html>

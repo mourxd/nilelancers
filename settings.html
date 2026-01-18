@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings - NileLancers</title>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; 
+            --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; 
+            --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; 
+            --glass-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.4s ease; 
+        }
+        [data-theme="light"] {
+            --navy-blue: #e2e8f0; --dark-navy: #f8fafc; --light-navy: #ffffff;
+            --text-light: #1a202c; --text-gray: #4a5568;
+            --primary-blue: #0056b3; --secondary-blue: #0074D9;
+            --glass-bg: rgba(255, 255, 255, 0.8); --glass-border: rgba(0, 0, 0, 0.1);
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
+        
+        /* HEADER (Shared) */
+        header { background: rgba(0, 15, 40, 0.95); backdrop-filter: blur(10px); padding: 15px 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary-blue); }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; transition: var(--transition); }
+        .logo h1 { font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
+        .desktop-nav ul { display: flex; align-items: center; gap: 30px; margin: 0; padding: 0; }
+        .desktop-nav a { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 15px; transition: var(--transition); }
+        .desktop-nav a:hover { color: var(--secondary-blue); }
+        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; border: none; cursor: pointer; transition: var(--transition); }
+        .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 8px 20px; border-radius: 30px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; }
+        
+        /* SETTINGS STYLES */
+        .settings-container { display: grid; grid-template-columns: 1fr 3fr; gap: 30px; }
+        .settings-sidebar { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 20px; height: fit-content; }
+        .sidebar-item { display: block; padding: 15px; color: var(--text-gray); text-decoration: none; border-radius: 10px; margin-bottom: 10px; transition: var(--transition); cursor: pointer; }
+        .sidebar-item:hover, .sidebar-item.active { background: var(--primary-blue); color: white; }
+        .sidebar-item i { width: 25px; }
+        
+        .settings-content { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 40px; }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; color: var(--accent-gold); margin-bottom: 10px; font-weight: 600; }
+        .input-field { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: var(--text-light); outline: none; transition: 0.3s; }
+        .input-field:focus { border-color: var(--secondary-blue); }
+        textarea.input-field { resize: vertical; min-height: 100px; }
+        
+        @media (max-width: 768px) { .settings-container { grid-template-columns: 1fr; } }
+
+        .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: var(--dark-navy); border-bottom: 2px solid var(--accent-gold); padding: 20px; display: flex; flex-direction: column; gap: 15px; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* NOTIFICATION STYLES */
+        .notif-btn { position: relative; cursor: pointer; margin-right: 15px; color: var(--text-light); font-size: 20px; }
+        .notif-badge { position: absolute; top: -5px; right: -5px; background: red; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .notif-dropdown { position: absolute; top: 150%; right: 0; width: 300px; background: var(--dark-navy); border: 1px solid var(--glass-border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; padding: 10px; display: none; }
+        .notif-dropdown.show { display: block; }
+        .notif-item { padding: 10px; border-bottom: 1px solid var(--glass-border); font-size: 13px; color: var(--text-gray); }
+        .notif-item.unread { background: rgba(255, 215, 0, 0.1); border-left: 3px solid var(--accent-gold); }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const translations = {
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job" }, title: "Account Settings", tabs: { profile: "Profile Info", security: "Security" }, lbl: { name: "Full Name", title: "Professional Title", loc: "Location", bio: "Bio", skills: "Skills (comma separated)", cur_pass: "Current Password", new_pass: "New Password", con_pass: "Confirm Password" }, btn: { save: "Save Changes", change: "Change Password" }, success: "Settings updated successfully!" },
+            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة" }, title: "إعدادات الحساب", tabs: { profile: "المعلومات الشخصية", security: "الأمان" }, lbl: { name: "الاسم الكامل", title: "المسمى الوظيفي", loc: "الموقع", bio: "نبذة عني", skills: "المهارات (مفصولة بفاصلة)", cur_pass: "كلمة المرور الحالية", new_pass: "كلمة المرور الجديدة", con_pass: "تأكيد كلمة المرور" }, btn: { save: "حفظ التغييرات", change: "تغيير كلمة المرور" }, success: "تم تحديث الإعدادات بنجاح!" }
+        };
+
+        function Header({ lang, t, toggleLang }) {
+            const [theme, setTheme] = React.useState('dark');
+            const [isOpen, setIsOpen] = React.useState(false);
+            const [notifs, setNotifs] = React.useState([]);
+            const [showNotifs, setShowNotifs] = React.useState(false);
+
+            React.useEffect(() => {
+                const saved = localStorage.getItem('nile_theme') || 'dark';
+                setTheme(saved);
+                document.documentElement.setAttribute('data-theme', saved);
+                
+                const loadNotifs = () => {
+                    const savedNotifs = JSON.parse(localStorage.getItem('nile_notifications') || '[]');
+                    setNotifs(savedNotifs);
+                };
+                loadNotifs();
+                const interval = setInterval(loadNotifs, 2000);
+                return () => clearInterval(interval);
+            }, []);
+
+            const toggleTheme = () => {
+                const newTheme = theme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+                localStorage.setItem('nile_theme', newTheme);
+                document.documentElement.setAttribute('data-theme', newTheme);
+            };
+
+            const unreadCount = notifs.filter(n => !n.read).length;
+            const handleNotifClick = () => {
+                setShowNotifs(!showNotifs);
+                if (!showNotifs && unreadCount > 0) {
+                    const updated = notifs.map(n => ({...n, read: true}));
+                    setNotifs(updated);
+                    localStorage.setItem('nile_notifications', JSON.stringify(updated));
+                }
+            };
+
+            return (
+                <header>
+                    <div className="container header-content">
+                        <a href="index.html" className="logo"><i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i><h1>NileLancers</h1></a>
+                        <nav className="hidden md:flex items-center gap-6">
+                            <a href="index.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.home}</a>
+                            <a href="jobs.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.services}</a>
+                            <a href="saved.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.saved}</a>
+                            <a href="client-dashboard.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.dashboard}</a>
+                            <a href="wallet.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.wallet}</a>
+                            <a href="profile.html" className="text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold">{t.nav.profile}</a>
+                            <a href="settings.html" className="text-[var(--secondary-blue)] font-bold">{t.nav.settings}</a>
+                            
+                            {/* Notification Bell */}
+                            <div className="relative">
+                                <button onClick={handleNotifClick} className="notif-btn">
+                                    <i className="fas fa-bell"></i>
+                                    {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
+                                </button>
+                                <div className={`notif-dropdown ${showNotifs ? 'show' : ''}`} style={{marginTop: '15px'}}>
+                                    <h4 className="p-2 font-bold text-white border-b border-gray-700">Notifications</h4>
+                                    {notifs.length === 0 ? <div className="p-4 text-center text-gray-500">No notifications</div> : 
+                                        notifs.slice(0, 5).map(n => (
+                                            <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`}>
+                                                <p>{n.text}</p>
+                                                <span className="text-xs text-gray-500">{new Date(n.time).toLocaleTimeString()}</span>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+
+                            <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'AR' : 'EN'}</button>
+                            <button onClick={toggleTheme} className="lang-btn px-3"><i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i></button>
+                            <a href="post-job.html" className="cta-button">{t.nav.post}</a>
+                        </nav>
+                        <div className="md:hidden flex items-center gap-4">
+                            <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
+                            <button onClick={() => setIsOpen(!isOpen)} className="text-white text-2xl"><i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i></button>
+                        </div>
+                    </div>
+                    {isOpen && (
+                        <div className="mobile-menu md:hidden">
+                            <a href="index.html" className="text-white font-bold">{t.nav.home}</a>
+                            <a href="jobs.html" className="text-white font-bold">{t.nav.services}</a>
+                            <a href="saved.html" className="text-white font-bold">{t.nav.saved}</a>
+                            <a href="client-dashboard.html" className="text-white font-bold">{t.nav.dashboard}</a>
+                            <a href="wallet.html" className="text-white font-bold">{t.nav.wallet}</a>
+                            <a href="profile.html" className="text-white font-bold">{t.nav.profile}</a>
+                            <a href="settings.html" className="text-white font-bold">{t.nav.settings}</a>
+                            <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
+                        </div>
+                    )}
+                </header>
+            );
+        }
+
+        function SettingsApp() {
+            const [lang, setLang] = React.useState('en');
+            const [activeTab, setActiveTab] = React.useState('profile');
+            const [profile, setProfile] = React.useState({
+                name: "Omar Sherif",
+                title: "Senior Full Stack Developer",
+                location: "Cairo, Egypt",
+                bio: "Passionate Full Stack Developer with 5+ years of experience building scalable web applications.",
+                skills: "React.js, Node.js, Tailwind CSS, MongoDB"
+            });
+            const [passwords, setPasswords] = React.useState({ current: '', new: '', confirm: '' });
+
+            React.useEffect(() => { 
+                const savedLang = localStorage.getItem('nile_lang') || 'en'; 
+                setLang(savedLang); 
+                document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
+                
+                const savedProfile = JSON.parse(localStorage.getItem('user_profile'));
+                if(savedProfile) setProfile(savedProfile);
+            }, []);
+            
+            const toggleLang = () => { 
+                const newLang = lang === 'en' ? 'ar' : 'en'; 
+                setLang(newLang); 
+                localStorage.setItem('nile_lang', newLang); 
+                document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; 
+            };
+
+            const handleProfileSave = (e) => {
+                e.preventDefault();
+                localStorage.setItem('user_profile', JSON.stringify(profile));
+                alert(translations[lang].success);
+            };
+
+            const handlePasswordChange = (e) => {
+                e.preventDefault();
+                if(passwords.new !== passwords.confirm) {
+                    alert("Passwords do not match!");
+                    return;
+                }
+                alert("Password changed successfully!");
+                setPasswords({ current: '', new: '', confirm: '' });
+            };
+
+            const t = translations[lang];
+
+            return (
+                <div className="min-h-screen flex flex-col">
+                    <Header lang={lang} t={t} toggleLang={toggleLang} />
+                    
+                    <div className="container py-12 flex-grow">
+                        <h1 className="text-3xl font-bold text-[var(--text-light)] mb-8">{t.title}</h1>
+                        
+                        <div className="settings-container">
+                            {/* Sidebar */}
+                            <div className="settings-sidebar">
+                                <div className={`sidebar-item ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}>
+                                    <i className="fas fa-user"></i> {t.tabs.profile}
+                                </div>
+                                <div className={`sidebar-item ${activeTab === 'security' ? 'active' : ''}`} onClick={() => setActiveTab('security')}>
+                                    <i className="fas fa-lock"></i> {t.tabs.security}
+                                </div>
+                            </div>
+
+                            {/* Content */}
+                            <div className="settings-content">
+                                {activeTab === 'profile' ? (
+                                    <form onSubmit={handleProfileSave}>
+                                        <div className="grid md:grid-cols-2 gap-6">
+                                            <div className="form-group">
+                                                <label>{t.lbl.name}</label>
+                                                <input type="text" className="input-field" value={profile.name} onChange={e => setProfile({...profile, name: e.target.value})} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>{t.lbl.title}</label>
+                                                <input type="text" className="input-field" value={profile.title} onChange={e => setProfile({...profile, title: e.target.value})} />
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>{t.lbl.loc}</label>
+                                            <input type="text" className="input-field" value={profile.location} onChange={e => setProfile({...profile, location: e.target.value})} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>{t.lbl.bio}</label>
+                                            <textarea className="input-field" value={profile.bio} onChange={e => setProfile({...profile, bio: e.target.value})}></textarea>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>{t.lbl.skills}</label>
+                                            <input type="text" className="input-field" value={profile.skills} onChange={e => setProfile({...profile, skills: e.target.value})} />
+                                        </div>
+                                        <button type="submit" className="cta-button">{t.btn.save}</button>
+                                    </form>
+                                ) : (
+                                    <form onSubmit={handlePasswordChange}>
+                                        <div className="form-group">
+                                            <label>{t.lbl.cur_pass}</label>
+                                            <input type="password" className="input-field" value={passwords.current} onChange={e => setPasswords({...passwords, current: e.target.value})} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>{t.lbl.new_pass}</label>
+                                            <input type="password" className="input-field" value={passwords.new} onChange={e => setPasswords({...passwords, new: e.target.value})} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>{t.lbl.con_pass}</label>
+                                            <input type="password" className="input-field" value={passwords.confirm} onChange={e => setPasswords({...passwords, confirm: e.target.value})} />
+                                        </div>
+                                        <button type="submit" className="cta-button">{t.btn.change}</button>
+                                    </form>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <footer>
+                        <div className="container text-center text-gray-500 text-sm py-8 border-t border-[var(--primary-blue)] mt-auto">
+                            © 2025 NileLancers. All rights reserved.
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SettingsApp />);
+    </script>
+</body>
+</html>
