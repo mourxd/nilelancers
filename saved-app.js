@@ -1,6 +1,25 @@
 // saved-app.js
+const translations = {
+    en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job", login: "Login", logout: "Logout", signup: "Sign Up", how: "How it Works" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." } },
+    ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة", login: "تسجيل الدخول", logout: "تسجيل الخروج", signup: "إنشاء حساب", how: "كيف يعمل" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." } }
+};
+
 function SavedApp() {
   const [savedJobs, setSavedJobs] = React.useState([]);
+  const [lang, setLang] = React.useState('en');
+  React.useEffect(() => {
+    const saved = localStorage.getItem('nile_lang') || 'en';
+    setLang(saved);
+    document.dir = saved === 'ar' ? 'rtl' : 'ltr';
+  }, []);
+
+  const toggleLang = () => {
+    const newLang = lang === 'en' ? 'ar' : 'en';
+    setLang(newLang);
+    localStorage.setItem('nile_lang', newLang);
+    document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+  };
+
 
   React.useEffect(() => {
     const saved = localStorage.getItem('savedServices');
@@ -13,9 +32,11 @@ function SavedApp() {
     localStorage.setItem('savedServices', JSON.stringify(updated));
   };
 
+  const t = translations[lang];
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Header lang={lang} t={t} toggleLang={toggleLang} activeLink="saved" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-8">Saved Services</h1>
         {savedJobs.length === 0 ? (
@@ -28,7 +49,7 @@ function SavedApp() {
           </div>
         )}
       </div>
-      <Footer />
+      <Footer t={t} />
     </div>
   );
 }
