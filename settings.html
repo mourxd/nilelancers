@@ -10,6 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="auth.js"></script>
     <script type="text/babel" src="components/Header.js"></script>
     <script type="text/babel" src="components/Footer.js"></script>
     <style>
@@ -74,8 +75,8 @@
     <div id="root"></div>
     <script type="text/babel">
         const translations = {
-            en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job" }, title: "Account Settings", tabs: { profile: "Profile Info", security: "Security" }, lbl: { name: "Full Name", title: "Professional Title", loc: "Location", bio: "Bio", skills: "Skills (comma separated)", cur_pass: "Current Password", new_pass: "New Password", con_pass: "Confirm Password" }, btn: { save: "Save Changes", change: "Change Password" }, success: "Settings updated successfully!", footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." } },
-            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة" }, title: "إعدادات الحساب", tabs: { profile: "المعلومات الشخصية", security: "الأمان" }, lbl: { name: "الاسم الكامل", title: "المسمى الوظيفي", loc: "الموقع", bio: "نبذة عني", skills: "المهارات (مفصولة بفاصلة)", cur_pass: "كلمة المرور الحالية", new_pass: "كلمة المرور الجديدة", con_pass: "تأكيد كلمة المرور" }, btn: { save: "حفظ التغييرات", change: "تغيير كلمة المرور" }, success: "تم تحديث الإعدادات بنجاح!", footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." } }
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job", login: "Login", logout: "Logout", signup: "Sign Up", how: "How it Works" }, title: "Account Settings", tabs: { profile: "Profile Info", security: "Security" }, lbl: { name: "Full Name", title: "Professional Title", loc: "Location", bio: "Bio", skills: "Skills (comma separated)", cur_pass: "Current Password", new_pass: "New Password", con_pass: "Confirm Password" }, btn: { save: "Save Changes", change: "Change Password" }, success: "Settings updated successfully!", footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." } },
+            ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة", login: "تسجيل الدخول", logout: "تسجيل الخروج", signup: "إنشاء حساب", how: "كيف يعمل" }, title: "إعدادات الحساب", tabs: { profile: "المعلومات الشخصية", security: "الأمان" }, lbl: { name: "الاسم الكامل", title: "المسمى الوظيفي", loc: "الموقع", bio: "نبذة عني", skills: "المهارات (مفصولة بفاصلة)", cur_pass: "كلمة المرور الحالية", new_pass: "كلمة المرور الجديدة", con_pass: "تأكيد كلمة المرور" }, btn: { save: "حفظ التغييرات", change: "تغيير كلمة المرور" }, success: "تم تحديث الإعدادات بنجاح!", footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." } }
         };
 
         function SettingsApp() {
@@ -95,8 +96,18 @@
                 setLang(savedLang); 
                 document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
                 
-                const savedProfile = JSON.parse(localStorage.getItem('user_profile'));
-                if(savedProfile) setProfile(savedProfile);
+                const user = Auth.getUser();
+                if(user) {
+                    setProfile({
+                        name: user.name,
+                        title: user.title,
+                        location: user.location,
+                        bio: user.bio,
+                        skills: user.skills.join(', ')
+                    });
+                } else {
+                    window.location.href = 'login.html';
+                }
             }, []);
             
             const toggleLang = () => { 
@@ -108,8 +119,16 @@
 
             const handleProfileSave = (e) => {
                 e.preventDefault();
-                localStorage.setItem('user_profile', JSON.stringify(profile));
-                alert(translations[lang].success);
+                const updatedUser = Auth.updateUser({
+                    name: profile.name,
+                    title: profile.title,
+                    location: profile.location,
+                    bio: profile.bio,
+                    skills: profile.skills.split(',').map(s => s.trim())
+                });
+                if(updatedUser) {
+                    alert(translations[lang].success);
+                }
             };
 
             const handlePasswordChange = (e) => {
@@ -118,6 +137,7 @@
                     alert("Passwords do not match!");
                     return;
                 }
+                // In a real app, you would call an API to change the password
                 alert("Password changed successfully!");
                 setPasswords({ current: '', new: '', confirm: '' });
             };
@@ -195,8 +215,5 @@
                 </div>
             );
         }
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<SettingsApp />);
-    </script>
 </body>
 </html>
