@@ -4,20 +4,11 @@ function Header({ lang, t, toggleLang, activeLink }) {
     const [theme, setTheme] = React.useState('dark');
     const [notifs, setNotifs] = React.useState([]);
     const [showNotifs, setShowNotifs] = React.useState(false);
-    const [user, setUser] = React.useState(null);
 
     React.useEffect(() => {
         const saved = localStorage.getItem('nile_theme') || 'dark';
         setTheme(saved);
         document.documentElement.setAttribute('data-theme', saved);
-        
-        try {
-            const u = JSON.parse(localStorage.getItem('nile_user'));
-            setUser(u);
-        } catch (e) {
-            console.error('Error parsing user from localStorage', e);
-            setUser(null);
-        }
         
         // Load Notifications
         const loadNotifs = () => {
@@ -41,6 +32,8 @@ function Header({ lang, t, toggleLang, activeLink }) {
         document.documentElement.setAttribute('data-theme', newTheme);
     };
 
+    const user = Auth.getUser();
+
     const unreadCount = notifs.filter(n => !n.read).length;
     const handleNotifClick = () => {
         setShowNotifs(!showNotifs);
@@ -52,7 +45,7 @@ function Header({ lang, t, toggleLang, activeLink }) {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('nile_user');
+        Auth.logout();
         window.location.href = 'index.html';
     };
 

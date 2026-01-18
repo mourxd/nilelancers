@@ -1,4 +1,4 @@
-// utils/auth.js
+// auth.js
 const Auth = {
   getUser() {
     try {
@@ -10,23 +10,39 @@ const Auth = {
     }
   },
 
-  login(email = 'demo@nilelancers.com') {
+  login(email, password) {
+    // In a real app, you'd call an API here.
+    // For this demo, we'll use a mock user.
     const mockUser = {
-      name: 'Ahmed Hassan',
+      name: 'Omar Sherif',
       email: email,
-      title: 'Senior Graphic Designer',
+      title: 'Senior Full Stack Developer',
       location: 'Cairo, Egypt',
-      bio: 'Passionate designer with 5 years of experience in branding and UI design. I love creating clean and functional interfaces for local and global clients.',
-      skills: ['Photoshop', 'Illustrator', 'Figma', 'UI/UX'],
-      avatar: 'https://ui-avatars.com/api/?name=Ahmed+Hassan&background=0D8ABC&color=fff'
+      bio: 'Passionate Full Stack Developer with 5+ years of experience building scalable web applications. Specialized in the MERN stack and modern UI/UX principles.',
+      skills: ["React.js", "Node.js", "Tailwind CSS", "MongoDB", "UI/UX", "Arabic Translation"],
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+      portfolio: [
+        { id: 1, img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=60", title: "E-commerce App" },
+        { id: 2, img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=60", title: "Analytics Dashboard" },
+        { id: 3, img: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&w=500&q=60", title: "Portfolio Site" }
+      ],
+      reviews: [
+        { id: 1, client: "TechCorp", text: "Omar is an exceptional developer. Delivered on time and code was clean.", stars: 5 },
+        { id: 2, client: "StartUp Inc", text: "Great communication and very skilled in React.", stars: 5 }
+      ]
     };
     localStorage.setItem('nile_user', JSON.stringify(mockUser));
     return mockUser;
   },
 
+  signup(name, email, password) {
+    // In a real app, you'd call an API here.
+    // For this demo, we'll just log them in with the mock user.
+    return this.login(email, password);
+  },
+
   logout() {
     localStorage.removeItem('nile_user');
-    window.location.href = 'index.html';
   },
 
   updateUser(updates) {

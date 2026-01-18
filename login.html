@@ -14,102 +14,64 @@
         :root { 
             --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; 
             --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; 
-            --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; 
+            --text-light: #ffffff; --text-gray: #f0f0f0; 
             --glass-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1);
-            --transition: all 0.4s ease; 
         }
-        [data-theme="light"] {
-            --navy-blue: #e2e8f0; --dark-navy: #f8fafc; --light-navy: #ffffff;
-            --text-light: #1a202c; --text-gray: #4a5568;
-            --primary-blue: #0056b3; --secondary-blue: #0074D9;
-            --glass-bg: rgba(255, 255, 255, 0.8); --glass-border: rgba(0, 0, 0, 0.1);
-        }
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
-        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
-        
-        .form-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 40px; backdrop-filter: blur(10px); max-width: 450px; margin: 0 auto; width: 100%; }
-        label { display: block; color: var(--accent-gold); margin-bottom: 8px; font-weight: 600; }
-        .input-field { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: var(--text-light); outline: none; transition: 0.3s; }
-        .input-field:focus { border-color: var(--secondary-blue); }
-        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 12px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; border: none; cursor: pointer; transition: var(--transition); width: 100%; text-align: center; }
-        .cta-button:hover { transform: translateY(-3px); }
-        .link { color: var(--secondary-blue); text-decoration: none; font-weight: bold; }
-        .link:hover { text-decoration: underline; }
+        body { background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 100%); font-family: 'Montserrat', sans-serif; color: var(--text-light); }
+        .form-container { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); }
+        .form-input { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); }
+        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center min-h-screen">
     <div id="root"></div>
+    <script src="auth.js"></script>
     <script type="text/babel">
-        const translations = {
-            en: { title: "Welcome Back", email: "Email Address", pass: "Password", btn: "Login", no_account: "Don't have an account?", signup: "Sign Up", home: "Back to Home" },
-            ar: { title: "مرحباً بعودتك", email: "البريد الإلكتروني", pass: "كلمة المرور", btn: "دخول", no_account: "ليس لديك حساب؟", signup: "إنشاء حساب", home: "العودة للرئيسية" }
-        };
-
         function LoginApp() {
-            const [lang, setLang] = React.useState('en');
-            const [formData, setFormData] = React.useState({ email: '', password: '' });
-
-            React.useEffect(() => { 
-                const savedLang = localStorage.getItem('nile_lang') || 'en';
-                setLang(savedLang); 
-                document.dir = savedLang === 'ar' ? 'rtl' : 'ltr'; 
-                
-                const theme = localStorage.getItem('nile_theme') || 'dark';
-                document.documentElement.setAttribute('data-theme', theme);
-            }, []);
+            const [email, setEmail] = React.useState('');
+            const [password, setPassword] = React.useState('');
+            const [error, setError] = React.useState('');
 
             const handleSubmit = (e) => {
                 e.preventDefault();
-                // Mock Login Logic
-                const user = {
-                    name: "Omar Sherif",
-                    email: formData.email,
-                    role: "Freelancer",
-                    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80"
-                };
-                localStorage.setItem('nile_user', JSON.stringify(user));
-                window.location.href = 'index.html';
+                setError('');
+                if (!email || !password) {
+                    setError('Please fill in all fields.');
+                    return;
+                }
+                const user = Auth.login(email, password);
+                if (user) {
+                    window.location.href = 'profile.html';
+                } else {
+                    setError('Invalid credentials. Please try again.');
+                }
             };
 
-            const t = translations[lang];
-
             return (
-                <div className="min-h-screen flex flex-col items-center justify-center p-4">
-                    <div className="mb-8 text-center">
-                        <a href="index.html" className="flex items-center justify-center gap-3 text-3xl font-bold text-white mb-2 no-underline">
-                            <i className="fas fa-water text-[var(--accent-gold)]"></i>
-                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[var(--secondary-blue)] to-[var(--accent-gold)]">NileLancers</span>
-                        </a>
+                <div className="form-container w-full max-w-md p-8 rounded-2xl shadow-2xl">
+                    <div className="text-center mb-8">
+                        <h1 className="text-4xl font-bold text-white">Welcome Back</h1>
+                        <p className="text-gray-400">Login to continue your journey with NileLancers</p>
                     </div>
-                    
-                    <form onSubmit={handleSubmit} className="form-card space-y-6">
-                        <h1 className="text-2xl font-bold text-[var(--text-light)] text-center mb-6">{t.title}</h1>
-                        
-                        <div>
-                            <label>{t.email}</label>
-                            <input type="email" className="input-field" required 
-                                onChange={(e) => setFormData({...formData, email: e.target.value})} />
+                    <form onSubmit={handleSubmit} noValidate>
+                        {error && <div className="bg-red-500/20 border border-red-500 text-red-300 p-3 rounded-lg mb-4">{error}</div>}
+                        <div className="mb-4">
+                            <label className="block text-gray-300 mb-2">Email</label>
+                            <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="form-input w-full p-3 rounded-lg" required />
                         </div>
-
-                        <div>
-                            <label>{t.pass}</label>
-                            <input type="password" className="input-field" required 
-                                onChange={(e) => setFormData({...formData, password: e.target.value})} />
+                        <div className="mb-6">
+                            <label className="block text-gray-300 mb-2">Password</label>
+                            <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="form-input w-full p-3 rounded-lg" required />
                         </div>
-
-                        <button type="submit" className="cta-button">{t.btn}</button>
-
-                        <div className="text-center text-[var(--text-gray)] text-sm mt-4">
-                            {t.no_account} <a href="signup.html" className="link">{t.signup}</a>
-                        </div>
-                        <div className="text-center mt-2">
-                            <a href="index.html" className="text-gray-500 text-xs hover:text-white">{t.home}</a>
-                        </div>
+                        <button type="submit" className="cta-button w-full p-3 rounded-lg font-bold text-lg">Login</button>
                     </form>
+                    <p className="text-center text-gray-400 mt-6">
+                        Don't have an account? <a href="signup.html" className="text-[var(--secondary-blue)] hover:underline">Sign Up</a>
+                    </p>
                 </div>
             );
         }
+
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<LoginApp />);
     </script>

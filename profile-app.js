@@ -18,23 +18,13 @@ function ProfileApp() {
         document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; 
     };
 
-    const t = translations[lang];
+    const user = Auth.getUser();
+    if (!user) {
+        window.location.href = 'login.html';
+        return null; // Return null to prevent rendering before redirect
+    }
 
-    // Mock Data
-    const user = Auth.getUser() || {
-        name: "Omar Sherif",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
-        skills: ["React.js", "Node.js", "Tailwind CSS", "MongoDB", "UI/UX", "Arabic Translation"],
-        portfolio: [
-            { id: 1, img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=60", title: "E-commerce App" },
-            { id: 2, img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=60", title: "Analytics Dashboard" },
-            { id: 3, img: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&w=500&q=60", title: "Portfolio Site" }
-        ],
-        reviews: [
-            { id: 1, client: "TechCorp", text: "Omar is an exceptional developer. Delivered on time and code was clean.", stars: 5 },
-            { id: 2, client: "StartUp Inc", text: "Great communication and very skilled in React.", stars: 5 }
-        ]
-    };
+    const t = translations[lang];
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -44,13 +34,13 @@ function ProfileApp() {
                 {/* Profile Header */}
                 <div className="profile-header">
                     <div className="avatar-container">
-                        <img src={user.image} alt={user.name} className="avatar" />
+                        <img src={user.avatar} alt={user.name} className="avatar" />
                         <div className="online-status"></div>
                     </div>
                     <div className="flex-1">
                         <h1 className="text-3xl font-bold text-[var(--text-light)] mb-2">{user.name} <i className="fas fa-check-circle text-[var(--secondary-blue)] text-xl ml-2"></i></h1>
-                        <p className="text-[var(--accent-gold)] text-lg mb-1">{t.role}</p>
-                        <p className="text-gray-400 mb-4"><i className="fas fa-map-marker-alt mr-2"></i> {t.loc}</p>
+                        <p className="text-[var(--accent-gold)] text-lg mb-1">{user.title}</p>
+                        <p className="text-gray-400 mb-4"><i className="fas fa-map-marker-alt mr-2"></i> {user.location}</p>
                         <div className="flex gap-4">
                             <button className="cta-button">{t.hire}</button>
                             <button className="px-6 py-2 border border-white rounded-full text-white hover:bg-white hover:text-black transition">{t.rate}</button>
@@ -78,7 +68,7 @@ function ProfileApp() {
                         <div className="bg-[var(--glass-bg)] p-6 rounded-xl border border-[var(--glass-border)]">
                             <h3 className="text-xl font-bold text-[var(--text-light)] mb-4 border-b border-[var(--glass-border)] pb-2">{t.headers.about}</h3>
                             <p className="text-[var(--text-gray)] text-sm leading-relaxed">
-                                Passionate Full Stack Developer with 5+ years of experience building scalable web applications. Specialized in the MERN stack and modern UI/UX principles.
+                                {user.bio}
                             </p>
                         </div>
                         <div className="bg-[var(--glass-bg)] p-6 rounded-xl border border-[var(--glass-border)]">
