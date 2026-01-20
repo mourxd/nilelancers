@@ -1,21 +1,21 @@
 const translations = {
-    en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job", login: "Login", logout: "Logout", signup: "Sign Up", how: "How it Works" }, role: "Senior Full Stack Developer", loc: "Cairo, Egypt", rate: "$45/hr", hire: "Hire Me", stats: { jobs: "Jobs Done", hours: "Hours Worked", rating: "Rating" }, headers: { about: "About Me", skills: "Skills", port: "Portfolio", rev: "Reviews" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." } },
+    en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job", login: "Login", logout: "Logout", signup: "Sign Up", how: "How it Works" }, role: "Senior Full Stack Developer", loc: "Cairo, Egypt", rate: "$45/hr", hire: "Hire Me", stats: { jobs: "Jobs Done", hours: "Hours Worked", rating: "Rating" }, headers: { about: "About Me", skills: "Skills", port: "Portfolio", rev: "Reviews" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers. All rights reserved." } },
     ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة", login: "تسجيل الدخول", logout: "تسجيل الخروج", signup: "إنشاء حساب", how: "كيف يعمل" }, role: "مطور ويب شامل", loc: "القاهرة، مصر", rate: "45$/ساعة", hire: "وظفني", stats: { jobs: "وظيفة منجزة", hours: "ساعة عمل", rating: "التقييم" }, headers: { about: "نبذة عني", skills: "المهارات", port: "معرض الأعمال", rev: "التقييمات" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." } }
 };
 
 function ProfileApp() {
     const [lang, setLang] = React.useState('en');
-    React.useEffect(() => { 
-        const saved = localStorage.getItem('nile_lang') || 'en'; 
-        setLang(saved); 
-        document.dir = saved === 'ar' ? 'rtl' : 'ltr'; 
+    React.useEffect(() => {
+        const saved = localStorage.getItem('nile_lang') || 'en';
+        setLang(saved);
+        document.dir = saved === 'ar' ? 'rtl' : 'ltr';
     }, []);
-    
-    const toggleLang = () => { 
-        const newLang = lang === 'en' ? 'ar' : 'en'; 
-        setLang(newLang); 
-        localStorage.setItem('nile_lang', newLang); 
-        document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; 
+
+    const toggleLang = () => {
+        const newLang = lang === 'en' ? 'ar' : 'en';
+        setLang(newLang);
+        localStorage.setItem('nile_lang', newLang);
+        document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
     };
 
     const user = Auth.getUser();
@@ -29,7 +29,7 @@ function ProfileApp() {
     return (
         <div className="min-h-screen flex flex-col">
             <Header lang={lang} t={t} toggleLang={toggleLang} activeLink="profile" />
-            
+
             <div className="container py-12 flex-grow">
                 {/* Profile Header */}
                 <div className="profile-header">
@@ -110,7 +110,7 @@ function ProfileApp() {
                     </div>
                 </div>
             </div>
-            
+
             <Footer t={t} />
         </div>
     );
