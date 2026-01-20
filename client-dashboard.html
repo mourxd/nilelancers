@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,67 +12,307 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="auth.js"></script>
     <script type="text/babel" src="components.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <style>
-        :root { 
-            --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; 
-            --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; 
-            --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; 
-            --glass-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1);
-            --transition: all 0.4s ease; 
+        :root {
+            --navy-blue: #001f3f;
+            --dark-navy: #001529;
+            --light-navy: #0a2d5a;
+            --primary-blue: #0074D9;
+            --secondary-blue: #7FDBFF;
+            --accent-gold: #FFD700;
+            --accent-green: #2ecc71;
+            --text-light: #ffffff;
+            --text-gray: #f0f0f0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.4s ease;
         }
+
         [data-theme="light"] {
-            --navy-blue: #e2e8f0; --dark-navy: #f8fafc; --light-navy: #ffffff;
-            --text-light: #1a202c; --text-gray: #4a5568;
-            --primary-blue: #0056b3; --secondary-blue: #0074D9;
-            --glass-bg: rgba(255, 255, 255, 0.8); --glass-border: rgba(0, 0, 0, 0.1);
+            --navy-blue: #e2e8f0;
+            --dark-navy: #f8fafc;
+            --light-navy: #ffffff;
+            --text-light: #1a202c;
+            --text-gray: #4a5568;
+            --primary-blue: #0056b3;
+            --secondary-blue: #0074D9;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(0, 0, 0, 0.1);
         }
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
-        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
-        
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.7;
+            color: var(--text-gray);
+            background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%);
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        body[dir="rtl"] {
+            font-family: 'Cairo', sans-serif;
+        }
+
         /* HEADER (Shared) */
-        header { background: rgba(0, 15, 40, 0.95); backdrop-filter: blur(10px); padding: 15px 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary-blue); }
-        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .header-content { display: flex; justify-content: space-between; align-items: center; }
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; transition: var(--transition); }
-        .logo h1 { font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
-        .desktop-nav ul { display: flex; align-items: center; gap: 30px; margin: 0; padding: 0; }
-        .desktop-nav a { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 15px; transition: var(--transition); }
-        .desktop-nav a:hover { color: var(--secondary-blue); }
-        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; border: none; cursor: pointer; transition: var(--transition); }
-        .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 8px 20px; border-radius: 30px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; }
-        
+        header {
+            background: rgba(0, 15, 40, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--primary-blue);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+        }
+
+        .desktop-nav ul {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .desktop-nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .desktop-nav a:hover {
+            color: var(--secondary-blue);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--dark-navy);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--accent-gold);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--accent-gold);
+            cursor: pointer;
+            font-weight: bold;
+        }
+
         /* DASHBOARD STYLES */
-        .stat-card { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 25px; border-radius: 15px; text-align: center; }
-        .stat-number { font-size: 36px; font-weight: 800; color: var(--accent-gold); }
-        .job-item { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 25px; border-radius: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-        .applicant-card { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--primary-blue); }
-        
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--accent-gold);
+        }
+
+        .job-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .applicant-card {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary-blue);
+        }
+
         /* RATING MODAL */
-        .rating-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 3000; }
-        .rating-content { background: var(--dark-navy); border: 1px solid var(--primary-blue); padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
-        .star-rating { font-size: 30px; color: #555; cursor: pointer; transition: 0.2s; }
-        .star-rating.active { color: var(--accent-gold); }
-        .review-text { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; padding: 10px; border-radius: 8px; margin-top: 15px; outline: none; }
-        
-        .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: var(--dark-navy); border-bottom: 2px solid var(--accent-gold); padding: 20px; display: flex; flex-direction: column; gap: 15px; animation: slideDown 0.3s ease; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .rating-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .rating-content {
+            background: var(--dark-navy);
+            border: 1px solid var(--primary-blue);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .star-rating {
+            font-size: 30px;
+            color: #555;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .star-rating.active {
+            color: var(--accent-gold);
+        }
+
+        .review-text {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            outline: none;
+        }
+
+        .mobile-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--dark-navy);
+            border-bottom: 2px solid var(--accent-gold);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         /* NOTIFICATION STYLES */
-        .notif-btn { position: relative; cursor: pointer; margin-right: 15px; color: var(--text-light); font-size: 20px; }
-        .notif-badge { position: absolute; top: -5px; right: -5px; background: red; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .notif-dropdown { position: absolute; top: 150%; right: 0; width: 300px; background: var(--dark-navy); border: 1px solid var(--glass-border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; padding: 10px; display: none; }
-        .notif-dropdown.show { display: block; }
-        .notif-item { padding: 10px; border-bottom: 1px solid var(--glass-border); font-size: 13px; color: var(--text-gray); }
-        .notif-item.unread { background: rgba(255, 215, 0, 0.1); border-left: 3px solid var(--accent-gold); }
+        .notif-btn {
+            position: relative;
+            cursor: pointer;
+            margin-right: 15px;
+            color: var(--text-light);
+            font-size: 20px;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: red;
+            color: white;
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notif-dropdown {
+            position: absolute;
+            top: 150%;
+            right: 0;
+            width: 300px;
+            background: var(--dark-navy);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            padding: 10px;
+            display: none;
+        }
+
+        .notif-dropdown.show {
+            display: block;
+        }
+
+        .notif-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--glass-border);
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .notif-item.unread {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 3px solid var(--accent-gold);
+        }
     </style>
 </head>
+
 <body>
     <div id="root"></div>
     <script type="text/babel">
         const translations = {
-            en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job", login: "Login", logout: "Logout", signup: "Sign Up", how: "How it Works" }, title: "Client Dashboard", stats: { active: "Active Jobs", apps: "Total Applications", hired: "Hired" }, jobs: "Your Posted Jobs", no_jobs: "You haven't posted any jobs yet.", view_apps: "View Applications", applicants: "Applicants for", rate_title: "Rate Freelancer", rate_desc: "How was your experience working with", submit_review: "Submit Review", footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." } },
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job", login: "Login", logout: "Logout", signup: "Sign Up", how: "How it Works" }, title: "Client Dashboard", stats: { active: "Active Jobs", apps: "Total Applications", hired: "Hired" }, jobs: "Your Posted Jobs", no_jobs: "You haven't posted any jobs yet.", view_apps: "View Applications", applicants: "Applicants for", rate_title: "Rate Freelancer", rate_desc: "How was your experience working with", submit_review: "Submit Review", footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers. All rights reserved." } },
             ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة", login: "تسجيل الدخول", logout: "تسجيل الخروج", signup: "إنشاء حساب", how: "كيف يعمل" }, title: "لوحة تحكم العميل", stats: { active: "وظائف نشطة", apps: "إجمالي الطلبات", hired: "تم التوظيف" }, jobs: "وظائفك المنشورة", no_jobs: "لم تقم بنشر أي وظائف بعد.", view_apps: "عرض الطلبات", applicants: "المتقدمين لـ", rate_title: "تقييم المستقل", rate_desc: "كيف كانت تجربتك مع", submit_review: "إرسال التقييم", footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." } }
         };
 
@@ -93,10 +334,10 @@
                         <h3 className="text-2xl font-bold text-white mb-2">{t.rate_title}</h3>
                         <p className="text-gray-400 mb-4">{t.rate_desc} <span className="text-[var(--secondary-blue)]">{freelancerName}</span>?</p>
                         <div className="flex justify-center gap-2 mb-4">
-                            {[1,2,3,4,5].map(star => (
-                                <i key={star} 
-                                   className={`fas fa-star star-rating ${star <= rating ? 'active' : ''}`}
-                                   onClick={() => setRating(star)}></i>
+                            {[1, 2, 3, 4, 5].map(star => (
+                                <i key={star}
+                                    className={`fas fa-star star-rating ${star <= rating ? 'active' : ''}`}
+                                    onClick={() => setRating(star)}></i>
                             ))}
                         </div>
                         <textarea className="review-text" rows="3" placeholder="Write your feedback..." value={review} onChange={e => setReview(e.target.value)}></textarea>
@@ -114,7 +355,7 @@
             const [jobs, setJobs] = React.useState([]);
             const [selectedJob, setSelectedJob] = React.useState(null);
             const [ratingModal, setRatingModal] = React.useState({ open: false, appId: null, name: '' });
-            
+
             // Mock Applicants Data
             const [applicants, setApplicants] = React.useState([
                 { id: 1, name: "Ahmed Ali", title: "Senior Developer", bid: "EGP 5000", status: "pending" },
@@ -122,24 +363,24 @@
                 { id: 3, name: "Mohamed Zaki", title: "Backend Dev", bid: "EGP 6000", status: "pending" }
             ]);
 
-            React.useEffect(() => { 
-                const savedLang = localStorage.getItem('nile_lang') || 'en'; 
-                setLang(savedLang); 
+            React.useEffect(() => {
+                const savedLang = localStorage.getItem('nile_lang') || 'en';
+                setLang(savedLang);
                 document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
-                
+
                 const posted = JSON.parse(localStorage.getItem('user_posted_jobs') || '[]');
                 setJobs(posted);
             }, []);
 
-            const toggleLang = () => { 
-                const newLang = lang === 'en' ? 'ar' : 'en'; 
-                setLang(newLang); 
-                localStorage.setItem('nile_lang', newLang); 
-                document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; 
+            const toggleLang = () => {
+                const newLang = lang === 'en' ? 'ar' : 'en';
+                setLang(newLang);
+                localStorage.setItem('nile_lang', newLang);
+                document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
             };
 
             const updateStatus = (appId, newStatus) => {
-                const updated = applicants.map(app => app.id === appId ? {...app, status: newStatus} : app);
+                const updated = applicants.map(app => app.id === appId ? { ...app, status: newStatus } : app);
                 setApplicants(updated);
             };
 
@@ -160,10 +401,10 @@
             return (
                 <div className="min-h-screen flex flex-col">
                     <Header lang={lang} t={t} toggleLang={toggleLang} activeLink="dashboard" />
-                    
+
                     <div className="container py-12 flex-grow">
                         <h1 className="text-3xl font-bold text-[var(--text-light)] mb-8">{t.title}</h1>
-                        
+
                         {/* Stats */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                             <div className="stat-card">
@@ -243,9 +484,9 @@
                         )}
                     </div>
 
-                    <RatingModal 
-                        isOpen={ratingModal.open} 
-                        onClose={() => setRatingModal({...ratingModal, open: false})} 
+                    <RatingModal
+                        isOpen={ratingModal.open}
+                        onClose={() => setRatingModal({ ...ratingModal, open: false })}
                         freelancerName={ratingModal.name}
                         onSubmit={handleRatingSubmit}
                         t={t}
@@ -258,4 +499,5 @@
         root.render(<Dashboard />);
     </script>
 </body>
+
 </html>

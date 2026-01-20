@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,77 +10,352 @@
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <script type="text/babel" src="components/Header.js"></script>
     <script type="text/babel" src="components/Footer.js"></script>
     <style>
-        :root { 
-            --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; 
-            --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; 
-            --accent-green: #2ecc71; --text-light: #ffffff; --text-gray: #f0f0f0; 
-            --glass-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1);
-            --transition: all 0.4s ease; 
+        :root {
+            --navy-blue: #001f3f;
+            --dark-navy: #001529;
+            --light-navy: #0a2d5a;
+            --primary-blue: #0074D9;
+            --secondary-blue: #7FDBFF;
+            --accent-gold: #FFD700;
+            --accent-green: #2ecc71;
+            --text-light: #ffffff;
+            --text-gray: #f0f0f0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.4s ease;
         }
+
         [data-theme="light"] {
-            --navy-blue: #e2e8f0; --dark-navy: #f8fafc; --light-navy: #ffffff;
-            --text-light: #1a202c; --text-gray: #4a5568;
-            --primary-blue: #0056b3; --secondary-blue: #0074D9;
-            --glass-bg: rgba(255, 255, 255, 0.8); --glass-border: rgba(0, 0, 0, 0.1);
+            --navy-blue: #e2e8f0;
+            --dark-navy: #f8fafc;
+            --light-navy: #ffffff;
+            --text-light: #1a202c;
+            --text-gray: #4a5568;
+            --primary-blue: #0056b3;
+            --secondary-blue: #0074D9;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(0, 0, 0, 0.1);
         }
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Montserrat', sans-serif; line-height: 1.7; color: var(--text-gray); background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%); min-height: 100vh; background-attachment: fixed; }
-        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
-        
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.7;
+            color: var(--text-gray);
+            background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 50%, var(--light-navy) 100%);
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        body[dir="rtl"] {
+            font-family: 'Cairo', sans-serif;
+        }
+
         /* HEADER (Shared) */
-        header { background: rgba(0, 15, 40, 0.95); backdrop-filter: blur(10px); padding: 15px 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary-blue); }
-        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .header-content { display: flex; justify-content: space-between; align-items: center; }
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; transition: var(--transition); }
-        .logo h1 { font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
-        .desktop-nav ul { display: flex; align-items: center; gap: 30px; margin: 0; padding: 0; }
-        .desktop-nav a { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 15px; transition: var(--transition); }
-        .desktop-nav a:hover { color: var(--secondary-blue); }
-        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); padding: 10px 25px; border-radius: 30px; font-weight: 700; text-decoration: none; display: inline-block; border: none; cursor: pointer; transition: var(--transition); }
-        .lang-btn { background: rgba(255,255,255,0.1); color: var(--accent-gold); padding: 8px 20px; border-radius: 30px; border: 1px solid var(--accent-gold); cursor: pointer; font-weight: bold; }
-        
+        header {
+            background: rgba(0, 15, 40, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--primary-blue);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--secondary-blue), var(--accent-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+        }
+
+        .desktop-nav ul {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .desktop-nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .desktop-nav a:hover {
+            color: var(--secondary-blue);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--dark-navy);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--accent-gold);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--accent-gold);
+            cursor: pointer;
+            font-weight: bold;
+        }
+
         /* TABLE STYLES */
-        .apps-table { width: 100%; border-collapse: collapse; background: var(--glass-bg); border-radius: 15px; overflow: hidden; border: 1px solid var(--glass-border); }
-        .apps-table th { background: rgba(0, 116, 217, 0.2); color: var(--secondary-blue); padding: 20px; text-align: left; font-weight: 700; }
-        .apps-table td { padding: 20px; border-bottom: 1px solid var(--glass-border); color: var(--text-light); }
-        .apps-table tr:last-child td { border-bottom: none; }
-        .apps-table tr:hover { background: var(--glass-border); }
-        
-        .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
-        .status-pending { background: rgba(255, 215, 0, 0.2); color: var(--accent-gold); }
-        .status-interview { background: rgba(0, 116, 217, 0.2); color: var(--secondary-blue); }
-        .status-rejected { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
-        .status-accepted { background: rgba(46, 204, 113, 0.2); color: var(--accent-green); }
+        .apps-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--glass-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+
+        .apps-table th {
+            background: rgba(0, 116, 217, 0.2);
+            color: var(--secondary-blue);
+            padding: 20px;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .apps-table td {
+            padding: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            color: var(--text-light);
+        }
+
+        .apps-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .apps-table tr:hover {
+            background: var(--glass-border);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--accent-gold);
+        }
+
+        .status-interview {
+            background: rgba(0, 116, 217, 0.2);
+            color: var(--secondary-blue);
+        }
+
+        .status-rejected {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .status-accepted {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--accent-green);
+        }
 
         /* CHAT STYLES */
-        .chat-modal { position: fixed; bottom: 20px; right: 20px; width: 350px; height: 500px; background: var(--dark-navy); border: 1px solid var(--primary-blue); border-radius: 15px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 5000; overflow: hidden; animation: slideUp 0.3s ease; }
-        .chat-header { padding: 15px; background: var(--primary-blue); color: white; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
-        .chat-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: var(--glass-bg); }
-        .chat-msg { padding: 8px 12px; border-radius: 10px; max-width: 80%; font-size: 14px; }
-        .msg-client { background: rgba(127, 219, 255, 0.1); align-self: flex-start; color: var(--text-light); border: 1px solid var(--glass-border); }
-        .msg-me { background: var(--primary-blue); align-self: flex-end; color: white; }
-        .chat-footer { padding: 10px; border-top: 1px solid var(--glass-border); display: flex; gap: 10px; background: var(--dark-navy); }
-        .chat-input { flex: 1; background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 8px; border-radius: 5px; color: var(--text-light); outline: none; }
-        
+        .chat-modal {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: var(--dark-navy);
+            border: 1px solid var(--primary-blue);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 5000;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        .chat-header {
+            padding: 15px;
+            background: var(--primary-blue);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: var(--glass-bg);
+        }
+
+        .chat-msg {
+            padding: 8px 12px;
+            border-radius: 10px;
+            max-width: 80%;
+            font-size: 14px;
+        }
+
+        .msg-client {
+            background: rgba(127, 219, 255, 0.1);
+            align-self: flex-start;
+            color: var(--text-light);
+            border: 1px solid var(--glass-border);
+        }
+
+        .msg-me {
+            background: var(--primary-blue);
+            align-self: flex-end;
+            color: white;
+        }
+
+        .chat-footer {
+            padding: 10px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 10px;
+            background: var(--dark-navy);
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 8px;
+            border-radius: 5px;
+            color: var(--text-light);
+            outline: none;
+        }
+
         /* NOTIFICATION STYLES */
-        .notif-btn { position: relative; cursor: pointer; margin-right: 15px; color: var(--text-light); font-size: 20px; }
-        .notif-badge { position: absolute; top: -5px; right: -5px; background: red; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .notif-dropdown { position: absolute; top: 150%; right: 0; width: 300px; background: var(--dark-navy); border: 1px solid var(--glass-border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; padding: 10px; display: none; }
-        .notif-dropdown.show { display: block; }
-        .notif-item { padding: 10px; border-bottom: 1px solid var(--glass-border); font-size: 13px; color: var(--text-gray); }
-        .notif-item.unread { background: rgba(255, 215, 0, 0.1); border-left: 3px solid var(--accent-gold); }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .notif-btn {
+            position: relative;
+            cursor: pointer;
+            margin-right: 15px;
+            color: var(--text-light);
+            font-size: 20px;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: red;
+            color: white;
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notif-dropdown {
+            position: absolute;
+            top: 150%;
+            right: 0;
+            width: 300px;
+            background: var(--dark-navy);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            padding: 10px;
+            display: none;
+        }
+
+        .notif-dropdown.show {
+            display: block;
+        }
+
+        .notif-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--glass-border);
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .notif-item.unread {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 3px solid var(--accent-gold);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div id="root"></div>
     <script type="text/babel">
         const translations = {
-            en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job" }, title: "My Applications", th: { job: "Job Details", date: "Date Applied", status: "Status", action: "Action" }, status: { pending: "Pending", interview: "Interviewing", rejected: "Rejected", accepted: "Accepted" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers." } },
+            en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job" }, title: "My Applications", th: { job: "Job Details", date: "Date Applied", status: "Status", action: "Action" }, status: { pending: "Pending", interview: "Interviewing", rejected: "Rejected", accepted: "Accepted" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers. All rights reserved." } },
             ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة" }, title: "طلبات التوظيف", th: { job: "تفاصيل الوظيفة", date: "تاريخ التقديم", status: "الحالة", action: "إجراء" }, status: { pending: "قيد الانتظار", interview: "مقابلة", rejected: "مرفوض", accepted: "مقبول" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." } }
         };
 
@@ -92,12 +368,12 @@
 
             const send = (e) => {
                 e.preventDefault();
-                if(!msg.trim()) return;
+                if (!msg.trim()) return;
                 setHistory([...history, { sender: 'me', text: msg }]);
                 setMsg('');
                 setTimeout(() => {
                     setHistory(prev => [...prev, { sender: 'client', text: 'Great, when can you start?' }]);
-                    
+
                     // Trigger Notification for new message
                     const newNotif = {
                         id: Date.now(),
@@ -115,7 +391,7 @@
                 <div className="chat-modal">
                     <div className="chat-header"><span>Chat with {client}</span><button onClick={onClose}><i className="fas fa-times"></i></button></div>
                     <div className="chat-body">{history.map((m, i) => <div key={i} className={`chat-msg ${m.sender === 'client' ? 'msg-client' : 'msg-me'}`}>{m.text}</div>)}</div>
-                    <form className="chat-footer" onSubmit={send}><input className="chat-input" value={msg} onChange={e=>setMsg(e.target.value)} placeholder="Type a message..." /><button type="submit" className="text-[var(--secondary-blue)]"><i className="fas fa-paper-plane"></i></button></form>
+                    <form className="chat-footer" onSubmit={send}><input className="chat-input" value={msg} onChange={e => setMsg(e.target.value)} placeholder="Type a message..." /><button type="submit" className="text-[var(--secondary-blue)]"><i className="fas fa-paper-plane"></i></button></form>
                 </div>
             );
         }
@@ -124,17 +400,17 @@
             const [lang, setLang] = React.useState('en');
             const [activeChat, setActiveChat] = React.useState(null);
 
-            React.useEffect(() => { 
-                const saved = localStorage.getItem('nile_lang') || 'en'; 
-                setLang(saved); 
-                document.dir = saved === 'ar' ? 'rtl' : 'ltr'; 
+            React.useEffect(() => {
+                const saved = localStorage.getItem('nile_lang') || 'en';
+                setLang(saved);
+                document.dir = saved === 'ar' ? 'rtl' : 'ltr';
             }, []);
-            
-            const toggleLang = () => { 
-                const newLang = lang === 'en' ? 'ar' : 'en'; 
-                setLang(newLang); 
-                localStorage.setItem('nile_lang', newLang); 
-                document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; 
+
+            const toggleLang = () => {
+                const newLang = lang === 'en' ? 'ar' : 'en';
+                setLang(newLang);
+                localStorage.setItem('nile_lang', newLang);
+                document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
             };
 
             const t = translations[lang];
@@ -160,10 +436,10 @@
             return (
                 <div className="min-h-screen flex flex-col">
                     <Header lang={lang} t={t} toggleLang={toggleLang} activeLink="dashboard" />
-                    
+
                     <div className="container py-12 flex-grow">
                         <h1 className="text-3xl font-bold text-[var(--text-light)] mb-8">{t.title}</h1>
-                        
+
                         <div className="overflow-x-auto">
                             <table className="apps-table">
                                 <thead>
@@ -195,7 +471,7 @@
                             </table>
                         </div>
                     </div>
-                    
+
                     {/* Footer Reuse */}
                     <Footer t={t} />
 
@@ -207,4 +483,5 @@
         root.render(<ApplicationsApp />);
     </script>
 </body>
+
 </html>
