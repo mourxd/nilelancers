@@ -12,13 +12,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap"
-        rel="stylesheet">    
+        rel="stylesheet">
     <!-- Firebase SDK (v9 compat mode) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-    
+
     <!-- Firebase Configuration and Auth -->
     <script src="firebase-config.js"></script>
     <script src="auth-firebase.js"></script>
@@ -418,11 +418,15 @@
             const [withdrawData, setWithdrawData] = React.useState({ number: '', amount: '' });
 
             React.useEffect(() => {
-                const user = Auth.getUser();
-                if (!user) {
-                    window.location.href = 'login.html';
-                    return;
-                }
+                const checkAuth = async () => {
+                    const user = await Auth.getCurrentUser();
+                    if (!user) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                };
+                checkAuth();
+
                 const saved = localStorage.getItem('nile_lang') || 'en';
                 setLang(saved);
                 document.dir = saved === 'ar' ? 'rtl' : 'ltr';
