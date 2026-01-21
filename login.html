@@ -70,6 +70,17 @@
             const [error, setError] = React.useState('');
             const [loading, setLoading] = React.useState(false);
 
+            // Check if user is already logged in
+            React.useEffect(() => {
+                const unsubscribe = Auth.onAuthStateChanged((user) => {
+                    if (user && !loading) {
+                        // User is already logged in, redirect to profile
+                        window.location.href = 'profile.html';
+                    }
+                });
+                return () => unsubscribe();
+            }, [loading]);
+
             const handleSubmit = async (e) => {
                 e.preventDefault();
                 setError('');

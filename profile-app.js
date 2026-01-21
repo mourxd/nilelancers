@@ -13,17 +13,18 @@ function ProfileApp() {
         setLang(saved);
         document.dir = saved === 'ar' ? 'rtl' : 'ltr';
 
-        // Load user data from Firebase
-        const loadUser = async () => {
-            const currentUser = await Auth.getCurrentUser();
+        // Listen to auth state changes and load user data
+        const unsubscribe = Auth.onAuthStateChanged((currentUser) => {
             if (!currentUser) {
                 window.location.href = 'login.html';
             } else {
                 setUser(currentUser);
                 setLoading(false);
             }
-        };
-        loadUser();
+        });
+
+        // Cleanup listener on unmount
+        return () => unsubscribe();
     }, []);
 
     const toggleLang = () => {

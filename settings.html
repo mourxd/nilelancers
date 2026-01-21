@@ -413,8 +413,8 @@
                 setLang(savedLang);
                 document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
 
-                const loadUser = async () => {
-                    const user = await Auth.getCurrentUser();
+                // Listen to auth state changes and load user data
+                const unsubscribe = Auth.onAuthStateChanged((user) => {
                     if (user) {
                         setProfile({
                             name: user.name,
@@ -426,8 +426,10 @@
                     } else {
                         window.location.href = 'login.html';
                     }
-                };
-                loadUser();
+                });
+
+                // Cleanup listener on unmount
+                return () => unsubscribe();
             }, []);
 
             const toggleLang = () => {
