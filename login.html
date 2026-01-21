@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,28 +10,55 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <style>
-        :root { 
-            --navy-blue: #001f3f; --dark-navy: #001529; --light-navy: #0a2d5a; 
-            --primary-blue: #0074D9; --secondary-blue: #7FDBFF; --accent-gold: #FFD700; 
-            --text-light: #ffffff; --text-gray: #f0f0f0; 
-            --glass-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1);
+        :root {
+            --navy-blue: #001f3f;
+            --dark-navy: #001529;
+            --light-navy: #0a2d5a;
+            --primary-blue: #0074D9;
+            --secondary-blue: #7FDBFF;
+            --accent-gold: #FFD700;
+            --text-light: #ffffff;
+            --text-gray: #f0f0f0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
-        body { background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 100%); font-family: 'Montserrat', sans-serif; color: var(--text-light); }
-        .form-container { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); }
-        .form-input { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); }
-        .cta-button { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--dark-navy); }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-blue) 100%);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-light);
+        }
+
+        .form-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--dark-navy);
+        }
     </style>
 </head>
+
 <body class="flex items-center justify-center min-h-screen">
-    <div id="root"></div>    
+    <div id="root"></div>
     <!-- Firebase SDK (v9 compat mode) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-    
+
     <!-- Firebase Configuration and Auth -->
     <script src="firebase-config.js"></script>
     <script src="auth-firebase.js"></script>
@@ -40,19 +68,23 @@
             const [email, setEmail] = React.useState('');
             const [password, setPassword] = React.useState('');
             const [error, setError] = React.useState('');
+            const [loading, setLoading] = React.useState(false);
 
-            const handleSubmit = (e) => {
+            const handleSubmit = async (e) => {
                 e.preventDefault();
                 setError('');
+                setLoading(true);
                 if (!email || !password) {
                     setError('Please fill in all fields.');
+                    setLoading(false);
                     return;
                 }
-                const user = Auth.login(email, password);
+                const user = await Auth.login(email, password);
                 if (user) {
                     window.location.href = 'profile.html';
                 } else {
                     setError('Invalid credentials. Please try again.');
+                    setLoading(false);
                 }
             };
 
@@ -72,7 +104,9 @@
                             <label className="block text-gray-300 mb-2">Password</label>
                             <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="form-input w-full p-3 rounded-lg" required />
                         </div>
-                        <button type="submit" className="cta-button w-full p-3 rounded-lg font-bold text-lg">Login</button>
+                        <button type="submit" disabled={loading} className="cta-button w-full p-3 rounded-lg font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                            {loading ? 'Logging in...' : 'Login'}
+                        </button>
                     </form>
                     <p className="text-center text-gray-400 mt-6">
                         Don't have an account? <a href="signup.html" className="text-[var(--secondary-blue)] hover:underline">Sign Up</a>
@@ -85,4 +119,5 @@
         root.render(<LoginApp />);
     </script>
 </body>
+
 </html>
