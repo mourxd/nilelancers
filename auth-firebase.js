@@ -152,6 +152,27 @@ const AuthFirebase = {
     onAuthStateChanged: (callback) => {
         return auth.onAuthStateChanged(async (user) => {
             if (user) {
+                // Check if Firestore profile exists, create if missing
+                const userDoc = await db.collection('users').doc(user.uid).get();
+
+                if (!userDoc.exists) {
+                    console.log('Creating missing Firestore profile for user:', user.uid);
+                    // Create profile for users who signed up before the async fix
+                    await db.collection('users').doc(user.uid).set({
+                        name: user.displayName || user.email.split('@')[0],
+                        email: user.email,
+                        title: 'Freelancer',
+                        location: 'Egypt',
+                        bio: 'Welcome to NileLancers!',
+                        skills: ['JavaScript', 'React', 'Node.js'],
+                        avatar: user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || user.email.split('@')[0]) + '&size=200&background=0074D9&color=fff',
+                        portfolio: [],
+                        reviews: [],
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+
                 const fullUser = await AuthFirebase.getCurrentUser();
                 callback(fullUser);
             } else {
