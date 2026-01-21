@@ -5,10 +5,25 @@ const translations = {
 
 function ProfileApp() {
     const [lang, setLang] = React.useState('en');
+    const [user, setUser] = React.useState(null);
+    const [loading, setLoading] = React.useState(true);
+
     React.useEffect(() => {
         const saved = localStorage.getItem('nile_lang') || 'en';
         setLang(saved);
         document.dir = saved === 'ar' ? 'rtl' : 'ltr';
+
+        // Load user data from Firebase
+        const loadUser = async () => {
+            const currentUser = await Auth.getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'login.html';
+            } else {
+                setUser(currentUser);
+                setLoading(false);
+            }
+        };
+        loadUser();
     }, []);
 
     const toggleLang = () => {
@@ -18,10 +33,19 @@ function ProfileApp() {
         document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
     };
 
-    const user = Auth.getUser();
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <i className="fas fa-spinner fa-spin text-4xl text-[var(--secondary-blue)] mb-4"></i>
+                    <p className="text-[var(--text-light)]">Loading profile...</p>
+                </div>
+            </div>
+        );
+    }
+
     if (!user) {
-        window.location.href = 'login.html';
-        return null; // Return null to prevent rendering before redirect
+        return null; // Will redirect to login
     }
 
     const t = translations[lang];
