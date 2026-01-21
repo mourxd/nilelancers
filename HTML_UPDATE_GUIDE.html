@@ -1,0 +1,67 @@
+<!-- 
+  FIREBASE INTEGRATION - HTML UPDATE GUIDE
+  ========================================
+  
+  Add these lines to the <head> section of ALL your HTML files.
+  Place them AFTER the other script imports but BEFORE components.js
+-->
+
+<!-- OLD WAY (Remove or comment out): -->
+<!-- <script src="auth.js"></script> -->
+
+<!-- NEW WAY (Add these lines): -->
+
+<!-- Firebase SDK (v9 compat mode) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+<!-- Firebase Configuration and Auth -->
+<script src="firebase-config.js"></script>
+<script src="auth-firebase.js"></script>
+<script src="db-firebase.js"></script>
+
+<!-- 
+  Files that need this update:
+  ============================
+  ✓ index.html
+  ✓ login.html
+  ✓ signup.html
+  ✓ jobs.html
+  ✓ saved.html
+  ✓ applications.html
+  ✓ wallet.html
+  ✓ profile.html
+  ✓ settings.html
+  ✓ client-dashboard.html
+  ✓ post-job.html
+  
+  Example placement in HTML:
+  ==========================
+  
+  <head>
+      <meta charset="UTF-8">
+      <title>Page Title</title>
+      
+      <!-- React, Tailwind, FontAwesome, etc -->
+<script src="..."></script>
+
+<!-- ADD FIREBASE SCRIPTS HERE -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="auth-firebase.js"></script>
+<script src="db-firebase.js"></script>
+
+<!-- Components -->
+<script type="text/babel" src="components.js"></script>
+
+<!-- Styles -->
+<style>
+    ...
+</style>
+</head>
+-->
