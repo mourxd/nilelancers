@@ -562,6 +562,23 @@
             background: rgba(255, 215, 0, 0.1);
             border-left: 3px solid var(--accent-gold);
         }
+
+        /* Job Card Animation */
+        .job-card {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -700,6 +717,7 @@
             const [savedJobs, setSavedJobs] = React.useState([]);
             const [activeCategory, setActiveCategory] = React.useState('All');
             const [searchQuery, setSearchQuery] = React.useState('');
+            const [visibleJobsCount, setVisibleJobsCount] = React.useState(9); // Show 9 jobs initially
 
             // Notification State
             const [toast, setToast] = React.useState({ show: false, message: '' });
@@ -752,6 +770,12 @@
             const handleSearch = (e) => {
                 setSearchQuery(e.target.value);
                 loadJobs(e.target.value);
+                // Show all jobs when user is searching
+                if (e.target.value) {
+                    setVisibleJobsCount(999);
+                } else {
+                    setVisibleJobsCount(9);
+                }
             };
 
             // Handle Application Submit
@@ -770,6 +794,13 @@
             };
 
             const categories = ['All', 'Development', 'Design', 'Photography', 'Marketing'];
+
+            const handleSeeMore = () => {
+                setVisibleJobsCount(prev => prev + 9); // Load 9 more jobs
+            };
+
+            const displayedJobs = filteredJobs.slice(0, visibleJobsCount);
+            const hasMoreJobs = filteredJobs.length > visibleJobsCount;
 
             if (selectedJob) {
                 return (
@@ -849,7 +880,27 @@
                                 </div>
                             </div>
                         </div>
-                        <div>{filteredJobs.map(job => <JobCard key={job.id} job={job} onClick={setSelectedJob} onToggleSave={toggleSave} isSaved={savedJobs.some(j => j.id === job.id)} t={t} />)}</div>
+                        <div>
+                            {displayedJobs.map(job => <JobCard key={job.id} job={job} onClick={setSelectedJob} onToggleSave={toggleSave} isSaved={savedJobs.some(j => j.id === job.id)} t={t} />)}
+                        </div>
+
+                        {/* See More Button */}
+                        {hasMoreJobs && (
+                            <div className="text-center mt-10">
+                                <button onClick={handleSeeMore} className="cta-button px-12 py-3 text-lg">
+                                    <i className="fas fa-chevron-down mr-2"></i>
+                                    See More Jobs ({filteredJobs.length - visibleJobsCount} remaining)
+                                </button>
+                            </div>
+                        )}
+
+                        {/* No More Jobs Message */}
+                        {!hasMoreJobs && filteredJobs.length > 9 && (
+                            <div className="text-center mt-10 text-gray-400">
+                                <i className="fas fa-check-circle mr-2"></i>
+                                You've reached the end of the job listings
+                            </div>
+                        )}
                     </div>
                     <Footer t={t} />
                     <Toast show={toast.show} message={toast.message} />
