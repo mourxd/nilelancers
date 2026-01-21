@@ -570,12 +570,53 @@
     <script type="text/babel">
         const JobsAPI = {
             fetchAllJobs: async (query = '') => {
-                const jobs = [
-                    { id: 'j1', title: 'Need a Full-Stack Web Developer', company: 'Innovatech Solutions', source: 'Upwork', budget: '$5k-$8k', type: 'Full-time', location: 'Remote (Global)', category: 'Development', image: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=600&q=60', description: 'Detailed job description here.', isLocal: false, link: '#' },
-                    { id: 'j2', title: 'Creative Graphic Designer for Branding', company: 'Creative Minds', source: 'Fiverr', budget: '$1.2k', type: 'Project', location: 'Remote', category: 'Design', image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=60', description: 'Detailed job description here.', isLocal: false, link: '#' },
-                    { id: 'j3', title: 'Local Photographer for Event', company: 'Cairo Events', source: 'NileLancers', budget: 'EGP 8,000', type: 'Part-time', location: 'Cairo, Egypt', category: 'Photography', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=60', description: 'We need a skilled photographer for a corporate event next month. Must have experience with low-light photography.', isLocal: true, link: '#' }
+                // Load user posted jobs from localStorage
+                const userPostedJobs = JSON.parse(localStorage.getItem('user_posted_jobs') || '[]');
+
+                // Mock jobs from various platforms
+                const mockJobs = [
+                    // Local EGP Jobs (NileLancers)
+                    { id: 'nl1', title: 'WordPress Developer Needed for E-commerce Site', company: 'Cairo Digital Agency', source: 'NileLancers', budget: 'EGP 15,000', type: 'Project', location: 'Cairo, Egypt', category: 'Development', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=60', description: 'Looking for an experienced WordPress developer to build a custom e-commerce website with WooCommerce integration.', isLocal: true, link: '#' },
+                    { id: 'nl2', title: 'Social Media Manager for Local Brand', company: 'Fashion Boutique Egypt', source: 'NileLancers', budget: 'EGP 8,000/month', type: 'Part-time', location: 'Alexandria, Egypt', category: 'Marketing', image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=600&q=60', description: 'Manage Instagram and Facebook accounts for a growing fashion brand. Create engaging content and run paid campaigns.', isLocal: true, link: '#' },
+                    { id: 'nl3', title: 'Local Photographer for Event Coverage', company: 'Cairo Events Co', source: 'NileLancers', budget: 'EGP 8,000', type: 'Part-time', location: 'Cairo, Egypt', category: 'Photography', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=60', description: 'We need a skilled photographer for a corporate event next month. Must have experience with low-light photography.', isLocal: true, link: '#' },
+                    { id: 'nl4', title: 'Mobile App UI/UX Designer', company: 'TechStart Egypt', source: 'NileLancers', budget: 'EGP 12,000', type: 'Project', location: 'Remote (Egypt)', category: 'Design', image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=60', description: 'Design modern UI/UX for a fintech mobile application targeting Egyptian users.', isLocal: true, link: '#' },
+                    { id: 'nl5', title: 'Arabic Content Writer for Blog', company: 'Content Hub Egypt', source: 'NileLancers', budget: 'EGP 5,000/month', type: 'Full-time', location: 'Remote (Egypt)', category: 'Marketing', image: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=600&q=60', description: 'Write SEO-optimized Arabic content for technology blog. 10-15 articles per month.', isLocal: true, link: '#' },
+                    { id: 'nl6', title: 'Video Editor for YouTube Channel', company: 'EgyptVlog Productions', source: 'NileLancers', budget: 'EGP 10,000/month', type: 'Part-time', location: 'Giza, Egypt', category: 'Design', image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=600&q=60', description: 'Edit 4-6 YouTube videos per month with motion graphics and transitions.', isLocal: true, link: '#' },
+
+                    // Upwork Jobs
+                    { id: 'up1', title: 'Full-Stack Developer for SaaS Platform', company: 'CloudTech Inc', source: 'Upwork', budget: '$5,000-$8,000', type: 'Full-time', location: 'Remote (Global)', category: 'Development', image: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=600&q=60', description: 'Build and maintain a SaaS platform using React, Node.js, and PostgreSQL. Long-term contract opportunity.', isLocal: false, link: 'https://www.upwork.com' },
+                    { id: 'up2', title: 'React Native Mobile Developer', company: 'Startup Labs', source: 'Upwork', budget: '$4,000-$6,000', type: 'Project', location: 'Remote', category: 'Development', image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=600&q=60', description: 'Develop cross-platform mobile app for food delivery service. 3-month project.', isLocal: false, link: 'https://www.upwork.com' },
+                    { id: 'up3', title: 'SEO Specialist for E-commerce', company: 'Digital Growth Agency', source: 'Upwork', budget: '$2,000/month', type: 'Part-time', location: 'Remote', category: 'Marketing', image: 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=600&q=60', description: 'Improve organic search rankings for multiple e-commerce clients using white-hat SEO techniques.', isLocal: false, link: 'https://www.upwork.com' },
+                    { id: 'up4', title: 'Python Developer for Data Analysis', company: 'Analytics Pro', source: 'Upwork', budget: '$3,500', type: 'Project', location: 'Remote', category: 'Development', image: 'https://images.unsplash.com/photo-16190592653-d22f72956e3b?auto=format&fit=crop&w=600&q=60', description: 'Build data analysis scripts and dashboards using Python, Pandas, and Plotly.', isLocal: false, link: 'https://www.upwork.com' },
+
+                    // Fiverr Jobs
+                    { id: 'fv1', title: 'Logo Design for Tech Startup', company: 'Innovate Labs', source: 'Fiverr', budget: '$250-$500', type: 'Project', location: 'Remote', category: 'Design', image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=60', description: 'Create a modern, memorable logo for AI-powered software company. Multiple revisions included.', isLocal: false, link: 'https://www.fiverr.com' },
+                    { id: 'fv2', title: 'Voiceover Artist for Explainer Video', company: 'VideoFX Studio', source: 'Fiverr', budget: '$150', type: 'Project', location: 'Remote', category: 'Marketing', image: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=600&q=60', description: 'Record professional voiceover for 3-minute product explainer video. Must have clear American accent.', isLocal: false, link: 'https://www.fiverr.com' },
+                    { id: 'fv3', title: 'WordPress Website Customization', company: 'Small Business Owner', source: 'Fiverr', budget: '$300', type: 'Project', location: 'Remote', category: 'Development', image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=600&q=60', description: 'Customize existing WordPress theme to match brand guidelines. Add contact forms and optimize speed.', isLocal: false, link: 'https://www.fiverr.com' },
+                    { id: 'fv4', title: 'Instagram Reels Creator', company: 'Fitness Influencer', source: 'Fiverr', budget: '$400/month', type: 'Part-time', location: 'Remote', category: 'Marketing', image: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=600&q=60', description: 'Create and edit 15 engaging Instagram Reels per month with trending music and effects.', isLocal: false, link: 'https://www.fiverr.com' },
+
+                    // Freelancer.com Jobs
+                    { id: 'fl1', title: 'Android App Development', company: 'Mobile Solutions Ltd', source: 'Freelancer', budget: '$2,500', type: 'Project', location: 'Remote', category: 'Development', image: 'https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?auto=format&fit=crop&w=600&q=60', description: 'Develop native Android app for restaurant ordering system with payment integration.', isLocal: false, link: 'https://www.freelancer.com' },
+                    { id: 'fl2', title: 'Copywriter for Landing Pages', company: 'Marketing Agency UK', source: 'Freelancer', budget: '$800', type: 'Project', location: 'Remote', category: 'Marketing', image: 'https://images.unsplash.com/photo-1542435503-956c469947f6?auto=format&fit=crop&w=600&q=60', description: 'Write compelling copy for 5 landing pages focused on conversion optimization.', isLocal: false, link: 'https://www.freelancer.com' },
+                    { id: 'fl3', title: '3D Product Visualization', company: 'Product Design Co', source: 'Freelancer', budget: '$1,200', type: 'Project', location: 'Remote', category: 'Design', image: 'https://images.unsplash.com/photo-1618761714954-0b8cd0026356?auto=format&fit=crop&w=600&q=60', description: 'Create photorealistic 3D renders of consumer electronics for marketing materials.', isLocal: false, link: 'https://www.freelancer.com' },
+
+                    // Toptal Jobs
+                    { id: 'tt1', title: 'Senior DevOps Engineer', company: 'Enterprise Corp', source: 'Toptal', budget: '$7,000-$10,000', type: 'Full-time', location: 'Remote (Global)', category: 'Development', image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=60', description: 'Manage AWS infrastructure, implement CI/CD pipelines, and ensure system reliability for enterprise clients.', isLocal: false, link: 'https://www.toptal.com' },
+                    { id: 'tt2', title: 'Blockchain Developer', company: 'CryptoFinance', source: 'Toptal', budget: '$8,000-$12,000', type: 'Full-time', location: 'Remote', category: 'Development', image: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=600&q=60', description: 'Develop smart contracts and DApps on Ethereum blockchain for DeFi platform.', isLocal: false, link: 'https://www.toptal.com' },
                 ];
-                return jobs.filter(j => j.title.toLowerCase().includes(query.toLowerCase()));
+
+                // Combine user jobs with mock jobs
+                const allJobs = [...userPostedJobs, ...mockJobs];
+
+                // Sort: Local jobs (isLocal===true) first, then others
+                const sortedJobs = allJobs.sort((a, b) => {
+                    if (a.isLocal && !b.isLocal) return -1;
+                    if (!a.isLocal && b.isLocal) return 1;
+                    return 0;
+                });
+
+                // Filter by search query
+                return sortedJobs.filter(j => j.title.toLowerCase().includes(query.toLowerCase()));
             }
         };
         const jobTranslations = {
