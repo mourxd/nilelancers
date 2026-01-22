@@ -12,13 +12,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap"
-        rel="stylesheet">    
+        rel="stylesheet">
     <!-- Firebase SDK (v9 compat mode) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-    
+
     <!-- Firebase Configuration and Auth -->
     <script src="firebase-config.js"></script>
     <script src="auth-firebase.js"></script>
@@ -74,6 +74,7 @@
         /* HEADER (FIXED) */
         header {
             background: rgba(0, 15, 40, 0.95);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             padding: 15px 0;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
@@ -259,6 +260,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 15px;
             padding: 40px;
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             max-width: 700px;
             margin: 0 auto;

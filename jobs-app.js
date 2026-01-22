@@ -30,7 +30,12 @@ function JobsApp() {
     setLang(savedLang);
     document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
 
-    setJobs(jobsAPI.getJobs());
+    // Load jobs from Firebase
+    const loadJobs = async () => {
+      const allJobs = await FirebaseDB.getAllJobs();
+      setJobs(allJobs);
+    };
+    loadJobs();
   }, []);
 
   const toggleLang = () => {

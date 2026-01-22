@@ -7,6 +7,8 @@ const translations = {
 function SavedApp() {
   const [savedJobs, setSavedJobs] = React.useState([]);
   const [lang, setLang] = React.useState('en');
+  const [loading, setLoading] = React.useState(true);
+
   React.useEffect(() => {
     const saved = localStorage.getItem('nile_lang') || 'en';
     setLang(saved);
@@ -20,16 +22,28 @@ function SavedApp() {
     document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
   };
 
-
+  // Load saved jobs from Firebase
   React.useEffect(() => {
-    const saved = localStorage.getItem('savedJobs');
-    if (saved) setSavedJobs(JSON.parse(saved));
+    const loadSavedJobs = async () => {
+      setLoading(true);
+      const jobs = await FirebaseDB.getSavedJobs();
+      setSavedJobs(jobs);
+      setLoading(false);
+    };
+    loadSavedJobs();
   }, []);
 
-  const handleRemoveJob = (jobId) => {
+  const handleRemoveJob = async (jobId) => {
+    // Find the job to remove
+    const jobToRemove = savedJobs.find(j => j.id === jobId);
+    if (!jobToRemove) return;
+
+    // Toggle save (which will unsave it)
+    await FirebaseDB.toggleSaveJob(jobToRemove);
+
+    // Update local state
     const updated = savedJobs.filter(j => j.id !== jobId);
     setSavedJobs(updated);
-    localStorage.setItem('savedJobs', JSON.stringify(updated));
   };
 
   const t = translations[lang];
@@ -39,8 +53,17 @@ function SavedApp() {
       <Header lang={lang} t={t} toggleLang={toggleLang} activeLink="saved" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-8">Saved Services</h1>
-        {savedJobs.length === 0 ? (
-          <p>No saved services yet.</p>
+        {loading ? (
+          <div className="text-center py-12">
+            <i className="fas fa-spinner fa-spin text-4xl text-[var(--secondary-blue)] mb-4"></i>
+            <p className="text-[var(--text-gray)]">Loading saved jobs...</p>
+          </div>
+        ) : savedJobs.length === 0 ? (
+          <div className="text-center py-12">
+            <i className="fas fa-bookmark text-6xl text-gray-400 mb-4"></i>
+            <p className="text-[var(--text-gray)] text-lg">No saved services yet.</p>
+            <a href="jobs.html" className="cta-button inline-block mt-4">Browse Jobs</a>
+          </div>
         ) : (
           <div className="space-y-4">
             {savedJobs.map(job => (

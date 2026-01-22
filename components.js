@@ -164,3 +164,44 @@ function Footer({ t }) {
     </footer>
   );
 }
+
+
+// SavedJobCard component for displaying saved jobs
+function SavedJobCard({ job, onRemove }) {
+    return (
+        <div className="bg-[var(--glass-bg)] p-6 rounded-xl border border-[var(--glass-border)] flex justify-between items-center hover:border-[var(--secondary-blue)] transition-all">
+            <div className="flex-1">
+                <h3 className="text-xl font-bold text-[var(--text-light)] mb-2">{job.title}</h3>
+                <p className="text-[var(--text-gray)] mb-2">{job.company || job.userName || 'Unknown Company'}</p>
+                <div className="flex flex-wrap gap-2 mb-3">
+                    {job.tags && job.tags.map(tag => (
+                        <span key={tag} className="bg-[var(--primary-blue)] text-white px-3 py-1 rounded-full text-xs">
+                            {tag}
+                        </span>
+                    ))}
+                    {job.category && (
+                        <span className="bg-[var(--accent-gold)] text-[var(--dark-navy)] px-3 py-1 rounded-full text-xs font-bold">
+                            {job.category}
+                        </span>
+                    )}
+                </div>
+                <p className="text-[var(--accent-gold)] font-bold text-lg">{job.budget}</p>
+                {job.description && (
+                    <p className="text-[var(--text-gray)] text-sm mt-2 line-clamp-2">{job.description}</p>
+                )}
+            </div>
+            <div className="flex flex-col gap-3 ml-6">
+                <a href={`jobs.html#`} className="cta-button text-center whitespace-nowrap">
+                    View Details
+                </a>
+                <button 
+                    onClick={() => onRemove(job.id)} 
+                    className="px-6 py-2 border border-red-500 text-red-500 rounded-full hover:bg-red-500 hover:text-white transition whitespace-nowrap">
+                    <i className="fas fa-trash-alt mr-2"></i>
+                    Remove
+                </button>
+            </div>
+        </div>
+    );
+}
+

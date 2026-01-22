@@ -62,6 +62,7 @@
         /* HEADER & FOOTER (Shared) */
         header {
             background: rgba(0, 15, 40, 0.95);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             padding: 15px 0;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
@@ -220,6 +221,7 @@
             border-radius: 20px;
             padding: 40px;
             border: 1px solid var(--glass-border);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             display: flex;
             flex-wrap: wrap;
@@ -400,13 +402,13 @@
             background: rgba(255, 215, 0, 0.1);
             border-left: 3px solid var(--accent-gold);
         }
-    </style>    
+    </style>
     <!-- Firebase SDK (v9 compat mode) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-    
+
     <!-- Firebase Configuration and Auth -->
     <script src="firebase-config.js"></script>
     <script src="auth-firebase.js"></script>
