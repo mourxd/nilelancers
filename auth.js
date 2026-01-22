@@ -1,234 +1,58 @@
-// Firebase Authentication System
-// This replaces the old localStorage-based auth.js
-
-const AuthFirebase = {
-    // Sign up new user
-    signup: async (name, email, password) => {
-        try {
-            // Create user account
-            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-
-            // Update display name
-            await user.updateProfile({
-                displayName: name
-            });
-
-            // Create user profile in Firestore
-            await db.collection('users').doc(user.uid).set({
-                name: name,
-                email: email,
-                title: 'Freelancer',
-                location: 'Egypt',
-                bio: 'Welcome to NileLancers!',
-                skills: ['JavaScript', 'React', 'Node.js'],
-                avatar: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&size=200&background=0074D9&color=fff',
-                portfolio: [],
-                reviews: [],
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-            console.log('User created successfully:', user.uid);
-            return AuthFirebase.getCurrentUser();
-        } catch (error) {
-            console.error('Signup error:', error);
-            alert(error.message);
-            return null;
-        }
-    },
-
-    // Login existing user
-    login: async (email, password) => {
-        try {
-            const userCredential = await auth.signInWithEmailAndPassword(email, password);
-            console.log('User logged in:', userCredential.user.uid);
-            return AuthFirebase.getCurrentUser();
-        } catch (error) {
-            console.error('Login error:', error);
-            alert(error.message);
-            return null;
-        }
-    },
-
-    // Logout
-    logout: async () => {
-        try {
-            await auth.signOut();
-            console.log('User logged out');
-            return true;
-        } catch (error) {
-            console.error('Logout error:', error);
-            return false;
-        }
-    },
-
-    // Get current user (synchronous - for initial checks)
-    getUser: () => {
-        const user = auth.currentUser;
-        if (!user) return null;
-
-        return {
-            uid: user.uid,
-            name: user.displayName || 'User',
-            email: user.email,
-            avatar: user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'User') + '&size=200&background=0074D9&color=fff'
-        };
-    },
-
-    // Get current user with full profile from Firestore
-    getCurrentUser: async () => {
-        const user = auth.currentUser;
-        if (!user) return null;
-
-        try {
-            // Get user profile from Firestore
-            const doc = await db.collection('users').doc(user.uid).get();
-
-            if (doc.exists) {
-                const userData = doc.data();
-                return {
-                    uid: user.uid,
-                    name: userData.name || user.displayName,
-                    email: user.email,
-                    title: userData.title || 'Freelancer',
-                    location: userData.location || 'Egypt',
-                    bio: userData.bio || '',
-                    skills: userData.skills || [],
-                    avatar: userData.avatar || user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'User') + '&size=200&background=0074D9&color=fff',
-                    portfolio: userData.portfolio || [],
-                    reviews: userData.reviews || []
-                };
-            } else {
-                // Fallback to auth data if no Firestore profile
-                return {
-                    uid: user.uid,
-                    name: user.displayName || 'User',
-                    email: user.email,
-                    title: 'Freelancer',
-                    location: 'Egypt',
-                    bio: '',
-                    skills: [],
-                    avatar: user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'User') + '&size=200&background=0074D9&color=fff',
-                    portfolio: [],
-                    reviews: []
-                };
-            }
-        } catch (error) {
-            console.error('Error fetching user profile:', error);
-            return null;
-        }
-    },
-
-    // Update user profile
-    updateUser: async (updates) => {
-        const user = auth.currentUser;
-        if (!user) return null;
-
-        try {
-            // Update Firestore
-            await db.collection('users').doc(user.uid).update({
-                ...updates,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-            // Update display name if changed
-            if (updates.name) {
-                await user.updateProfile({
-                    displayName: updates.name
-                });
-            }
-
-            console.log('Profile updated successfully');
-            return AuthFirebase.getCurrentUser();
-        } catch (error) {
-            console.error('Update error:', error);
-            alert(error.message);
-            return null;
-        }
-    },
-
-    // Listen to auth state changes
-    onAuthStateChanged: (callback) => {
-        return auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                // Check if Firestore profile exists, create if missing
-                const userDoc = await db.collection('users').doc(user.uid).get();
-
-                if (!userDoc.exists) {
-                    console.log('Creating missing Firestore profile for user:', user.uid);
-                    // Create profile for users who signed up before the async fix
-                    await db.collection('users').doc(user.uid).set({
-                        name: user.displayName || user.email.split('@')[0],
-                        email: user.email,
-                        title: 'Freelancer',
-                        location: 'Egypt',
-                        bio: 'Welcome to NileLancers!',
-                        skills: ['JavaScript', 'React', 'Node.js'],
-                        avatar: user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || user.email.split('@')[0]) + '&size=200&background=0074D9&color=fff',
-                        portfolio: [],
-                        reviews: [],
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                }
-
-                const fullUser = await AuthFirebase.getCurrentUser();
-                callback(fullUser);
-            } else {
-                callback(null);
-            }
-        });
-    },
-
-    // Send password reset email
-    resetPassword: async (email) => {
-        try {
-            await auth.sendPasswordResetEmail(email);
-            alert('Password reset email sent! Check your inbox.');
-            return true;
-        } catch (error) {
-            console.error('Password reset error:', error);
-            alert(error.message);
-            return false;
-        }
-    },
-
-    // Google Sign-In
-    signInWithGoogle: async () => {
-        try {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            const result = await auth.signInWithPopup(provider);
-            const user = result.user;
-
-            // Check if user profile exists, if not create one
-            const userDoc = await db.collection('users').doc(user.uid).get();
-
-            if (!userDoc.exists) {
-                await db.collection('users').doc(user.uid).set({
-                    name: user.displayName,
-                    email: user.email,
-                    title: 'Freelancer',
-                    location: 'Egypt',
-                    bio: 'Welcome to NileLancers!',
-                    skills: [],
-                    avatar: user.photoURL,
-                    portfolio: [],
-                    reviews: [],
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            }
-
-            console.log('Google sign-in successful');
-            return AuthFirebase.getCurrentUser();
-        } catch (error) {
-            console.error('Google sign-in error:', error);
-            alert(error.message);
-            return null;
-        }
+// auth.js
+const Auth = {
+  getUser() {
+    try {
+      const user = localStorage.getItem('nile_user');
+      return user ? JSON.parse(user) : null;
+    } catch (e) {
+      console.error('Error parsing user data', e);
+      return null;
     }
-};
+  },
 
-// For backwards compatibility with old Auth object
-const Auth = AuthFirebase;
+  login(email, password) {
+    // In a real app, you'd call an API here.
+    // For this demo, we'll use a mock user.
+    const mockUser = {
+      name: 'Omar Sherif',
+      email: email,
+      title: 'Senior Full Stack Developer',
+      location: 'Cairo, Egypt',
+      bio: 'Passionate Full Stack Developer with 5+ years of experience building scalable web applications. Specialized in the MERN stack and modern UI/UX principles.',
+      skills: ["React.js", "Node.js", "Tailwind CSS", "MongoDB", "UI/UX", "Arabic Translation"],
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+      portfolio: [
+        { id: 1, img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=60", title: "E-commerce App" },
+        { id: 2, img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=60", title: "Analytics Dashboard" },
+        { id: 3, img: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&w=500&q=60", title: "Portfolio Site" }
+      ],
+      reviews: [
+        { id: 1, client: "TechCorp", text: "Omar is an exceptional developer. Delivered on time and code was clean.", stars: 5 },
+        { id: 2, client: "StartUp Inc", text: "Great communication and very skilled in React.", stars: 5 }
+      ]
+    };
+    localStorage.setItem('nile_user', JSON.stringify(mockUser));
+    return mockUser;
+  },
+
+  signup(name, email, password) {
+    // In a real app, you'd call an API here.
+    // For this demo, we'll just log them in with the mock user.
+    return this.login(email, password);
+  },
+
+  logout() {
+    localStorage.removeItem('nile_user');
+  },
+
+  updateUser(updates) {
+    const user = this.getUser();
+    if (!user) return null;
+    const updated = { ...user, ...updates };
+    if (updates.name && updates.name !== user.name) {
+        updated.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(updates.name)}&background=0D8ABC&color=fff`;
+    }
+    localStorage.setItem('nile_user', JSON.stringify(updated));
+    return updated;
+  }
+};
