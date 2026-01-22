@@ -6,12 +6,14 @@ function Header({ lang, t, toggleLang, activeLink }) {
     const [theme, setTheme] = React.useState('dark');
     const [notifs, setNotifs] = React.useState([]);
     const [showNotifs, setShowNotifs] = React.useState(false);
+    const [user, setUser] = React.useState(null);
+    const [authLoading, setAuthLoading] = React.useState(true);
 
     React.useEffect(() => {
         const saved = localStorage.getItem('nile_theme') || 'dark';
         setTheme(saved);
         document.documentElement.setAttribute('data-theme', saved);
-        
+
         // Load Notifications
         const loadNotifs = () => {
             try {
@@ -24,7 +26,17 @@ function Header({ lang, t, toggleLang, activeLink }) {
         };
         loadNotifs();
         const interval = setInterval(loadNotifs, 2000);
-        return () => clearInterval(interval);
+
+        // Listen to auth state changes
+        const unsubscribe = Auth.onAuthStateChanged((currentUser) => {
+            setUser(currentUser);
+            setAuthLoading(false);
+        });
+
+        return () => {
+            clearInterval(interval);
+            unsubscribe();
+        };
     }, []);
 
     const toggleTheme = () => {
@@ -34,13 +46,11 @@ function Header({ lang, t, toggleLang, activeLink }) {
         document.documentElement.setAttribute('data-theme', newTheme);
     };
 
-    const user = Auth.getUser();
-
     const unreadCount = notifs.filter(n => !n.read).length;
     const handleNotifClick = () => {
         setShowNotifs(!showNotifs);
         if (!showNotifs && unreadCount > 0) {
-            const updated = notifs.map(n => ({...n, read: true}));
+            const updated = notifs.map(n => ({ ...n, read: true }));
             setNotifs(updated);
             localStorage.setItem('nile_notifications', JSON.stringify(updated));
         }
@@ -63,8 +73,8 @@ function Header({ lang, t, toggleLang, activeLink }) {
                 </a>
                 <nav className="hidden md:flex items-center gap-6">
                     <a href="index.html" className={getLinkClass('home')}>{t.nav.home}</a>
-                    <a href="jobs.html" className={getLinkClass('services')}>{t.nav.services}</a>                            
-                    
+                    <a href="jobs.html" className={getLinkClass('services')}>{t.nav.services}</a>
+
                     {user ? (
                         <>
                             <a href="saved.html" className={getLinkClass('saved')}>{t.nav.saved}</a>
@@ -74,31 +84,31 @@ function Header({ lang, t, toggleLang, activeLink }) {
                             <a href="settings.html" className={getLinkClass('settings')}>{t.nav.settings}</a>
                         </>
                     ) : null}
-                    
+
                     {/* Notification Bell */}
                     {user && (
-                    <div className="relative">
-                        <button onClick={handleNotifClick} className="notif-btn">
-                            <i className="fas fa-bell"></i>
-                            {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
-                        </button>
-                        <div className={`notif-dropdown ${showNotifs ? 'show' : ''}`} style={{marginTop: '15px'}}>
-                            <h4 className="p-2 font-bold text-white border-b border-gray-700">Notifications</h4>
-                            {notifs.length === 0 ? <div className="p-4 text-center text-gray-500">No notifications</div> : 
-                                notifs.slice(0, 5).map(n => (
-                                    <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`}>
-                                        <p>{n.text}</p>
-                                        <span className="text-xs text-gray-500">{new Date(n.time).toLocaleTimeString()}</span>
-                                    </div>
-                                ))
-                            }
+                        <div className="relative">
+                            <button onClick={handleNotifClick} className="notif-btn">
+                                <i className="fas fa-bell"></i>
+                                {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
+                            </button>
+                            <div className={`notif-dropdown ${showNotifs ? 'show' : ''}`} style={{ marginTop: '15px' }}>
+                                <h4 className="p-2 font-bold text-white border-b border-gray-700">Notifications</h4>
+                                {notifs.length === 0 ? <div className="p-4 text-center text-gray-500">No notifications</div> :
+                                    notifs.slice(0, 5).map(n => (
+                                        <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`}>
+                                            <p>{n.text}</p>
+                                            <span className="text-xs text-gray-500">{new Date(n.time).toLocaleTimeString()}</span>
+                                        </div>
+                                    ))
+                                }
+                            </div>
                         </div>
-                    </div>
                     )}
 
                     <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'AR' : 'EN'}</button>
                     <button onClick={toggleTheme} className="lang-btn px-3"><i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i></button>
-                    
+
                     {user ? (
                         <button onClick={handleLogout} className="text-[var(--text-light)] hover:text-red-500 font-bold"><i className="fas fa-sign-out-alt"></i></button>
                     ) : (
@@ -143,26 +153,26 @@ function Header({ lang, t, toggleLang, activeLink }) {
 
 // components/Footer.js
 function Footer({ t }) {
-  return (
-    <footer>
-        <div className="container footer-grid">
-            <div className="footer-col">
-                <div className="footer-logo">NileLancers</div>
-                <p className="text-sm text-gray-400 mb-4">{t.footer.desc}</p>
-                <div className="social-icons"><a href="#"><i className="fab fa-facebook-f"></i></a><a href="#"><i className="fab fa-twitter"></i></a><a href="#"><i className="fab fa-linkedin-in"></i></a></div>
+    return (
+        <footer>
+            <div className="container footer-grid">
+                <div className="footer-col">
+                    <div className="footer-logo">NileLancers</div>
+                    <p className="text-sm text-gray-400 mb-4">{t.footer.desc}</p>
+                    <div className="social-icons"><a href="#"><i className="fab fa-facebook-f"></i></a><a href="#"><i className="fab fa-twitter"></i></a><a href="#"><i className="fab fa-linkedin-in"></i></a></div>
+                </div>
+                <div className="footer-col">
+                    <h4>{t.footer.quick}</h4>
+                    <ul><li><a href="index.html">{t.nav.home}</a></li><li><a href="jobs.html">{t.nav.services}</a></li><li><a href="index.html#how">{t.nav.how}</a></li></ul>
+                </div>
+                <div className="footer-col">
+                    <h4>{t.footer.contact}</h4>
+                    <ul><li><i className="fas fa-envelope mr-2"></i> info@nilelancers.com</li><li><i className="fas fa-map-marker-alt mr-2"></i> Cairo, Egypt</li></ul>
+                </div>
             </div>
-            <div className="footer-col">
-                <h4>{t.footer.quick}</h4>
-                <ul><li><a href="index.html">{t.nav.home}</a></li><li><a href="jobs.html">{t.nav.services}</a></li><li><a href="index.html#how">{t.nav.how}</a></li></ul>
-            </div>
-            <div className="footer-col">
-                <h4>{t.footer.contact}</h4>
-                <ul><li><i className="fas fa-envelope mr-2"></i> info@nilelancers.com</li><li><i className="fas fa-map-marker-alt mr-2"></i> Cairo, Egypt</li></ul>
-            </div>
-        </div>
-        <div className="text-center mt-12 pt-5 border-t border-gray-700 text-sm text-gray-500">{t.footer.rights}</div>
-    </footer>
-  );
+            <div className="text-center mt-12 pt-5 border-t border-gray-700 text-sm text-gray-500">{t.footer.rights}</div>
+        </footer>
+    );
 }
 
 
@@ -194,8 +204,8 @@ function SavedJobCard({ job, onRemove }) {
                 <a href={`jobs.html#`} className="cta-button text-center whitespace-nowrap">
                     View Details
                 </a>
-                <button 
-                    onClick={() => onRemove(job.id)} 
+                <button
+                    onClick={() => onRemove(job.id)}
                     className="px-6 py-2 border border-red-500 text-red-500 rounded-full hover:bg-red-500 hover:text-white transition whitespace-nowrap">
                     <i className="fas fa-trash-alt mr-2"></i>
                     Remove
