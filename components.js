@@ -75,7 +75,7 @@ function Header({ lang, t, toggleLang, activeLink }) {
                     <a href="index.html" className={getLinkClass('home')}>{t.nav.home}</a>
                     <a href="jobs.html" className={getLinkClass('services')}>{t.nav.services}</a>
 
-                    {user ? (
+                    {(authLoading || user) ? (
                         <>
                             <a href="saved.html" className={getLinkClass('saved')}>{t.nav.saved}</a>
                             <a href="client-dashboard.html" className={getLinkClass('dashboard')}>{t.nav.dashboard}</a>
@@ -86,7 +86,7 @@ function Header({ lang, t, toggleLang, activeLink }) {
                     ) : null}
 
                     {/* Notification Bell */}
-                    {user && (
+                    {(authLoading || user) && (
                         <div className="relative">
                             <button onClick={handleNotifClick} className="notif-btn">
                                 <i className="fas fa-bell"></i>
@@ -109,7 +109,7 @@ function Header({ lang, t, toggleLang, activeLink }) {
                     <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'AR' : 'EN'}</button>
                     <button onClick={toggleTheme} className="lang-btn px-3"><i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i></button>
 
-                    {user ? (
+                    {(authLoading || user) ? (
                         <button onClick={handleLogout} className="text-[var(--text-light)] hover:text-red-500 font-bold"><i className="fas fa-sign-out-alt"></i></button>
                     ) : (
                         <>
@@ -117,7 +117,7 @@ function Header({ lang, t, toggleLang, activeLink }) {
                             <a href="signup.html" className="cta-button">{t.nav.signup}</a>
                         </>
                     )}
-                    {user && <a href="post-job.html" className="cta-button">{t.nav.post}</a>}
+                    {(authLoading || user) && <a href="post-job.html" className="cta-button">{t.nav.post}</a>}
                 </nav>
                 <div className="md:hidden flex items-center gap-4">
                     <button onClick={toggleLang} className="lang-btn text-xs m-0">{lang === 'en' ? 'AR' : 'EN'}</button>
@@ -128,7 +128,7 @@ function Header({ lang, t, toggleLang, activeLink }) {
                 <div className="mobile-menu md:hidden">
                     <a href="index.html" className={getMobileLinkClass('home')}>{t.nav.home}</a>
                     <a href="jobs.html" className={getMobileLinkClass('services')}>{t.nav.services}</a>
-                    {user ? (
+                    {(authLoading || user) ? (
                         <>
                             <a href="saved.html" className={getMobileLinkClass('saved')}>{t.nav.saved}</a>
                             <a href="client-dashboard.html" className={getMobileLinkClass('dashboard')}>{t.nav.dashboard}</a>
