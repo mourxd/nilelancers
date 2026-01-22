@@ -6,23 +6,12 @@ A modern freelance platform connecting talented freelancers with clients across 
 
 ```
 nilelancers/
-├── index.html              # Homepage
-├── pages/                  # All application pages
-│   ├── login.html
-│   ├── signup.html
-│   ├── profile.html
-│   ├── settings.html
-│   ├── wallet.html
-│   ├── jobs.html
-│   ├── saved.html
-│   ├── post-job.html
-│   ├── applications.html
-│   └── client-dashboard.html
+├── *.html                  # All HTML pages (login, signup, profile, etc.)
 ├── js/                     # JavaScript files
 │   ├── auth.js            # Firebase authentication
 │   ├── db-firebase.js     # Firestore database functions
 │   ├── firebase-config.js # Firebase configuration
-│   ├── components.js      # Shared React components (Header, Footer)
+│   ├── components.js      # Shared React components
 │   ├── profile-app.js     # Profile page logic
 │   ├── jobs-app.js        # Jobs page logic
 │   └── saved-app.js       # Saved jobs logic
