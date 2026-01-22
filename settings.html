@@ -399,12 +399,13 @@
         function SettingsApp() {
             const [lang, setLang] = React.useState('en');
             const [activeTab, setActiveTab] = React.useState('profile');
+            const [loading, setLoading] = React.useState(true);
             const [profile, setProfile] = React.useState({
-                name: "Omar Sherif",
-                title: "Senior Full Stack Developer",
-                location: "Cairo, Egypt",
-                bio: "Passionate Full Stack Developer with 5+ years of experience building scalable web applications.",
-                skills: "React.js, Node.js, Tailwind CSS, MongoDB"
+                name: "",
+                title: "",
+                location: "",
+                bio: "",
+                skills: ""
             });
             const [passwords, setPasswords] = React.useState({ current: '', new: '', confirm: '' });
 
@@ -417,12 +418,13 @@
                 const unsubscribe = Auth.onAuthStateChanged((user) => {
                     if (user) {
                         setProfile({
-                            name: user.name,
-                            title: user.title,
-                            location: user.location,
-                            bio: user.bio,
-                            skills: user.skills.join(', ')
+                            name: user.name || "",
+                            title: user.title || "",
+                            location: user.location || "",
+                            bio: user.bio || "",
+                            skills: user.skills ? user.skills.join(', ') : ""
                         });
+                        setLoading(false);
                     } else {
                         window.location.href = 'login.html';
                     }
@@ -486,48 +488,57 @@
 
                             {/* Content */}
                             <div className="settings-content">
-                                {activeTab === 'profile' ? (
-                                    <form onSubmit={handleProfileSave}>
-                                        <div className="grid md:grid-cols-2 gap-6">
-                                            <div className="form-group">
-                                                <label>{t.lbl.name}</label>
-                                                <input type="text" className="input-field" value={profile.name} onChange={e => setProfile({ ...profile, name: e.target.value })} />
-                                            </div>
-                                            <div className="form-group">
-                                                <label>{t.lbl.title}</label>
-                                                <input type="text" className="input-field" value={profile.title} onChange={e => setProfile({ ...profile, title: e.target.value })} />
-                                            </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>{t.lbl.loc}</label>
-                                            <input type="text" className="input-field" value={profile.location} onChange={e => setProfile({ ...profile, location: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>{t.lbl.bio}</label>
-                                            <textarea className="input-field" value={profile.bio} onChange={e => setProfile({ ...profile, bio: e.target.value })}></textarea>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>{t.lbl.skills}</label>
-                                            <input type="text" className="input-field" value={profile.skills} onChange={e => setProfile({ ...profile, skills: e.target.value })} />
-                                        </div>
-                                        <button type="submit" className="cta-button">{t.btn.save}</button>
-                                    </form>
+                                {loading ? (
+                                    <div className="text-center py-20">
+                                        <i className="fas fa-spinner fa-spin text-4xl text-[var(--secondary-blue)]"></i>
+                                        <p className="text-[var(--text-gray)] mt-4">Loading settings...</p>
+                                    </div>
                                 ) : (
-                                    <form onSubmit={handlePasswordChange}>
-                                        <div className="form-group">
-                                            <label>{t.lbl.cur_pass}</label>
-                                            <input type="password" className="input-field" value={passwords.current} onChange={e => setPasswords({ ...passwords, current: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>{t.lbl.new_pass}</label>
-                                            <input type="password" className="input-field" value={passwords.new} onChange={e => setPasswords({ ...passwords, new: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>{t.lbl.con_pass}</label>
-                                            <input type="password" className="input-field" value={passwords.confirm} onChange={e => setPasswords({ ...passwords, confirm: e.target.value })} />
-                                        </div>
-                                        <button type="submit" className="cta-button">{t.btn.change}</button>
-                                    </form>
+                                    <>
+                                        {activeTab === 'profile' ? (
+                                            <form onSubmit={handleProfileSave}>
+                                                <div className="grid md:grid-cols-2 gap-6">
+                                                    <div className="form-group">
+                                                        <label>{t.lbl.name}</label>
+                                                        <input type="text" className="input-field" value={profile.name} onChange={e => setProfile({ ...profile, name: e.target.value })} />
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>{t.lbl.title}</label>
+                                                        <input type="text" className="input-field" value={profile.title} onChange={e => setProfile({ ...profile, title: e.target.value })} />
+                                                    </div>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>{t.lbl.loc}</label>
+                                                    <input type="text" className="input-field" value={profile.location} onChange={e => setProfile({ ...profile, location: e.target.value })} />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>{t.lbl.bio}</label>
+                                                    <textarea className="input-field" value={profile.bio} onChange={e => setProfile({ ...profile, bio: e.target.value })}></textarea>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>{t.lbl.skills}</label>
+                                                    <input type="text" className="input-field" value={profile.skills} onChange={e => setProfile({ ...profile, skills: e.target.value })} />
+                                                </div>
+                                                <button type="submit" className="cta-button">{t.btn.save}</button>
+                                            </form>
+                                        ) : (
+                                            <form onSubmit={handlePasswordChange}>
+                                                <div className="form-group">
+                                                    <label>{t.lbl.cur_pass}</label>
+                                                    <input type="password" className="input-field" value={passwords.current} onChange={e => setPasswords({ ...passwords, current: e.target.value })} />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>{t.lbl.new_pass}</label>
+                                                    <input type="password" className="input-field" value={passwords.new} onChange={e => setPasswords({ ...passwords, new: e.target.value })} />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>{t.lbl.con_pass}</label>
+                                                    <input type="password" className="input-field" value={passwords.confirm} onChange={e => setPasswords({ ...passwords, confirm: e.target.value })} />
+                                                </div>
+                                                <button type="submit" className="cta-button">{t.btn.change}</button>
+                                            </form>
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>
