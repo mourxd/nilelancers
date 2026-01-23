@@ -257,3 +257,4 @@ AuthFirebase.isAdmin = () => {
 
 // For backwards compatibility with old Auth object
 const Auth = AuthFirebase;
+window.Auth = AuthFirebase;

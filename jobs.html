@@ -698,7 +698,7 @@
             );
         }
 
-        function JobCard({ job, onClick, onToggleSave, onDelete, isSaved, isAdmin, currentUser, t }) {
+        function JobCard({ job, onClick, onToggleSave, onDelete, isSaved, isAdmin, currentUser, authLoading, t }) {
             const handleButtonClick = (e) => { e.stopPropagation(); job.isLocal ? onClick(job) : window.open(job.link, '_blank'); };
             const handleSaveClick = (e) => { e.stopPropagation(); onToggleSave(job); };
             const handleDeleteClick = (e) => { e.stopPropagation(); if (window.confirm('Are you sure you want to delete this job?')) onDelete(job); };
@@ -729,8 +729,8 @@
                     </div>
                     <div className="flex flex-col justify-center min-w-[140px]">
                         {(!currentUser || currentUser.userType !== 'client') ? (
-                            <button onClick={handleButtonClick} className={`cta-button w-full text-center text-sm ${job.isLocal ? 'bg-[var(--accent-green)] text-black' : ''}`} style={job.isLocal ? { background: 'var(--accent-green)' } : {}}>
-                                {job.isLocal ? t.details_apply : <span>{t.details_view} <i className="fas fa-external-link-alt ml-1"></i></span>}
+                            <button onClick={handleButtonClick} className={`cta-button w-full text-center text-sm ${job.isLocal ? 'bg-[var(--accent-green)] text-black' : ''}`} style={job.isLocal ? { background: 'var(--accent-green)' } : {}} disabled={authLoading}>
+                                {authLoading ? 'Loading...' : (job.isLocal ? t.details_apply : <span>{t.details_view} <i className="fas fa-external-link-alt ml-1"></i></span>)}
                             </button>
                         ) : null}
                     </div>
@@ -869,14 +869,12 @@
             };
 
             const openApplyModal = async () => {
-                alert("Debug: Apply Clicked");
                 if (authLoading) {
                     showToast('Please wait, checking authentication...');
                     return;
                 }
 
                 if (!currentUser) {
-                    alert("Debug: No Current User");
                     showToast('Please login to apply');
                     return;
                 }
@@ -887,7 +885,6 @@
                 }
 
                 if (selectedJob.isLocal) {
-                    alert("Debug: Opening Modal");
                     setIsModalOpen(true);
                 } else {
                     window.open(selectedJob.link, '_blank');
@@ -984,7 +981,7 @@
                             </div>
                         </div>
                         <div>
-                            {displayedJobs.map(job => <JobCard key={job.id} job={job} onClick={setSelectedJob} onToggleSave={toggleSave} onDelete={deleteJob} isSaved={savedJobs.some(j => j.id === job.id)} isAdmin={isAdmin} currentUser={currentUser} t={t} />)}
+                            {displayedJobs.map(job => <JobCard key={job.id} job={job} onClick={setSelectedJob} onToggleSave={toggleSave} onDelete={deleteJob} isSaved={savedJobs.some(j => j.id === job.id)} isAdmin={isAdmin} currentUser={currentUser} authLoading={authLoading} t={t} />)}
                         </div>
 
                         {/* See More Button */}
