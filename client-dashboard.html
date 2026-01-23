@@ -444,12 +444,8 @@
             const [selectedJob, setSelectedJob] = React.useState(null);
             const [ratingModal, setRatingModal] = React.useState({ open: false, appId: null, name: '' });
 
-            // Mock Applicants Data
-            const [applicants, setApplicants] = React.useState([
-                { id: 1, name: "Ahmed Ali", title: "Senior Developer", bid: "EGP 5000", status: "pending" },
-                { id: 2, name: "Sarah Smith", title: "UI Designer", bid: "EGP 4500", status: "pending" },
-                { id: 3, name: "Mohamed Zaki", title: "Backend Dev", bid: "EGP 6000", status: "pending" }
-            ]);
+            const [applicants, setApplicants] = React.useState([]);
+            const [isLoadingApps, setIsLoadingApps] = React.useState(false);
 
             React.useEffect(() => {
                 const savedLang = localStorage.getItem('nile_lang') || 'en';
@@ -459,7 +455,6 @@
                 // Listen to auth state changes to reliably fetch jobs
                 const unsubscribe = Auth.onAuthStateChanged(async (user) => {
                     if (user) {
-                        // Only fetch if user is logged in
                         try {
                             const postedJobs = await FirebaseDB.getUserJobs(user.uid);
                             setJobs(postedJobs);
@@ -467,13 +462,32 @@
                             console.error("Error loading jobs:", err);
                         }
                     } else {
-                        // If no user, jobs should be empty
                         setJobs([]);
                     }
                 });
 
                 return () => unsubscribe(); // Cleanup subscription on unmount
             }, []);
+
+            // Fetch applications when a job is selected
+            React.useEffect(() => {
+                const fetchApps = async () => {
+                    if (selectedJob) {
+                        setIsLoadingApps(true);
+                        try {
+                            const apps = await FirebaseDB.getJobApplications(selectedJob.id);
+                            setApplicants(apps);
+                        } catch (err) {
+                            console.error("Error loading applications:", err);
+                        } finally {
+                            setIsLoadingApps(false);
+                        }
+                    } else {
+                        setApplicants([]);
+                    }
+                };
+                fetchApps();
+            }, [selectedJob]);
 
             const toggleLang = () => {
                 const newLang = lang === 'en' ? 'ar' : 'en';
@@ -482,17 +496,30 @@
                 document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
             };
 
-            const updateStatus = (appId, newStatus) => {
-                const updated = applicants.map(app => app.id === appId ? { ...app, status: newStatus } : app);
-                setApplicants(updated);
+            const updateStatus = async (appId, newStatus) => {
+                // Optimistic update
+                const previousApplicants = [...applicants];
+                setApplicants(applicants.map(app => app.id === appId ? { ...app, status: newStatus } : app));
+
+                try {
+                    const success = await FirebaseDB.updateApplicationStatus(appId, newStatus);
+                    if (!success) {
+                        // Revert if failed
+                        setApplicants(previousApplicants);
+                        alert("Failed to update status");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    setApplicants(previousApplicants);
+                }
             };
 
             const openRating = (app) => {
-                setRatingModal({ open: true, appId: app.id, name: app.name });
+                // Ensure we use the correct name from the application object
+                setRatingModal({ open: true, appId: app.id, name: app.userName || app.name });
             };
 
             const handleRatingSubmit = (data) => {
-                // Save review logic here (mock)
                 console.log("Review Submitted:", data);
                 updateStatus(ratingModal.appId, 'completed');
                 setRatingModal({ open: false, appId: null, name: '' });
@@ -575,31 +602,40 @@
                                         <button onClick={() => setSelectedJob(null)} className="text-gray-400 hover:text-white"><i className="fas fa-times text-xl"></i></button>
                                     </div>
                                     <div className="space-y-4">
-                                        {applicants.map(app => (
-                                            <div key={app.id} className="applicant-card">
-                                                <div className="flex justify-between mb-2">
-                                                    <span className="font-bold text-white">{app.name}</span>
-                                                    <span className="text-[var(--accent-gold)]">{app.bid}</span>
-                                                </div>
-                                                <p className="text-sm text-gray-300 mb-3">{app.title}</p>
-                                                <div className="flex gap-2">
-                                                    {app.status === 'pending' ? (
-                                                        <>
-                                                            <button onClick={() => updateStatus(app.id, 'accepted')} className="flex-1 bg-green-600 text-white py-1 rounded hover:bg-green-500">Accept</button>
-                                                            <button onClick={() => updateStatus(app.id, 'rejected')} className="flex-1 bg-red-600 text-white py-1 rounded hover:bg-red-500">Reject</button>
-                                                        </>
-                                                    ) : app.status === 'accepted' ? (
-                                                        <button onClick={() => openRating(app)} className="w-full py-1 rounded font-bold bg-[var(--primary-blue)] text-white hover:bg-blue-600">
-                                                            Mark Complete & Rate
-                                                        </button>
-                                                    ) : (
-                                                        <span className={`w-full text-center py-1 rounded font-bold ${app.status === 'completed' ? 'text-[var(--accent-gold)] border border-[var(--accent-gold)]' : 'bg-red-900 text-red-300'}`}>
-                                                            {app.status.toUpperCase()}
-                                                        </span>
+                                        {isLoadingApps ? (
+                                            <div className="text-center text-white py-4">Loading applications...</div>
+                                        ) : applicants.length === 0 ? (
+                                            <div className="text-center text-gray-400 py-4">No applications yet.</div>
+                                        ) : (
+                                            applicants.map(app => (
+                                                <div key={app.id} className="applicant-card">
+                                                    <div className="flex justify-between mb-2">
+                                                        <span className="font-bold text-white">{app.userName || app.name || 'Anonymous User'}</span>
+                                                        <span className="text-[var(--accent-gold)]">{app.bid}</span>
+                                                    </div>
+                                                    <p className="text-sm text-gray-300 mb-3 whitespace-pre-wrap">{app.coverLetter || "No cover letter provided."}</p>
+                                                    {app.userEmail && (
+                                                        <p className="text-xs text-gray-400 mb-3"><i className="fas fa-envelope mr-1"></i> {app.userEmail}</p>
                                                     )}
+                                                    <div className="flex gap-2">
+                                                        {app.status === 'pending' ? (
+                                                            <>
+                                                                <button onClick={() => updateStatus(app.id, 'accepted')} className="flex-1 bg-green-600 text-white py-1 rounded hover:bg-green-500">Accept</button>
+                                                                <button onClick={() => updateStatus(app.id, 'rejected')} className="flex-1 bg-red-600 text-white py-1 rounded hover:bg-red-500">Reject</button>
+                                                            </>
+                                                        ) : app.status === 'accepted' ? (
+                                                            <button onClick={() => openRating(app)} className="w-full py-1 rounded font-bold bg-[var(--primary-blue)] text-white hover:bg-blue-600">
+                                                                Mark Complete & Rate
+                                                            </button>
+                                                        ) : (
+                                                            <span className={`w-full text-center py-1 rounded font-bold ${app.status === 'completed' ? 'text-[var(--accent-gold)] border border-[var(--accent-gold)]' : 'bg-red-900 text-red-300'}`}>
+                                                                {app.status.toUpperCase()}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            ))
+                                        )}
                                     </div>
                                 </div>
                             </div>

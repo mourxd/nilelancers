@@ -685,11 +685,11 @@
                         <form onSubmit={onSubmit} className="space-y-4">
                             <div>
                                 <label className="block text-[var(--accent-gold)] text-sm mb-1 font-bold">Cover Letter</label>
-                                <textarea rows="4" className="w-full bg-[rgba(255,255,255,0.1)] border border-gray-600 rounded-lg p-3 text-white focus:border-[var(--secondary-blue)] outline-none" placeholder="Why are you the best fit?" style={{ color: 'white' }}></textarea>
+                                <textarea name="coverLetter" rows="4" className="w-full bg-[rgba(255,255,255,0.1)] border border-gray-600 rounded-lg p-3 text-white focus:border-[var(--secondary-blue)] outline-none" placeholder="Why are you the best fit?" style={{ color: 'white' }} required></textarea>
                             </div>
                             <div>
                                 <label className="block text-[var(--accent-gold)] text-sm mb-1 font-bold">Your Bid</label>
-                                <input type="text" className="w-full bg-[rgba(255,255,255,0.1)] border border-gray-600 rounded-lg p-3 text-white focus:border-[var(--secondary-blue)] outline-none" placeholder="e.g. 5000" style={{ color: 'white' }} />
+                                <input name="bid" type="text" className="w-full bg-[rgba(255,255,255,0.1)] border border-gray-600 rounded-lg p-3 text-white focus:border-[var(--secondary-blue)] outline-none" placeholder="e.g. 5000" style={{ color: 'white' }} required />
                             </div>
                             <button type="submit" className="cta-button w-full">Submit Proposal</button>
                         </form>
@@ -818,10 +818,45 @@
             };
 
             // Handle Application Submit
-            const handleApplySubmit = (e) => {
+            const handleApplySubmit = async (e) => {
                 e.preventDefault();
-                setIsModalOpen(false);
-                showToast(`Application sent to ${selectedJob.company}!`);
+                const form = e.target;
+                const coverLetter = form.elements[0].value;
+                const bid = form.elements[1].value;
+
+                if (!Auth.currentUser) {
+                    showToast('Please login to apply');
+                    return;
+                }
+
+                // Show loading state (simple approach using button text change if possible, or just blocking)
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerText;
+                submitBtn.innerText = 'Submitting...';
+                submitBtn.disabled = true;
+
+                try {
+                    const result = await FirebaseDB.submitApplication(selectedJob.id, {
+                        jobTitle: selectedJob.title,
+                        company: selectedJob.company,
+                        bid: bid,
+                        coverLetter: coverLetter
+                    });
+
+                    if (result) {
+                        showToast(`Application sent to ${selectedJob.company}!`);
+                        setIsModalOpen(false);
+                    } else {
+                        // Error handled in db call but we can show generic
+                        // showToast('Failed to submit application');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    showToast('Error submitting application');
+                } finally {
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                }
             };
 
             const openApplyModal = () => {
