@@ -26,6 +26,12 @@ function SavedApp() {
   React.useEffect(() => {
     const loadSavedJobs = async () => {
       setLoading(true);
+      // Check if user is authenticated
+      const user = await Auth.getCurrentUser();
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
       const jobs = await FirebaseDB.getSavedJobs();
       setSavedJobs(jobs);
       setLoading(false);

@@ -411,6 +411,7 @@
             });
             const [passwords, setPasswords] = React.useState({ current: '', new: '', confirm: '' });
             const [showTypeModal, setShowTypeModal] = React.useState(false);
+            const [loading, setLoading] = React.useState(true);
 
             React.useEffect(() => {
                 const savedLang = localStorage.getItem('nile_lang') || 'en';
@@ -428,6 +429,7 @@
                             skills: user.skills.join(', '),
                             userType: user.userType || 'freelancer'
                         });
+                        setLoading(false);
                     } else {
                         window.location.href = 'login.html';
                     }
@@ -495,129 +497,151 @@
                     <div className="container py-12 flex-grow">
                         <h1 className="text-3xl font-bold text-[var(--text-light)] mb-8">{t.title}</h1>
 
-                        <div className="settings-container">
-                            {/* Sidebar */}
-                            <div className="settings-sidebar">
-                                <div className={`sidebar-item ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}>
-                                    <i className="fas fa-user"></i> {t.tabs.profile}
-                                </div>
-                                <div className={`sidebar-item ${activeTab === 'security' ? 'active' : ''}`} onClick={() => setActiveTab('security')}>
-                                    <i className="fas fa-lock"></i> {t.tabs.security}
+                        {loading ? (
+                            <div className="min-h-[400px] flex items-center justify-center">
+                                <div className="text-center">
+                                    <i className="fas fa-spinner fa-spin text-4xl text-[var(--secondary-blue)] mb-4"></i>
+                                    <p className="text-[var(--text-light)]">Loading settings...</p>
                                 </div>
                             </div>
+                        ) : (
+                            <div className="settings-container">
+                                {/* Sidebar */}
+                                <div className="settings-sidebar">
+                                    <div className={`sidebar-item ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}>
+                                        <i className="fas fa-user"></i> {t.tabs.profile}
+                                    </div>
+                                    <div className={`sidebar-item ${activeTab === 'security' ? 'active' : ''}`} onClick={() => setActiveTab('security')}>
+                                        <i className="fas fa-lock"></i> {t.tabs.security}
+                                    </div>
+                                </div>
 
-                            {/* Content */}
-                            <div className="settings-content">
-                                {activeTab === 'profile' ? (
-                                    <form onSubmit={handleProfileSave}>
-                                        {/* User Type Badge */}
-                                        <div className="mb-6 p-4 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl">
-                                            <label className="block text-[var(--text-gray)] mb-2 font-semibold">Account Type</label>
-                                            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold ${profile.userType === 'client'
-                                                ? 'bg-[var(--accent-gold)] text-[var(--dark-navy)]'
-                                                : 'bg-[var(--secondary-blue)] text-[var(--dark-navy)]'
-                                                }`}>
-                                                <i className={`fas ${profile.userType === 'client' ? 'fa-briefcase' : 'fa-user-tie'}`}></i>
-                                                <span>{profile.userType === 'client' ? 'Business / Client' : 'Freelancer'}</span>
+                                {/* Content */}
+                                <div className="settings-content">
+                                    {activeTab === 'profile' ? (
+                                        <form onSubmit={handleProfileSave}>
+                                            {/* User Type Switcher */}
+                                            <div className="mb-6 p-4 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl">
+                                                <label className="block text-[var(--text-gray)] mb-3 font-semibold">Account Type</label>
+                                                <div className="flex items-center gap-4 flex-wrap">
+                                                    <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold ${profile.userType === 'client'
+                                                        ? 'bg-[var(--accent-gold)] text-[var(--dark-navy)]'
+                                                        : 'bg-[var(--secondary-blue)] text-[var(--dark-navy)]'
+                                                        }`}>
+                                                        <i className={`fas ${profile.userType === 'client' ? 'fa-briefcase' : 'fa-user-tie'}`}></i>
+                                                        <span>{profile.userType === 'client' ? 'Business / Client' : 'Freelancer'}</span>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setShowTypeModal(true)}
+                                                        className="px-4 py-2 border border-[var(--accent-gold)] text-[var(--accent-gold)] rounded-full hover:bg-[var(--accent-gold)] hover:text-[var(--dark-navy)] transition font-semibold text-sm"
+                                                    >
+                                                        <i className="fas fa-exchange-alt mr-2"></i>
+                                                        Change Type
+                                                    </button>
+                                                </div>
+                                                <p className="text-xs text-gray-500 mt-3">Your account type determines the features available to you.</p>
                                             </div>
-                                            <p className="text-xs text-gray-500 mt-2">Your account type determines the features available to you.</p>
-                                        </div>
 
-                                        <div className="grid md:grid-cols-2 gap-6">
-                                            <div className="form-group">
-                                                <label>{t.lbl.name}</label>
-                                                <input type="text" className="input-field" value={profile.name} onChange={e => setProfile({ ...profile, name: e.target.value })} />
+                                            <div className="grid md:grid-cols-2 gap-6">
+                                                <div className="form-group">
+                                                    <label>{t.lbl.name}</label>
+                                                    <input type="text" className="input-field" value={profile.name} onChange={e => setProfile({ ...profile, name: e.target.value })} />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>{t.lbl.title}</label>
+                                                    <input type="text" className="input-field" value={profile.title} onChange={e => setProfile({ ...profile, title: e.target.value })} />
+                                                </div>
                                             </div>
                                             <div className="form-group">
-                                                <label>{t.lbl.title}</label>
-                                                <input type="text" className="input-field" value={profile.title} onChange={e => setProfile({ ...profile, title: e.target.value })} />
+                                                <label>{t.lbl.loc}</label>
+                                                <input type="text" className="input-field" value={profile.location} onChange={e => setProfile({ ...profile, location: e.target.value })} />
                                             </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>{t.lbl.loc}</label>
-                                            <input type="text" className="input-field" value={profile.location} onChange={e => setProfile({ ...profile, location: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>{t.lbl.bio}</label>
-                                            <textarea className="input-field" value={profile.bio} onChange={e => setProfile({ ...profile, bio: e.target.value })}></textarea>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>{t.lbl.skills}</label>
-                                            <input type="text" className="input-field" value={profile.skills} onChange={e => setProfile({ ...profile, skills: e.target.value })} />
-                                        </div>
-                                        <button type="submit" className="cta-button">{t.btn.save}</button>
-                                    </form>
-                                ) : (
-                                    <form onSubmit={handlePasswordChange}>
-                                        <div className="form-group">
-                                            <label>{t.lbl.cur_pass}</label>
-                                            <input type="password" className="input-field" value={passwords.current} onChange={e => setPasswords({ ...passwords, current: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>{t.lbl.new_pass}</label>
-                                            <input type="password" className="input-field" value={passwords.new} onChange={e => setPasswords({ ...passwords, new: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>{t.lbl.con_pass}</label>
-                                            <input type="password" className="input-field" value={passwords.confirm} onChange={e => setPasswords({ ...passwords, confirm: e.target.value })} />
-                                        </div>
-                                        <button type="submit" className="cta-button">{t.btn.change}</button>
-                                    </form>
-                                )}
+                                            <div className="form-group">
+                                                <label>{t.lbl.bio}</label>
+                                                <textarea className="input-field" value={profile.bio} onChange={e => setProfile({ ...profile, bio: e.target.value })}></textarea>
+                                            </div>
+                                            <div className="form-group">
+                                                <label>{t.lbl.skills}</label>
+                                                <input type="text" className="input-field" value={profile.skills} onChange={e => setProfile({ ...profile, skills: e.target.value })} />
+                                            </div>
+                                            <button type="submit" className="cta-button">{t.btn.save}</button>
+                                        </form>
+                                    ) : (
+                                        <form onSubmit={handlePasswordChange}>
+                                            <div className="form-group">
+                                                <label>{t.lbl.cur_pass}</label>
+                                                <input type="password" className="input-field" value={passwords.current} onChange={e => setPasswords({ ...passwords, current: e.target.value })} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>{t.lbl.new_pass}</label>
+                                                <input type="password" className="input-field" value={passwords.new} onChange={e => setPasswords({ ...passwords, new: e.target.value })} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>{t.lbl.con_pass}</label>
+                                                <input type="password" className="input-field" value={passwords.confirm} onChange={e => setPasswords({ ...passwords, confirm: e.target.value })} />
+                                            </div>
+                                            <button type="submit" className="cta-button">{t.btn.change}</button>
+                                        </form>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        )}
+                </div>
+
+                    {/* Account Type Change Modal */ }
+            {
+                showTypeModal && (
+                    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+                        <div className="bg-[var(--dark-navy)] border border-[var(--primary-blue)] rounded-xl p-6 max-w-md w-full">
+                            <h3 className="text-2xl font-bold text-white mb-4">
+                                <i className="fas fa-exchange-alt mr-2 text-[var(--accent-gold)]"></i>
+                                Change Account Type
+                            </h3>
+                            <p className="text-[var(--text-gray)] mb-2">
+                                You are about to switch from <strong>{profile.userType === 'freelancer' ? 'Freelancer' : 'Business/Client'}</strong> to <strong>{profile.userType === 'freelancer' ? 'Business/Client' : 'Freelancer'}</strong>.
+                            </p>
+                            <div className="bg-yellow-900/30 border border-yellow-600 rounded-lg p-3 mb-4">
+                                <p className="text-yellow-200 text-sm mb-2"><i className="fas fa-exclamation-triangle mr-2"></i>What will change:</p>
+                                <ul className="text-yellow-100 text-xs list-disc list-inside space-y-1">
+                                    <li>Navigation menu will update automatically</li>
+                                    <li>Available features will change</li>
+                                    {profile.userType === 'freelancer' ? (
+                                        <>
+                                            <li>You'll gain access to Dashboard and Post Job</li>
+                                            <li>Your freelancer profile will become read-only</li>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <li>You'll gain access to Browse Jobs and Profile</li>
+                                            <li>Dashboard will be hidden</li>
+                                        </>
+                                    )}
+                                </ul>
+                            </div>
+                            <p className="text-gray-400 text-sm mb-6">Your data and settings will remain intact. You can switch back at any time.</p>
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setShowTypeModal(false)}
+                                    className="flex-1 py-2 border border-gray-500 rounded text-gray-300 hover:bg-gray-700 transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleTypeChange}
+                                    className="flex-1 py-2 bg-[var(--accent-gold)] rounded text-[var(--dark-navy)] font-bold hover:bg-yellow-500 transition"
+                                >
+                                    Confirm Change
+                                </button>
                             </div>
                         </div>
                     </div>
+                )
+            }
 
-                    {/* Account Type Change Modal */}
-                    {showTypeModal && (
-                        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-                            <div className="bg-[var(--dark-navy)] border border-[var(--primary-blue)] rounded-xl p-6 max-w-md w-full">
-                                <h3 className="text-2xl font-bold text-white mb-4">
-                                    <i className="fas fa-exchange-alt mr-2 text-[var(--accent-gold)]"></i>
-                                    Change Account Type
-                                </h3>
-                                <p className="text-[var(--text-gray)] mb-2">
-                                    You are about to switch from <strong>{profile.userType === 'freelancer' ? 'Freelancer' : 'Business/Client'}</strong> to <strong>{profile.userType === 'freelancer' ? 'Business/Client' : 'Freelancer'}</strong>.
-                                </p>
-                                <div className="bg-yellow-900/30 border border-yellow-600 rounded-lg p-3 mb-4">
-                                    <p className="text-yellow-200 text-sm mb-2"><i className="fas fa-exclamation-triangle mr-2"></i>What will change:</p>
-                                    <ul className="text-yellow-100 text-xs list-disc list-inside space-y-1">
-                                        <li>Navigation menu will update automatically</li>
-                                        <li>Available features will change</li>
-                                        {profile.userType === 'freelancer' ? (
-                                            <>
-                                                <li>You'll gain access to Dashboard and Post Job</li>
-                                                <li>Your freelancer profile will become read-only</li>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <li>You'll gain access to Browse Jobs and Profile</li>
-                                                <li>Dashboard will be hidden</li>
-                                            </>
-                                        )}
-                                    </ul>
-                                </div>
-                                <p className="text-gray-400 text-sm mb-6">Your data and settings will remain intact. You can switch back at any time.</p>
-                                <div className="flex gap-3">
-                                    <button
-                                        onClick={() => setShowTypeModal(false)}
-                                        className="flex-1 py-2 border border-gray-500 rounded text-gray-300 hover:bg-gray-700 transition"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        onClick={handleTypeChange}
-                                        className="flex-1 py-2 bg-[var(--accent-gold)] rounded text-[var(--dark-navy)] font-bold hover:bg-yellow-500 transition"
-                                    >
-                                        Confirm Change
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    <Footer t={t} />
-                </div>
+            <Footer t={t} />
+                </div >
             );
         }
         const root = ReactDOM.createRoot(document.getElementById('root'));
