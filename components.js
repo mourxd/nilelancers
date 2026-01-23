@@ -61,7 +61,7 @@ function Header({ lang, t, toggleLang, activeLink }) {
         window.location.href = 'index.html';
     };
 
-    const getLinkClass = (name) => activeLink === name ? "text-[var(--secondary-blue)] font-bold" : "text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold";
+    const getLinkClass = (name) => activeLink === name ? "text-[var(--secondary-blue)] font-bold text-sm" : "text-[var(--text-light)] hover:text-[var(--secondary-blue)] font-bold text-sm";
     const getMobileLinkClass = (name) => activeLink === name ? "text-[var(--accent-gold)] font-bold" : "text-white font-bold";
 
     return (
@@ -71,7 +71,7 @@ function Header({ lang, t, toggleLang, activeLink }) {
                     <i className="fas fa-water text-[var(--accent-gold)] text-3xl floating"></i>
                     <h1>NileLancers</h1>
                 </a>
-                <nav className="hidden md:flex items-center gap-6">
+                <nav className="hidden md:flex items-center gap-4">
                     <a href="index.html" className={getLinkClass('home')}>{t.nav.home}</a>
                     <a href="jobs.html" className={getLinkClass('services')}>{t.nav.services}</a>
 

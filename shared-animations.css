@@ -3,7 +3,7 @@
 /* Header nav links gold underline animation */
 header nav a {
     position: relative;
-    padding: 10px 15px;
+    padding: 6px 10px;
     border-radius: 8px;
     transition: all 0.4s ease;
 }
@@ -30,8 +30,15 @@ header nav a:hover:after {
 
 /* Floating animation for logo icon */
 @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 .floating {
