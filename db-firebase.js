@@ -65,7 +65,6 @@ const FirebaseDB = {
         try {
             const snapshot = await db.collection('jobs')
                 .where('userId', '==', userId)
-                .orderBy('createdAt', 'desc')
                 .get();
 
             const jobs = [];
@@ -76,7 +75,12 @@ const FirebaseDB = {
                 });
             });
 
-            return jobs;
+            // Sort client-side to avoid index requirement
+            return jobs.sort((a, b) => {
+                const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+                const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+                return dateB - dateA; // Descending
+            });
         } catch (error) {
             console.error('Error fetching user jobs:', error);
             return [];
