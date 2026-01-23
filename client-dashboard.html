@@ -456,27 +456,16 @@
                 setLang(savedLang);
                 document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
 
-                // Page Access Guard - Only clients can access dashboard
-                const checkAccess = async () => {
+                // Fetch user's posted jobs from Firebase
+                const loadJobs = async () => {
                     const user = await Auth.getCurrentUser();
 
-                    // Redirect if not logged in
-                    if (!user) {
-                        window.location.href = 'login.html';
-                        return;
+                    if (user) {
+                        const postedJobs = await FirebaseDB.getUserJobs(user.uid);
+                        setJobs(postedJobs);
                     }
-
-                    // Redirect if not a client
-                    if (user.userType !== 'client') {
-                        window.location.href = 'profile.html';
-                        return;
-                    }
-
-                    // Fetch user's posted jobs from Firebase
-                    const postedJobs = await FirebaseDB.getUserJobs(user.uid);
-                    setJobs(postedJobs);
                 };
-                checkAccess();
+                loadJobs();
             }, []);
 
             const toggleLang = () => {
