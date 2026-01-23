@@ -144,11 +144,29 @@
             font-size: 15px;
             transition: var(--transition);
             position: relative;
-            padding-bottom: 5px;
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+
+        .desktop-nav a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: var(--accent-gold);
+            bottom: 0;
+            left: 50%;
+            transition: var(--transition);
+            transform: translateX(-50%);
         }
 
         .desktop-nav a:hover {
             color: var(--secondary-blue);
+            background: rgba(127, 219, 255, 0.1);
+        }
+
+        .desktop-nav a:hover:after {
+            width: 80%;
         }
 
         .cta-button {
@@ -295,24 +313,56 @@
             -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             transition: var(--transition);
+            position: relative;
+        }
+
+        .service-card:before,
+        .feature-item:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-blue), var(--secondary-blue));
+            opacity: 0;
+            transition: var(--transition);
+            border-radius: 15px 15px 0 0;
+        }
+
+        .service-card:hover:before,
+        .feature-item:hover:before {
+            opacity: 1;
         }
 
         .service-card:hover,
         .feature-item:hover {
-            transform: translateY(-15px);
-            border-color: var(--secondary-blue);
-            background: var(--glass-border);
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(127, 219, 255, 0.3);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .service-icon,
         .feature-icon {
-            font-size: 50px;
+            font-size: 60px;
             color: var(--secondary-blue);
             margin-bottom: 25px;
+            filter: drop-shadow(0 0 10px rgba(127, 219, 255, 0.5));
+            transition: var(--transition);
+        }
+
+        .service-card:hover .service-icon {
+            color: var(--accent-gold);
+            transform: scale(1.2);
         }
 
         .feature-icon {
             color: var(--accent-gold);
+        }
+
+        .feature-item:hover .feature-icon {
+            transform: rotateY(180deg) scale(1.2);
         }
 
         .how-it-works {
@@ -427,7 +477,9 @@
         }
 
         .reg-card:hover {
-            transform: translateY(-15px);
+            transform: translateY(-15px) scale(1.02);
+            border-color: var(--primary-blue);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
         }
 
         .reg-list {
@@ -731,14 +783,50 @@
                         <h2 className="section-title">{t.reg.title}</h2>
                         <div className="reg-options">
                             <div className="reg-card" style={{ borderTop: '5px solid var(--primary-blue)' }}>
-                                <h3>{t.reg.free_title}</h3>
-                                <ul className="reg-list"><li><i className="fas fa-check text-[var(--primary-blue)]"></i> {t.reg.l1}</li><li><i className="fas fa-check text-[var(--primary-blue)]"></i> {t.reg.l2}</li></ul>
-                                <a href="#" className="cta-button">{t.reg.btn_free}</a>
+                                <h3><i className="fas fa-user-tie" style={{ marginRight: '10px' }}></i>{t.reg.free_title}</h3>
+                                <p style={{ marginBottom: '30px', fontSize: '18px', color: '#cccccc' }}>Showcase your skills, build your portfolio, and connect with premium clients worldwide.</p>
+                                <ul style={{ textAlign: 'left', marginBottom: '35px', listStyle: 'none', paddingLeft: '0' }}>
+                                    <li style={{ marginBottom: '15px', paddingLeft: '30px', position: 'relative' }}>
+                                        <i className="fas fa-check-circle" style={{ color: 'var(--primary-blue)', position: 'absolute', left: '0' }}></i>
+                                        Access to high-paying projects
+                                    </li>
+                                    <li style={{ marginBottom: '15px', paddingLeft: '30px', position: 'relative' }}>
+                                        <i className="fas fa-check-circle" style={{ color: 'var(--primary-blue)', position: 'absolute', left: '0' }}></i>
+                                        Secure payment protection
+                                    </li>
+                                    <li style={{ marginBottom: '15px', paddingLeft: '30px', position: 'relative' }}>
+                                        <i className="fas fa-check-circle" style={{ color: 'var(--primary-blue)', position: 'absolute', left: '0' }}></i>
+                                        Professional profile showcase
+                                    </li>
+                                    <li style={{ paddingLeft: '30px', position: 'relative' }}>
+                                        <i className="fas fa-check-circle" style={{ color: 'var(--primary-blue)', position: 'absolute', left: '0' }}></i>
+                                        Skill certification programs
+                                    </li>
+                                </ul>
+                                <a href="signup.html" className="cta-button" style={{ background: 'linear-gradient(135deg, var(--primary-blue), #0056b3)' }}>Become a Freelancer</a>
                             </div>
                             <div className="reg-card" style={{ borderTop: '5px solid var(--accent-gold)' }}>
-                                <h3>{t.reg.client_title}</h3>
-                                <ul className="reg-list"><li><i className="fas fa-check text-[var(--accent-gold)]"></i> {t.reg.l3}</li><li><i className="fas fa-check text-[var(--accent-gold)]"></i> {t.reg.l4}</li></ul>
-                                <a href="#" className="cta-button" style={{ background: 'linear-gradient(135deg, var(--accent-gold), #ffaa00)', color: 'black' }}>{t.reg.btn_client}</a>
+                                <h3><i className="fas fa-building" style={{ marginRight: '10px' }}></i>{t.reg.client_title}</h3>
+                                <p style={{ marginBottom: '30px', fontSize: '18px', color: '#cccccc' }}>Find expert talent, manage projects efficiently, and scale your business with our vetted professionals.</p>
+                                <ul style={{ textAlign: 'left', marginBottom: '35px', listStyle: 'none', paddingLeft: '0' }}>
+                                    <li style={{ marginBottom: '15px', paddingLeft: '30px', position: 'relative' }}>
+                                        <i className="fas fa-check-circle" style={{ color: 'var(--accent-gold)', position: 'absolute', left: '0' }}></i>
+                                        Access to top 5% freelancers
+                                    </li>
+                                    <li style={{ marginBottom: '15px', paddingLeft: '30px', position: 'relative' }}>
+                                        <i className="fas fa-check-circle" style={{ color: 'var(--accent-gold)', position: 'absolute', left: '0' }}></i>
+                                        Project management tools
+                                    </li>
+                                    <li style={{ marginBottom: '15px', paddingLeft: '30px', position: 'relative' }}>
+                                        <i className="fas fa-check-circle" style={{ color: 'var(--accent-gold)', position: 'absolute', left: '0' }}></i>
+                                        Flexible hiring models
+                                    </li>
+                                    <li style={{ paddingLeft: '30px', position: 'relative' }}>
+                                        <i className="fas fa-check-circle" style={{ color: 'var(--accent-gold)', position: 'absolute', left: '0' }}></i>
+                                        Dedicated account manager
+                                    </li>
+                                </ul>
+                                <a href="post-job.html" className="cta-button" style={{ background: 'linear-gradient(135deg, var(--accent-gold), #ffaa00)', color: 'var(--navy-blue)' }}>Hire Talent</a>
                             </div>
                         </div>
                     </div>
