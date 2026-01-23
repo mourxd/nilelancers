@@ -907,9 +907,22 @@
                             // User is logged in to Firebase but state might be lagging (waiting for profile)
                             // Force fetch profile
                             userToCheck = await Auth.getCurrentUser();
+
+                            // CRITICAL FIX: If Firestore fetch returns null (e.g. timeout or error), 
+                            // fall back to the basic syncUser object so we don't block the user.
+                            if (!userToCheck) {
+                                console.log("Firestore profile fetch failed, using sync user");
+                                userToCheck = {
+                                    ...syncUser,
+                                    userType: 'freelancer' // Default to freelancer if profile missing to allow application
+                                };
+                            }
+
                             setCurrentUser(userToCheck);
                         } catch (e) {
                             console.error("Error fetching user profile", e);
+                            // Emergency fallback
+                            userToCheck = { ...syncUser, userType: 'freelancer' };
                         }
                     }
                 }
