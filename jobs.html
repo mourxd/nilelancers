@@ -869,12 +869,14 @@
             };
 
             const openApplyModal = async () => {
+                alert("Debug: Apply Clicked");
                 if (authLoading) {
                     showToast('Please wait, checking authentication...');
                     return;
                 }
 
                 if (!currentUser) {
+                    alert("Debug: No Current User");
                     showToast('Please login to apply');
                     return;
                 }
@@ -885,6 +887,7 @@
                 }
 
                 if (selectedJob.isLocal) {
+                    alert("Debug: Opening Modal");
                     setIsModalOpen(true);
                 } else {
                     window.open(selectedJob.link, '_blank');
