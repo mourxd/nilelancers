@@ -19,7 +19,8 @@ function ProfileApp() {
                 window.location.href = 'login.html';
             } else {
                 // Page Access Guard - Only freelancers can access profile
-                if (currentUser.userType === 'client') {
+                // Only redirect if userType is explicitly 'client'
+                if (currentUser.userType && currentUser.userType === 'client') {
                     window.location.href = 'client-dashboard.html';
                     return;
                 }
