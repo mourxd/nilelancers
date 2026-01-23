@@ -1,3 +1,64 @@
+const translations = {
+    en: {
+        nav: {
+            home: 'Home',
+            services: 'Find Work',
+            saved: 'Saved Jobs',
+            wallet: 'Wallet',
+            settings: 'Settings',
+            dashboard: 'Client Dashboard',
+            login: 'Login',
+            signup: 'Sign Up',
+            post: 'Post Job',
+            logout: 'Logout'
+        },
+        footer: {
+            desc: 'Connecting top talent with the best clients in Egypt.',
+            quick: 'Quick Links',
+            company: 'Company',
+            contact: 'Contact Us',
+            rights: '© 2024 NileLancers'
+        },
+        profile: {
+            edit: 'Edit Profile',
+            save: 'Save Changes',
+            add_skill: 'Add Skill',
+            add_project: 'Add Project',
+            no_projects: 'No projects added yet.',
+            view_project: 'View Project'
+        }
+    },
+    ar: {
+        nav: {
+            home: 'الرئيسية',
+            services: 'اعثر على عمل',
+            saved: 'الوظائف المحفوظة',
+            wallet: 'المحفظة',
+            settings: 'الإعدادات',
+            dashboard: 'لوحة التحكم',
+            login: 'تسجيل الدخول',
+            signup: 'إنشاء حساب',
+            post: 'نشر وظيفة',
+            logout: 'تسجيل الخروج'
+        },
+        footer: {
+            desc: 'نربط أفضل المواهب بأفضل العملاء في مصر.',
+            quick: 'روابط سريعة',
+            company: 'الشركة',
+            contact: 'اتصل بنا',
+            rights: '© 2024 نايل لانسرز'
+        },
+        profile: {
+            edit: 'تعديل الملف',
+            save: 'حفظ التغييرات',
+            add_skill: 'إضافة مهارة',
+            add_project: 'إضافة مشروع',
+            no_projects: 'لم يتم إضافة مشاريع بعد.',
+            view_project: 'عرض المشروع'
+        }
+    }
+};
+
 function ProfileApp() {
     const [user, setUser] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
