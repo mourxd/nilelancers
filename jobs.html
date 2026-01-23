@@ -750,6 +750,7 @@
             const [toast, setToast] = React.useState({ show: false, message: '' });
             const [isModalOpen, setIsModalOpen] = React.useState(false);
             const [isAdmin, setIsAdmin] = React.useState(false);
+            const [currentUser, setCurrentUser] = React.useState(null);
 
             React.useEffect(() => {
                 const savedLang = localStorage.getItem('nile_lang') || 'en';
@@ -757,8 +758,14 @@
                 setLang(savedLang);
                 setSavedJobs(saved);
                 document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
-                setIsAdmin(Auth.isAdmin());
+
+                const unsubscribe = Auth.onAuthStateChanged(user => {
+                    setCurrentUser(user);
+                    setIsAdmin(Auth.isAdmin());
+                });
+
                 loadJobs();
+                return () => unsubscribe();
             }, []);
 
             const toggleLang = () => { const newLang = lang === 'en' ? 'ar' : 'en'; setLang(newLang); localStorage.setItem('nile_lang', newLang); document.dir = newLang === 'ar' ? 'rtl' : 'ltr'; };
@@ -860,6 +867,16 @@
             };
 
             const openApplyModal = () => {
+                if (!currentUser) {
+                    showToast('Please login to apply');
+                    return;
+                }
+
+                if (currentUser.userType === 'client') {
+                    showToast('Client accounts cannot apply to jobs');
+                    return;
+                }
+
                 if (selectedJob.isLocal) {
                     setIsModalOpen(true);
                 } else {
