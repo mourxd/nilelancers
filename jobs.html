@@ -698,7 +698,7 @@
             );
         }
 
-        function JobCard({ job, onClick, onToggleSave, onDelete, isSaved, isAdmin, t }) {
+        function JobCard({ job, onClick, onToggleSave, onDelete, isSaved, isAdmin, currentUser, t }) {
             const handleButtonClick = (e) => { e.stopPropagation(); job.isLocal ? onClick(job) : window.open(job.link, '_blank'); };
             const handleSaveClick = (e) => { e.stopPropagation(); onToggleSave(job); };
             const handleDeleteClick = (e) => { e.stopPropagation(); if (window.confirm('Are you sure you want to delete this job?')) onDelete(job); };
@@ -728,9 +728,11 @@
                         </div>
                     </div>
                     <div className="flex flex-col justify-center min-w-[140px]">
-                        <button onClick={handleButtonClick} className={`cta-button w-full text-center text-sm ${job.isLocal ? 'bg-[var(--accent-green)] text-black' : ''}`} style={job.isLocal ? { background: 'var(--accent-green)' } : {}}>
-                            {job.isLocal ? t.details_apply : <span>{t.details_view} <i className="fas fa-external-link-alt ml-1"></i></span>}
-                        </button>
+                        {(!currentUser || currentUser.userType !== 'client') ? (
+                            <button onClick={handleButtonClick} className={`cta-button w-full text-center text-sm ${job.isLocal ? 'bg-[var(--accent-green)] text-black' : ''}`} style={job.isLocal ? { background: 'var(--accent-green)' } : {}}>
+                                {job.isLocal ? t.details_apply : <span>{t.details_view} <i className="fas fa-external-link-alt ml-1"></i></span>}
+                            </button>
+                        ) : null}
                     </div>
                 </div>
             );
@@ -928,9 +930,11 @@
 
                                         <p className="price-tag text-4xl mb-6">{selectedJob.budget}</p>
                                         <div className="flex gap-4">
-                                            <button className="cta-button flex-1 py-3 text-lg" onClick={openApplyModal}>
-                                                {selectedJob.isLocal ? t.details_apply : `${t.details_view} ${selectedJob.source}`}
-                                            </button>
+                                            {(!currentUser || currentUser.userType !== 'client') ? (
+                                                <button className="cta-button flex-1 py-3 text-lg" onClick={openApplyModal}>
+                                                    {selectedJob.isLocal ? t.details_apply : `${t.details_view} ${selectedJob.source}`}
+                                                </button>
+                                            ) : null}
                                             <button onClick={() => toggleSave(selectedJob)} className={`px-5 rounded-full border border-[var(--accent-gold)] transition-colors ${savedJobs.some(j => j.id === selectedJob.id) ? 'bg-[var(--accent-gold)] text-[var(--dark-navy)]' : 'text-[var(--accent-gold)] hover:bg-[var(--accent-gold)] hover:text-[var(--dark-navy)]'}`}>
                                                 <i className={`fas fa-bookmark`}></i>
                                             </button>
@@ -977,7 +981,7 @@
                             </div>
                         </div>
                         <div>
-                            {displayedJobs.map(job => <JobCard key={job.id} job={job} onClick={setSelectedJob} onToggleSave={toggleSave} onDelete={deleteJob} isSaved={savedJobs.some(j => j.id === job.id)} isAdmin={isAdmin} t={t} />)}
+                            {displayedJobs.map(job => <JobCard key={job.id} job={job} onClick={setSelectedJob} onToggleSave={toggleSave} onDelete={deleteJob} isSaved={savedJobs.some(j => j.id === job.id)} isAdmin={isAdmin} currentUser={currentUser} t={t} />)}
                         </div>
 
                         {/* See More Button */}
