@@ -230,5 +230,15 @@ const AuthFirebase = {
     }
 };
 
+// Admin email list
+const ADMIN_EMAILS = ['morad.karym@gmail.com'];
+
+// Check if current user is admin
+AuthFirebase.isAdmin = () => {
+    const user = auth.currentUser;
+    if (!user) return false;
+    return ADMIN_EMAILS.includes(user.email.toLowerCase());
+};
+
 // For backwards compatibility with old Auth object
 const Auth = AuthFirebase;
