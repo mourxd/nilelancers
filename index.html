@@ -169,6 +169,34 @@
             width: 80%;
         }
 
+        /* Header nav links for components.js */
+        header nav a {
+            position: relative;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        header nav a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: var(--accent-gold);
+            bottom: 0;
+            left: 50%;
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+
+        header nav a:hover {
+            background: rgba(127, 219, 255, 0.1);
+        }
+
+        header nav a:hover:after {
+            width: 80%;
+        }
+
         .cta-button {
             background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
             color: var(--dark-navy);
@@ -384,8 +412,15 @@
             padding: 40px 25px;
             background: var(--glass-bg);
             border-radius: 15px;
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(127, 219, 255, 0.1);
             transition: var(--transition);
+        }
+
+        .step-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-10px);
+            border-color: var(--primary-blue);
+            box-shadow: 0 15px 30px rgba(0, 116, 217, 0.2);
         }
 
         .step-number {
