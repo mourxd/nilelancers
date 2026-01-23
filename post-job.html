@@ -408,18 +408,31 @@
             const handleSubmit = async (e) => {
                 e.preventDefault();
 
+                // Get current user
+                const currentUser = await Auth.getCurrentUser();
+                if (!currentUser) {
+                    alert('Please login to post a job');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
                 // 1. Create New Job Object for Firebase
                 const jobData = {
                     title: formData.title,
-                    company: Auth.getCurrentUser()?.name || 'Client',
+                    company: currentUser.name || 'Client',
+                    clientId: currentUser.uid,  // Link to client who posted
+                    clientName: currentUser.name,
                     budget: 'EGP ' + formData.budget,
                     type: 'Project',
                     category: formData.category,
                     description: formData.description,
                     location: formData.location,
+                    paymentMethod: formData.payment,
                     skills: ['Custom Job'],
                     link: '#',
-                    image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'
+                    image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80',
+                    postedAt: new Date().toISOString(),
+                    status: 'open'
                 };
 
                 // 2. Save to Firebase (visible to all users)
