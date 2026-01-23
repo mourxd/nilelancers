@@ -600,8 +600,13 @@
     <script type="text/babel">
         const JobsAPI = {
             fetchAllJobs: async (query = '') => {
-                // Load user posted jobs from localStorage
-                const userPostedJobs = JSON.parse(localStorage.getItem('user_posted_jobs') || '[]');
+                // Load user posted jobs from Firebase (visible to all users)
+                let userPostedJobs = [];
+                try {
+                    userPostedJobs = await FirebaseDB.getAllJobs();
+                } catch (error) {
+                    console.error('Error loading jobs from Firebase:', error);
+                }
 
                 // Mock jobs from various platforms
                 const mockJobs = [

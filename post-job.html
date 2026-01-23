@@ -404,33 +404,30 @@
                 document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
             };
 
-            const handleSubmit = (e) => {
+            const handleSubmit = async (e) => {
                 e.preventDefault();
 
-                // 1. Create New Job Object
-                const newJob = {
-                    id: 'local_' + Date.now(), // Unique ID
+                // 1. Create New Job Object for Firebase
+                const jobData = {
                     title: formData.title,
-                    company: 'You (Client)', // Placeholder for user
+                    company: Auth.getCurrentUser()?.name || 'Client',
                     budget: 'EGP ' + formData.budget,
                     type: 'Project',
                     category: formData.category,
                     description: formData.description,
                     location: formData.location,
                     skills: ['Custom Job'],
-                    source: 'NileLancers Local',
-                    isLocal: true,
                     link: '#',
-                    image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80' // Generic Business Image
+                    image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'
                 };
 
-                // 2. Save to Local Storage
-                const existingJobs = JSON.parse(localStorage.getItem('user_posted_jobs') || '[]');
-                existingJobs.unshift(newJob); // Add to beginning
-                localStorage.setItem('user_posted_jobs', JSON.stringify(existingJobs));
+                // 2. Save to Firebase (visible to all users)
+                const result = await FirebaseDB.postJob(jobData);
 
-                // 3. Show Success
-                setTimeout(() => setStep(2), 500);
+                if (result) {
+                    // 3. Show Success
+                    setTimeout(() => setStep(2), 500);
+                }
             };
 
             const t = translations[lang];
