@@ -456,16 +456,23 @@
                 setLang(savedLang);
                 document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
 
-                // Fetch user's posted jobs from Firebase
-                const loadJobs = async () => {
-                    const user = await Auth.getCurrentUser();
-
+                // Listen to auth state changes to reliably fetch jobs
+                const unsubscribe = Auth.onAuthStateChanged(async (user) => {
                     if (user) {
-                        const postedJobs = await FirebaseDB.getUserJobs(user.uid);
-                        setJobs(postedJobs);
+                        // Only fetch if user is logged in
+                        try {
+                            const postedJobs = await FirebaseDB.getUserJobs(user.uid);
+                            setJobs(postedJobs);
+                        } catch (err) {
+                            console.error("Error loading jobs:", err);
+                        }
+                    } else {
+                        // If no user, jobs should be empty
+                        setJobs([]);
                     }
-                };
-                loadJobs();
+                });
+
+                return () => unsubscribe(); // Cleanup subscription on unmount
             }, []);
 
             const toggleLang = () => {
