@@ -287,3 +287,12 @@ function SavedJobCard({ job, onRemove }) {
     );
 }
 
+// Toast Notification Component
+function Toast({ show, message }) {
+    if (!show) return null;
+    return (
+        <div className="fixed bottom-5 right-5 bg-[var(--accent-gold)] text-[var(--dark-navy)] px-6 py-3 rounded-lg shadow-xl animate-slideIn z-50 font-bold border border-white/20">
+            {message}
+        </div>
+    );
+}
