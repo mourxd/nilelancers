@@ -897,12 +897,29 @@
                     return;
                 }
 
-                if (!currentUser) {
+                let userToCheck = currentUser;
+
+                // Fallback: If state is null, check if firebase auth is actually active
+                if (!userToCheck) {
+                    const syncUser = Auth.getUser();
+                    if (syncUser) {
+                        try {
+                            // User is logged in to Firebase but state might be lagging (waiting for profile)
+                            // Force fetch profile
+                            userToCheck = await Auth.getCurrentUser();
+                            setCurrentUser(userToCheck);
+                        } catch (e) {
+                            console.error("Error fetching user profile", e);
+                        }
+                    }
+                }
+
+                if (!userToCheck) {
                     showToast('Please login to apply');
                     return;
                 }
 
-                if (currentUser.userType === 'client') {
+                if (userToCheck.userType === 'client') {
                     showToast('Client accounts cannot apply to jobs');
                     return;
                 }
