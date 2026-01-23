@@ -406,7 +406,8 @@
                 title: "",
                 location: "",
                 bio: "",
-                skills: ""
+                skills: "",
+                userType: "freelancer"
             });
             const [passwords, setPasswords] = React.useState({ current: '', new: '', confirm: '' });
 
@@ -423,7 +424,8 @@
                             title: user.title,
                             location: user.location,
                             bio: user.bio,
-                            skills: user.skills.join(', ')
+                            skills: user.skills.join(', '),
+                            userType: user.userType || 'freelancer'
                         });
                     } else {
                         window.location.href = 'login.html';
@@ -490,6 +492,19 @@
                             <div className="settings-content">
                                 {activeTab === 'profile' ? (
                                     <form onSubmit={handleProfileSave}>
+                                        {/* User Type Badge */}
+                                        <div className="mb-6 p-4 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl">
+                                            <label className="block text-[var(--text-gray)] mb-2 font-semibold">Account Type</label>
+                                            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold ${profile.userType === 'client'
+                                                ? 'bg-[var(--accent-gold)] text-[var(--dark-navy)]'
+                                                : 'bg-[var(--secondary-blue)] text-[var(--dark-navy)]'
+                                                }`}>
+                                                <i className={`fas ${profile.userType === 'client' ? 'fa-briefcase' : 'fa-user-tie'}`}></i>
+                                                <span>{profile.userType === 'client' ? 'Business / Client' : 'Freelancer'}</span>
+                                            </div>
+                                            <p className="text-xs text-gray-500 mt-2">Your account type determines the features available to you.</p>
+                                        </div>
+
                                         <div className="grid md:grid-cols-2 gap-6">
                                             <div className="form-group">
                                                 <label>{t.lbl.name}</label>

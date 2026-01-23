@@ -77,11 +77,20 @@ function Header({ lang, t, toggleLang, activeLink }) {
 
                     {(authLoading || user) ? (
                         <>
+                            {/* Common links for all authenticated users */}
                             <a href="saved.html" className={getLinkClass('saved')}>{t.nav.saved}</a>
-                            <a href="client-dashboard.html" className={getLinkClass('dashboard')}>{t.nav.dashboard}</a>
                             <a href="wallet.html" className={getLinkClass('wallet')}>{t.nav.wallet}</a>
-                            <a href="profile.html" className={getLinkClass('profile')}>{t.nav.profile}</a>
                             <a href="settings.html" className={getLinkClass('settings')}>{t.nav.settings}</a>
+
+                            {/* User type specific links */}
+                            {user && user.userType === 'client' ? (
+                                <>
+                                    <a href="client-dashboard.html" className={getLinkClass('dashboard')}>{t.nav.dashboard}</a>
+                                    <a href="applications.html" className={getLinkClass('applications')}>Applications</a>
+                                </>
+                            ) : (
+                                <a href="profile.html" className={getLinkClass('profile')}>{t.nav.profile}</a>
+                            )}
                         </>
                     ) : null}
 
@@ -131,10 +140,19 @@ function Header({ lang, t, toggleLang, activeLink }) {
                     {(authLoading || user) ? (
                         <>
                             <a href="saved.html" className={getMobileLinkClass('saved')}>{t.nav.saved}</a>
-                            <a href="client-dashboard.html" className={getMobileLinkClass('dashboard')}>{t.nav.dashboard}</a>
                             <a href="wallet.html" className={getMobileLinkClass('wallet')}>{t.nav.wallet}</a>
-                            <a href="profile.html" className={getMobileLinkClass('profile')}>{t.nav.profile}</a>
                             <a href="settings.html" className={getMobileLinkClass('settings')}>{t.nav.settings}</a>
+
+                            {/* User type specific mobile links */}
+                            {user && user.userType === 'client' ? (
+                                <>
+                                    <a href="client-dashboard.html" className={getMobileLinkClass('dashboard')}>{t.nav.dashboard}</a>
+                                    <a href="applications.html" className={getMobileLinkClass('applications')}>Applications</a>
+                                </>
+                            ) : (
+                                <a href="profile.html" className={getMobileLinkClass('profile')}>{t.nav.profile}</a>
+                            )}
+
                             <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
                             <button onClick={handleLogout} className="text-red-400 font-bold text-left">{t.nav.logout}</button>
                         </>

@@ -63,7 +63,16 @@ function ProfileApp() {
                         <div className="online-status"></div>
                     </div>
                     <div className="flex-1">
-                        <h1 className="text-3xl font-bold text-[var(--text-light)] mb-2">{user.name} <i className="fas fa-check-circle text-[var(--secondary-blue)] text-xl ml-2"></i></h1>
+                        <div className="flex items-center gap-3 mb-2">
+                            <h1 className="text-3xl font-bold text-[var(--text-light)]">{user.name} <i className="fas fa-check-circle text-[var(--secondary-blue)] text-xl ml-2"></i></h1>
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${user.userType === 'client'
+                                    ? 'bg-[var(--accent-gold)] text-[var(--dark-navy)]'
+                                    : 'bg-[var(--secondary-blue)] text-[var(--dark-navy)]'
+                                }`}>
+                                <i className={`fas ${user.userType === 'client' ? 'fa-briefcase' : 'fa-user-tie'} mr-1`}></i>
+                                {user.userType === 'client' ? 'Business' : 'Freelancer'}
+                            </span>
+                        </div>
                         <p className="text-[var(--accent-gold)] text-lg mb-1">{user.title}</p>
                         <p className="text-gray-400 mb-4"><i className="fas fa-map-marker-alt mr-2"></i> {user.location}</p>
                         <div className="flex gap-4">

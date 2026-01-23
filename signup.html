@@ -70,6 +70,7 @@
             const [name, setName] = React.useState('');
             const [email, setEmail] = React.useState('');
             const [password, setPassword] = React.useState('');
+            const [userType, setUserType] = React.useState('');
             const [error, setError] = React.useState('');
             const [loading, setLoading] = React.useState(false);
 
@@ -93,9 +94,19 @@
                     setLoading(false);
                     return;
                 }
-                const user = await Auth.signup(name, email, password);
+                if (!userType) {
+                    setError('Please select your account type.');
+                    setLoading(false);
+                    return;
+                }
+                const user = await Auth.signup(name, email, password, userType);
                 if (user) {
-                    window.location.href = 'profile.html';
+                    // Redirect based on user type
+                    if (userType === 'client') {
+                        window.location.href = 'client-dashboard.html';
+                    } else {
+                        window.location.href = 'profile.html';
+                    }
                 } else {
                     setError('Could not create an account. Please try again.');
                     setLoading(false);
@@ -106,8 +117,42 @@
                 <div className="form-container w-full max-w-md p-8 rounded-2xl shadow-2xl">
                     <div className="text-center mb-8">
                         <h1 className="text-4xl font-bold text-white">Create Your Account</h1>
-                        <p className="text-gray-400">Join NileLancers and start your freelance journey</p>
+                        <p className="text-gray-400">Join NileLancers and start your journey</p>
                     </div>
+
+                    {/* User Type Selection */}
+                    <div className="mb-6">
+                        <h2 className="text-xl font-semibold text-white mb-4 text-center">I want to...</h2>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div
+                                onClick={() => setUserType('freelancer')}
+                                className={`cursor-pointer p-4 rounded-xl border-2 transition-all ${userType === 'freelancer'
+                                        ? 'border-[var(--secondary-blue)] bg-[var(--secondary-blue)]/10'
+                                        : 'border-[var(--glass-border)] hover:border-[var(--secondary-blue)]/50'
+                                    }`}
+                            >
+                                <div className="text-center">
+                                    <i className="fas fa-user-tie text-3xl mb-2 text-[var(--secondary-blue)]"></i>
+                                    <h3 className="font-bold text-white mb-1">Work as a Freelancer</h3>
+                                    <p className="text-xs text-gray-400">Find jobs and offer services</p>
+                                </div>
+                            </div>
+                            <div
+                                onClick={() => setUserType('client')}
+                                className={`cursor-pointer p-4 rounded-xl border-2 transition-all ${userType === 'client'
+                                        ? 'border-[var(--accent-gold)] bg-[var(--accent-gold)]/10'
+                                        : 'border-[var(--glass-border)] hover:border-[var(--accent-gold)]/50'
+                                    }`}
+                            >
+                                <div className="text-center">
+                                    <i className="fas fa-briefcase text-3xl mb-2 text-[var(--accent-gold)]"></i>
+                                    <h3 className="font-bold text-white mb-1">Hire Talent</h3>
+                                    <p className="text-xs text-gray-400">Post jobs and find freelancers</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <form onSubmit={handleSubmit} noValidate>
                         {error && <div className="bg-red-500/20 border border-red-500 text-red-300 p-3 rounded-lg mb-4">{error}</div>}
                         <div className="mb-4">

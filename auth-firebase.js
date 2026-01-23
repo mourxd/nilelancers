@@ -3,7 +3,7 @@
 
 const AuthFirebase = {
     // Sign up new user
-    signup: async (name, email, password) => {
+    signup: async (name, email, password, userType = 'freelancer') => {
         try {
             // Create user account
             const userCredential = await auth.createUserWithEmailAndPassword(email, password);
@@ -18,10 +18,11 @@ const AuthFirebase = {
             await db.collection('users').doc(user.uid).set({
                 name: name,
                 email: email,
-                title: 'Freelancer',
+                userType: userType, // 'freelancer' or 'client'
+                title: userType === 'client' ? 'Business Owner' : 'Freelancer',
                 location: 'Egypt',
-                bio: 'Welcome to NileLancers!',
-                skills: ['JavaScript', 'React', 'Node.js'],
+                bio: userType === 'client' ? 'Looking for talented freelancers.' : 'Welcome to NileLancers!',
+                skills: userType === 'client' ? [] : ['JavaScript', 'React', 'Node.js'],
                 avatar: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&size=200&background=0074D9&color=fff',
                 portfolio: [],
                 reviews: [],
@@ -91,6 +92,7 @@ const AuthFirebase = {
                     uid: user.uid,
                     name: userData.name || user.displayName,
                     email: user.email,
+                    userType: userData.userType || 'freelancer', // Default to freelancer for backward compatibility
                     title: userData.title || 'Freelancer',
                     location: userData.location || 'Egypt',
                     bio: userData.bio || '',
@@ -105,6 +107,7 @@ const AuthFirebase = {
                     uid: user.uid,
                     name: user.displayName || 'User',
                     email: user.email,
+                    userType: 'freelancer', // Default type
                     title: 'Freelancer',
                     location: 'Egypt',
                     bio: '',
@@ -161,6 +164,7 @@ const AuthFirebase = {
                     await db.collection('users').doc(user.uid).set({
                         name: user.displayName || user.email.split('@')[0],
                         email: user.email,
+                        userType: 'freelancer', // Default for existing users
                         title: 'Freelancer',
                         location: 'Egypt',
                         bio: 'Welcome to NileLancers!',
@@ -171,6 +175,16 @@ const AuthFirebase = {
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
+                } else {
+                    // Add userType to existing users who don't have it
+                    const userData = userDoc.data();
+                    if (!userData.userType) {
+                        console.log('Adding userType to existing user:', user.uid);
+                        await db.collection('users').doc(user.uid).update({
+                            userType: 'freelancer', // Default for backward compatibility
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
                 }
 
                 const fullUser = await AuthFirebase.getCurrentUser();
@@ -208,6 +222,7 @@ const AuthFirebase = {
                 await db.collection('users').doc(user.uid).set({
                     name: user.displayName,
                     email: user.email,
+                    userType: 'freelancer', // Default for Google sign-in
                     title: 'Freelancer',
                     location: 'Egypt',
                     bio: 'Welcome to NileLancers!',
