@@ -18,6 +18,11 @@ function ProfileApp() {
             if (!currentUser) {
                 window.location.href = 'login.html';
             } else {
+                // Page Access Guard - Only freelancers can access profile
+                if (currentUser.userType === 'client') {
+                    window.location.href = 'client-dashboard.html';
+                    return;
+                }
                 setUser(currentUser);
                 setLoading(false);
             }
@@ -66,8 +71,8 @@ function ProfileApp() {
                         <div className="flex items-center gap-3 mb-2">
                             <h1 className="text-3xl font-bold text-[var(--text-light)]">{user.name} <i className="fas fa-check-circle text-[var(--secondary-blue)] text-xl ml-2"></i></h1>
                             <span className={`px-3 py-1 rounded-full text-xs font-bold ${user.userType === 'client'
-                                    ? 'bg-[var(--accent-gold)] text-[var(--dark-navy)]'
-                                    : 'bg-[var(--secondary-blue)] text-[var(--dark-navy)]'
+                                ? 'bg-[var(--accent-gold)] text-[var(--dark-navy)]'
+                                : 'bg-[var(--secondary-blue)] text-[var(--dark-navy)]'
                                 }`}>
                                 <i className={`fas ${user.userType === 'client' ? 'fa-briefcase' : 'fa-user-tie'} mr-1`}></i>
                                 {user.userType === 'client' ? 'Business' : 'Freelancer'}

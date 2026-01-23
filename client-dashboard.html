@@ -456,8 +456,22 @@
                 setLang(savedLang);
                 document.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
 
-                const posted = JSON.parse(localStorage.getItem('user_posted_jobs') || '[]');
-                setJobs(posted);
+                // Page Access Guard - Only clients can access dashboard
+                const checkAccess = async () => {
+                    const user = await Auth.getCurrentUser();
+                    if (user && user.userType !== 'client') {
+                        // Redirect freelancers to profile
+                        window.location.href = 'profile.html';
+                        return;
+                    }
+
+                    // Fetch user's posted jobs from Firebase
+                    if (user) {
+                        const postedJobs = await FirebaseDB.getUserJobs(user.uid);
+                        setJobs(postedJobs);
+                    }
+                };
+                checkAccess();
             }, []);
 
             const toggleLang = () => {
