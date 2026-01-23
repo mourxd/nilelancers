@@ -867,24 +867,17 @@
             };
 
             const openApplyModal = async () => {
-                let userToCheck = currentUser;
-
-                // Fallback: If state is null, check if firebase auth is actually active
-                if (!userToCheck) {
-                    const syncUser = Auth.getUser();
-                    if (syncUser) {
-                        // User is logged in to Firebase but state might be lagging (waiting for profile)
-                        userToCheck = await Auth.getCurrentUser();
-                        setCurrentUser(userToCheck);
-                    }
+                if (authLoading) {
+                    showToast('Please wait, checking authentication...');
+                    return;
                 }
 
-                if (!userToCheck) {
+                if (!currentUser) {
                     showToast('Please login to apply');
                     return;
                 }
 
-                if (userToCheck.userType === 'client') {
+                if (currentUser.userType === 'client') {
                     showToast('Client accounts cannot apply to jobs');
                     return;
                 }
