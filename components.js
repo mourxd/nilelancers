@@ -68,7 +68,7 @@ function Header({ lang, t, toggleLang, activeLink }) {
         <header>
             <div className="container header-content">
                 <a href="index.html" className="logo">
-                    <i className="fas fa-water text-[var(--accent-gold)] text-3xl"></i>
+                    <i className="fas fa-water text-[var(--accent-gold)] text-3xl floating"></i>
                     <h1>NileLancers</h1>
                 </a>
                 <nav className="hidden md:flex items-center gap-6">
@@ -158,19 +158,57 @@ function Footer({ t }) {
             <div className="container footer-grid">
                 <div className="footer-col">
                     <div className="footer-logo">NileLancers</div>
-                    <p className="text-sm text-gray-400 mb-4">{t.footer.desc}</p>
-                    <div className="social-icons"><a href="#"><i className="fab fa-facebook-f"></i></a><a href="#"><i className="fab fa-twitter"></i></a><a href="#"><i className="fab fa-linkedin-in"></i></a></div>
+                    <p className="text-sm text-gray-400 mb-4" style={{ lineHeight: '1.8' }}>{t.footer.desc}</p>
+                    <div className="social-icons">
+                        <a href="#"><i className="fab fa-facebook-f"></i></a>
+                        <a href="#"><i className="fab fa-twitter"></i></a>
+                        <a href="#"><i className="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i className="fab fa-instagram"></i></a>
+                        <a href="#"><i className="fab fa-youtube"></i></a>
+                    </div>
                 </div>
                 <div className="footer-col">
                     <h4>{t.footer.quick}</h4>
-                    <ul><li><a href="index.html">{t.nav.home}</a></li><li><a href="jobs.html">{t.nav.services}</a></li><li><a href="index.html#how">{t.nav.how}</a></li></ul>
+                    <ul>
+                        <li><a href="index.html">{t.nav.home}</a></li>
+                        <li><a href="jobs.html">{t.nav.services}</a></li>
+                        <li><a href="index.html#how">{t.nav.how}</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+                <div className="footer-col">
+                    <h4>{t.footer.company}</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
                 </div>
                 <div className="footer-col">
                     <h4>{t.footer.contact}</h4>
-                    <ul><li><i className="fas fa-envelope mr-2"></i> info@nilelancers.com</li><li><i className="fas fa-map-marker-alt mr-2"></i> Cairo, Egypt</li></ul>
+                    <ul>
+                        <li style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                            <i className="fas fa-map-marker-alt" style={{ marginRight: '12px', color: 'var(--secondary-blue)' }}></i>
+                            <span>123 Nile Street, Cairo, Egypt</span>
+                        </li>
+                        <li style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                            <i className="fas fa-phone" style={{ marginRight: '12px', color: 'var(--secondary-blue)' }}></i>
+                            <span>+20 123 456 7890</span>
+                        </li>
+                        <li style={{ display: 'flex', alignItems: 'center' }}>
+                            <i className="fas fa-envelope" style={{ marginRight: '12px', color: 'var(--secondary-blue)' }}></i>
+                            <span>info@nilelancers.com</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div className="text-center mt-12 pt-5 border-t border-gray-700 text-sm text-gray-500">{t.footer.rights}</div>
+            <div className="text-center mt-12 pt-5 border-t border-gray-700 text-sm text-gray-500">
+                {t.footer.rights} | Designed with <i className="fas fa-heart" style={{ color: '#ff4757' }}></i> for the future of work
+            </div>
         </footer>
     );
 }
