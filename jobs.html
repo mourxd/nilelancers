@@ -729,7 +729,12 @@
                     </div>
                     <div className="flex flex-col justify-center min-w-[140px]">
                         {(!currentUser || currentUser.userType !== 'client') ? (
-                            <button onClick={handleButtonClick} className={`cta-button w-full text-center text-sm ${job.isLocal ? 'bg-[var(--accent-green)] text-black' : ''}`} style={job.isLocal ? { background: 'var(--accent-green)' } : {}} disabled={authLoading}>
+                            <button
+                                onClick={handleButtonClick}
+                                className={`cta-button w-full text-center text-sm ${job.isLocal ? 'bg-[var(--accent-green)] text-black' : ''}`}
+                                style={job.isLocal ? { background: 'var(--accent-green)' } : {}}
+                                disabled={authLoading}
+                            >
                                 {authLoading ? 'Loading...' : (job.isLocal ? t.details_apply : <span>{t.details_view} <i className="fas fa-external-link-alt ml-1"></i></span>)}
                             </button>
                         ) : null}
