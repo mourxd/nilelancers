@@ -88,9 +88,7 @@ function Header({ lang, t, toggleLang, activeLink }) {
                                     <a href="client-dashboard.html" className={getLinkClass('dashboard')}>{t.nav.dashboard}</a>
                                     <a href="applications.html" className={getLinkClass('applications')}>Applications</a>
                                 </>
-                            ) : (
-                                <a href="profile.html" className={getLinkClass('profile')}>{t.nav.profile}</a>
-                            )}
+                            ) : null}
                         </>
                     ) : null}
 
@@ -113,6 +111,17 @@ function Header({ lang, t, toggleLang, activeLink }) {
                                 }
                             </div>
                         </div>
+                    )}
+
+                    {/* Profile Avatar */}
+                    {(authLoading || user) && (
+                        <a href="profile.html" className="flex items-center" title="Profile">
+                            <img
+                                src={user?.avatar || 'https://ui-avatars.com/api/?name=User&size=40&background=0074D9&color=fff'}
+                                alt="Profile"
+                                className="w-10 h-10 rounded-full border-2 border-[var(--accent-gold)] hover:border-[var(--secondary-blue)] transition cursor-pointer object-cover"
+                            />
+                        </a>
                     )}
 
                     <button onClick={toggleLang} className="lang-btn">{lang === 'en' ? 'AR' : 'EN'}</button>
@@ -149,9 +158,16 @@ function Header({ lang, t, toggleLang, activeLink }) {
                                     <a href="client-dashboard.html" className={getMobileLinkClass('dashboard')}>{t.nav.dashboard}</a>
                                     <a href="applications.html" className={getMobileLinkClass('applications')}>Applications</a>
                                 </>
-                            ) : (
-                                <a href="profile.html" className={getMobileLinkClass('profile')}>{t.nav.profile}</a>
-                            )}
+                            ) : null}
+
+                            <a href="profile.html" className="flex items-center gap-2 text-white font-bold">
+                                <img
+                                    src={user?.avatar || 'https://ui-avatars.com/api/?name=User&size=32&background=0074D9&color=fff'}
+                                    alt="Profile"
+                                    className="w-8 h-8 rounded-full border-2 border-[var(--accent-gold)]"
+                                />
+                                <span>Profile</span>
+                            </a>
 
                             <a href="post-job.html" className="cta-button text-center">{t.nav.post}</a>
                             <button onClick={handleLogout} className="text-red-400 font-bold text-left">{t.nav.logout}</button>
