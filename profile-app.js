@@ -79,7 +79,7 @@ function ProfileApp() {
 
     // Header State
     const [lang, setLang] = React.useState(localStorage.getItem('nile_lang') || 'en');
-    const t = translations[lang];
+    const t = translations[lang] || translations['en']; // Fallback to EN if lang key is invalid
 
     React.useEffect(() => {
         const unsubscribe = Auth.onAuthStateChanged(async (u) => {
