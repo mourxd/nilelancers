@@ -85,14 +85,38 @@ function ProfileApp() {
         const unsubscribe = Auth.onAuthStateChanged(async (u) => {
             if (u) {
                 // Ensure we have the latest data from Firestore
-                const fullProfile = await Auth.getCurrentUser();
-                setUser(fullProfile);
-                setEditForm({
-                    title: fullProfile.title || '',
-                    bio: fullProfile.bio || '',
-                    hourlyRate: fullProfile.hourlyRate || '',
-                    location: fullProfile.location || ''
-                });
+                let fullProfile = null;
+                try {
+                    fullProfile = await Auth.getCurrentUser();
+                } catch (e) {
+                    console.error("Error fetching profile", e);
+                }
+
+                // Fallback if firestore fetch fails
+                if (!fullProfile) {
+                    console.log("Using sync user fallback");
+                    const syncUser = Auth.getUser();
+                    if (syncUser) {
+                        fullProfile = {
+                            ...syncUser,
+                            title: 'Freelancer', // Default
+                            bio: '',
+                            location: 'Egypt',
+                            skills: [],
+                            portfolio: []
+                        };
+                    }
+                }
+
+                if (fullProfile) {
+                    setUser(fullProfile);
+                    setEditForm({
+                        title: fullProfile.title || '',
+                        bio: fullProfile.bio || '',
+                        hourlyRate: fullProfile.hourlyRate || '',
+                        location: fullProfile.location || ''
+                    });
+                }
             } else {
                 window.location.href = 'login.html';
             }
@@ -163,6 +187,9 @@ function ProfileApp() {
     };
 
     if (loading) return <div className="min-h-screen flex items-center justify-center text-white">Loading Profile...</div>;
+
+    // Guard against null user before redirect happens
+    if (!user) return <div className="min-h-screen flex items-center justify-center text-white">Redirecting...</div>;
 
     return (
         <div className="min-h-screen flex flex-col">
