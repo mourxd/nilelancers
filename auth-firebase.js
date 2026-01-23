@@ -130,6 +130,7 @@ const AuthFirebase = {
 
         try {
             // Update Firestore
+            console.log("Updating user profile with:", updates);
             await db.collection('users').doc(user.uid).update({
                 ...updates,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()

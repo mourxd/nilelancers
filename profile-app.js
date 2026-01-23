@@ -1,245 +1,304 @@
-const translations = {
-    en: { nav: { home: "Home", services: "Services", saved: "Saved", dashboard: "Dashboard", wallet: "Wallet", profile: "Profile", settings: "Settings", post: "Post Job", login: "Login", logout: "Logout", signup: "Sign Up", how: "How it Works" }, role: "Senior Full Stack Developer", loc: "Cairo, Egypt", rate: "$45/hr", hire: "Hire Me", stats: { jobs: "Jobs Done", hours: "Hours Worked", rating: "Rating" }, headers: { about: "About Me", skills: "Skills", port: "Portfolio", rev: "Reviews" }, footer: { desc: "The premier freelance platform connecting global talent.", quick: "Quick Links", company: "Company", contact: "Contact Us", rights: "© 2025 NileLancers. All rights reserved." } },
-    ar: { nav: { home: "الرئيسية", services: "الخدمات", saved: "المحفوظات", dashboard: "لوحة التحكم", wallet: "المحفظة", profile: "الملف الشخصي", settings: "الإعدادات", post: "أضف وظيفة", login: "تسجيل الدخول", logout: "تسجيل الخروج", signup: "إنشاء حساب", how: "كيف يعمل" }, role: "مطور ويب شامل", loc: "القاهرة، مصر", rate: "45$/ساعة", hire: "وظفني", stats: { jobs: "وظيفة منجزة", hours: "ساعة عمل", rating: "التقييم" }, headers: { about: "نبذة عني", skills: "المهارات", port: "معرض الأعمال", rev: "التقييمات" }, footer: { desc: "المنصة الرائدة لربط المواهب العالمية.", quick: "روابط سريعة", company: "الشركة", contact: "اتصل بنا", rights: "© 2025 نايل لانسرز." } }
-};
-
 function ProfileApp() {
-    const [lang, setLang] = React.useState('en');
     const [user, setUser] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
+    const [isEditing, setIsEditing] = React.useState(false);
+
+    // Edit Form State
+    const [editForm, setEditForm] = React.useState({
+        title: '',
+        bio: '',
+        hourlyRate: '',
+        location: ''
+    });
+
+    const [newSkill, setNewSkill] = React.useState('');
+    const [newPortfolio, setNewPortfolio] = React.useState({ title: '', image: '', link: '' });
+    const [showPortfolioModal, setShowPortfolioModal] = React.useState(false);
+    const [toast, setToast] = React.useState({ show: false, message: '' });
+
+    // Header State
+    const [lang, setLang] = React.useState(localStorage.getItem('nile_lang') || 'en');
+    const t = translations[lang];
 
     React.useEffect(() => {
-        const saved = localStorage.getItem('nile_lang') || 'en';
-        setLang(saved);
-        document.dir = saved === 'ar' ? 'rtl' : 'ltr';
-
-        // Listen to auth state changes and load user data
-        const unsubscribe = Auth.onAuthStateChanged((currentUser) => {
-            if (!currentUser) {
-                window.location.href = 'login.html';
+        const unsubscribe = Auth.onAuthStateChanged(async (u) => {
+            if (u) {
+                // Ensure we have the latest data from Firestore
+                const fullProfile = await Auth.getCurrentUser();
+                setUser(fullProfile);
+                setEditForm({
+                    title: fullProfile.title || '',
+                    bio: fullProfile.bio || '',
+                    hourlyRate: fullProfile.hourlyRate || '',
+                    location: fullProfile.location || ''
+                });
             } else {
-                // Note: Clients don't have a Profile link in nav, so no need to redirect them
-                // The dashboard has its own guard to redirect non-clients
-                setUser(currentUser);
-                setLoading(false);
+                window.location.href = 'login.html';
             }
+            setLoading(false);
         });
-
-        // Cleanup listener on unmount
         return () => unsubscribe();
     }, []);
 
-    const toggleLang = () => {
-        const newLang = lang === 'en' ? 'ar' : 'en';
-        setLang(newLang);
-        localStorage.setItem('nile_lang', newLang);
-        document.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+    const showToast = (msg) => {
+        setToast({ show: true, message: msg });
+        setTimeout(() => setToast({ show: false, message: '' }), 3000);
     };
 
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <i className="fas fa-spinner fa-spin text-4xl text-[var(--secondary-blue)] mb-4"></i>
-                    <p className="text-[var(--text-light)]">Loading profile...</p>
-                </div>
-            </div>
-        );
-    }
+    const handleSaveProfile = async () => {
+        const updated = await Auth.updateUser({
+            title: editForm.title,
+            bio: editForm.bio,
+            location: editForm.location,
+            hourlyRate: editForm.hourlyRate
+        });
 
-    if (!user) {
-        return null; // Will redirect to login
-    }
+        if (updated) {
+            setUser(updated);
+            setIsEditing(false);
+            showToast('Profile Updated Successfully');
+        } else {
+            showToast('Failed to update profile');
+        }
+    };
 
-    const t = translations[lang];
+    const handleAddSkill = async (e) => {
+        e.preventDefault();
+        if (!newSkill.trim()) return;
+
+        const currentSkills = user.skills || [];
+        if (currentSkills.includes(newSkill)) return;
+
+        const updatedSkills = [...currentSkills, newSkill];
+        const result = await Auth.updateUser({ skills: updatedSkills });
+
+        if (result) {
+            setUser(result);
+            setNewSkill('');
+            showToast('Skill Added');
+        }
+    };
+
+    const handleRemoveSkill = async (skillToRemove) => {
+        const updatedSkills = user.skills.filter(s => s !== skillToRemove);
+        const result = await Auth.updateUser({ skills: updatedSkills });
+        if (result) setUser(result);
+    };
+
+    const handleAddPortfolio = async (e) => {
+        e.preventDefault();
+        const newItem = { ...newPortfolio, id: Date.now() };
+        const currentPortfolio = user.portfolio || [];
+        const updatedPortfolio = [...currentPortfolio, newItem];
+
+        const result = await Auth.updateUser({ portfolio: updatedPortfolio });
+
+        if (result) {
+            setUser(result);
+            setShowPortfolioModal(false);
+            setNewPortfolio({ title: '', image: '', link: '' });
+            showToast('Project Added to Portfolio');
+        }
+    };
+
+    if (loading) return <div className="min-h-screen flex items-center justify-center text-white">Loading Profile...</div>;
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Header lang={lang} t={t} toggleLang={toggleLang} activeLink="profile" />
+            <Header lang={lang} t={t} toggleLang={() => setLang(l => l === 'en' ? 'ar' : 'en')} activeLink="profile" />
 
             <div className="container py-12 flex-grow">
                 {/* Profile Header */}
-                <div className="profile-header">
-                    <div className="avatar-container">
-                        <img src={user.avatar} alt={user.name} className="avatar" />
-                        <div className="online-status"></div>
+                <div className="glass-panel p-8 mb-8 relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-[var(--primary-blue)] to-[var(--navy-blue)] opacity-50"></div>
+
+                    <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start mt-10">
+                        <div className="w-32 h-32 rounded-full border-4 border-[var(--dark-navy)] overflow-hidden shadow-xl shrink-0">
+                            <img src={user.avatar} className="w-full h-full object-cover" alt="Profile" />
+                        </div>
+
+                        <div className="flex-1 w-full">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h1 className="text-3xl font-bold text-white mb-2">{user.name}</h1>
+                                    {isEditing ? (
+                                        <input
+                                            type="text"
+                                            className="editable-input text-xl font-semibold mb-2"
+                                            value={editForm.title}
+                                            onChange={e => setEditForm({ ...editForm, title: e.target.value })}
+                                            placeholder="Professional Title"
+                                        />
+                                    ) : (
+                                        <p className="text-xl text-[var(--secondary-blue)] font-medium mb-2">{user.title}</p>
+                                    )}
+
+                                    <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
+                                        <span><i className="fas fa-map-marker-alt mr-2"></i>{user.location}</span>
+                                        <span><i className="fas fa-star text-[var(--accent-gold)] mr-2"></i>5.0 (New)</span>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => isEditing ? handleSaveProfile() : setIsEditing(true)}
+                                    className={`cta-button px-6 py-2 text-sm ${isEditing ? 'bg-green-600 border-green-600' : ''}`}
+                                >
+                                    {isEditing ? <><i className="fas fa-save mr-2"></i>Save Changes</> : <><i className="fas fa-pen mr-2"></i>Edit Profile</>}
+                                </button>
+                            </div>
+
+                            {isEditing ? (
+                                <textarea
+                                    className="editable-input h-24 resize-none"
+                                    value={editForm.bio}
+                                    onChange={e => setEditForm({ ...editForm, bio: e.target.value })}
+                                    placeholder="Write a short bio..."
+                                />
+                            ) : (
+                                <p className="text-gray-300 leading-relaxed max-w-3xl">
+                                    {user.bio || "No bio added yet. Click edit to tell clients about yourself!"}
+                                </p>
+                            )}
+                        </div>
                     </div>
-                    <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                            <h1 className="text-3xl font-bold text-[var(--text-light)]">{user.name} <i className="fas fa-check-circle text-[var(--secondary-blue)] text-xl ml-2"></i></h1>
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${user.userType === 'client'
-                                ? 'bg-[var(--accent-gold)] text-[var(--dark-navy)]'
-                                : 'bg-[var(--secondary-blue)] text-[var(--dark-navy)]'
-                                }`}>
-                                <i className={`fas ${user.userType === 'client' ? 'fa-briefcase' : 'fa-user-tie'} mr-1`}></i>
-                                {user.userType === 'client' ? 'Business' : 'Freelancer'}
-                            </span>
-                        </div>
-                        <p className="text-[var(--accent-gold)] text-lg mb-1">{user.title}</p>
-                        <p className="text-gray-400 mb-4"><i className="fas fa-map-marker-alt mr-2"></i> {user.location}</p>
-                        {user.userType === 'client' ? (
-                            <div className="flex gap-4">
-                                <a href="post-job.html" className="cta-button">Post a Job</a>
-                                <a href="client-dashboard.html" className="px-6 py-2 border border-white rounded-full text-white hover:bg-white hover:text-black transition">View Dashboard</a>
-                            </div>
-                        ) : (
-                            <div className="flex gap-4">
-                                <button className="cta-button">{t.hire}</button>
-                                <button className="px-6 py-2 border border-white rounded-full text-white hover:bg-white hover:text-black transition">{t.rate}</button>
-                            </div>
-                        )}
-                    </div>
-                    {/* CONDITIONAL STATS & CONTENT */}
-                    {user.userType === 'client' ? (
-                        /* CLIENT STATS */
-                        <div className="flex gap-4 text-center w-full md:w-auto mt-4 md:mt-0">
-                            <div className="stat-box">
-                                <h3 className="text-2xl font-bold text-[var(--accent-gold)]">12</h3>
-                                <p className="text-xs text-gray-400">Jobs Posted</p>
-                            </div>
-                            <div className="stat-box">
-                                <h3 className="text-2xl font-bold text-[var(--secondary-blue)]">8</h3>
-                                <p className="text-xs text-gray-400">Hired</p>
-                            </div>
-                            <div className="stat-box">
-                                <h3 className="text-2xl font-bold text-[var(--text-light)]">4.9 <i className="fas fa-star text-[var(--accent-gold)]"></i></h3>
-                                <p className="text-xs text-gray-400">Rating</p>
-                            </div>
-                        </div>
-                    ) : (
-                        /* FREELANCER STATS */
-                        <div className="flex gap-4 text-center w-full md:w-auto mt-4 md:mt-0">
-                            <div className="stat-box">
-                                <h3 className="text-2xl font-bold text-[var(--text-light)]">100%</h3>
-                                <p className="text-xs text-gray-400">Success</p>
-                            </div>
-                            <div className="stat-box">
-                                <h3 className="text-2xl font-bold text-[var(--text-light)]">42</h3>
-                                <p className="text-xs text-gray-400">{t.stats.jobs}</p>
-                            </div>
-                            <div className="stat-box">
-                                <h3 className="text-2xl font-bold text-[var(--accent-gold)]">5.0 <i className="fas fa-star"></i></h3>
-                                <p className="text-xs text-gray-400">{t.stats.rating}</p>
-                            </div>
-                        </div>
-                    )}
                 </div>
 
-                {user.userType === 'client' ? (
-                    /* CLIENT CONTENT GRID */
-                    <div className="grid md:grid-cols-3 gap-8">
-                        {/* Left Column - Company Info */}
-                        <div className="md:col-span-2 space-y-8">
-                            <div className="bg-[var(--glass-bg)] p-8 rounded-xl border border-[var(--glass-border)]">
-                                <h3 className="text-2xl font-bold text-[var(--text-light)] mb-6 border-b border-[var(--glass-border)] pb-4">
-                                    <i className="fas fa-building mr-3 text-[var(--accent-gold)]"></i>
-                                    Company Information
-                                </h3>
-                                <p className="text-[var(--text-gray)] text-lg leading-relaxed mb-8">
-                                    {user.bio || "We are a forward-thinking company looking for top talent to help us build the next generation of digital products. Our team is passionate, remote-first, and dedicated to excellence."}
-                                </p>
-
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="bg-[var(--dark-navy)]/50 p-4 rounded-lg border border-[var(--glass-border)]">
-                                        <div className="text-[var(--accent-gold)] text-sm font-bold mb-1">INDUSTRY</div>
-                                        <div className="text-white text-lg"><i className="fas fa-laptop-code mr-2"></i>Technology</div>
-                                    </div>
-                                    <div className="bg-[var(--dark-navy)]/50 p-4 rounded-lg border border-[var(--glass-border)]">
-                                        <div className="text-[var(--accent-gold)] text-sm font-bold mb-1">LOCATION</div>
-                                        <div className="text-white text-lg"><i className="fas fa-map-marker-alt mr-2"></i>{user.location}</div>
-                                    </div>
-                                    <div className="bg-[var(--dark-navy)]/50 p-4 rounded-lg border border-[var(--glass-border)]">
-                                        <div className="text-[var(--accent-gold)] text-sm font-bold mb-1">MEMBER SINCE</div>
-                                        <div className="text-white text-lg"><i className="fas fa-calendar mr-2"></i>2025</div>
-                                    </div>
-                                    <div className="bg-[var(--dark-navy)]/50 p-4 rounded-lg border border-[var(--glass-border)]">
-                                        <div className="text-[var(--accent-gold)] text-sm font-bold mb-1">SIZE</div>
-                                        <div className="text-white text-lg"><i className="fas fa-users mr-2"></i>10-50 Employees</div>
-                                    </div>
+                <div className="grid md:grid-cols-3 gap-8">
+                    {/* Left Column: Stats & Skills */}
+                    <div className="space-y-8">
+                        {/* Stats */}
+                        <div className="glass-panel p-6">
+                            <h3 className="text-lg font-bold text-white mb-4 border-b border-gray-700 pb-2">Overview</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="stat-card">
+                                    <div className="text-2xl font-bold text-[var(--accent-gold)]">0</div>
+                                    <div className="text-xs text-gray-400 mt-1">Jobs Done</div>
+                                </div>
+                                <div className="stat-card">
+                                    <div className="text-2xl font-bold text-[var(--accent-green)]">$0</div>
+                                    <div className="text-xs text-gray-400 mt-1">Earned</div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Right Column - Tech Stack / Needs */}
-                        <div className="md:col-span-1 space-y-6">
-                            <div className="bg-[var(--glass-bg)] p-6 rounded-xl border border-[var(--glass-border)]">
-                                <h3 className="text-xl font-bold text-[var(--text-light)] mb-4">Tech Stack</h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {['React', 'Node.js', 'Python', 'AWS', 'Firebase'].map(tech => (
-                                        <span key={tech} className="px-3 py-1 bg-[var(--primary-blue)]/20 text-[var(--secondary-blue)] rounded-full text-sm font-mono border border-[var(--primary-blue)]/30">
-                                            {tech}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="bg-gradient-to-br from-[var(--navy-blue)] to-[var(--dark-navy)] p-6 rounded-xl border border-[var(--accent-gold)]/30 shadow-lg relative overflow-hidden">
-                                <div className="absolute top-0 right-0 p-4 opacity-10">
-                                    <i className="fas fa-bullhorn text-9xl"></i>
-                                </div>
-                                <h3 className="text-xl font-bold text-[var(--accent-gold)] mb-2 relative z-10">Hiring?</h3>
-                                <p className="text-gray-300 text-sm mb-4 relative z-10">Post a new job today and connect with top freelancers instantly.</p>
-                                <a href="post-job.html" className="inline-block w-full py-2 bg-[var(--accent-gold)] text-[var(--dark-navy)] text-center font-bold rounded-lg hover:bg-yellow-400 transition relative z-10">
-                                    Post a Job
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    /* FREELANCER CONTENT GRID */
-                    <div className="grid md:grid-cols-3 gap-8">
-                        {/* Left Column */}
-                        <div className="md:col-span-1 space-y-8">
-                            <div className="bg-[var(--glass-bg)] p-6 rounded-xl border border-[var(--glass-border)]">
-                                <h3 className="text-xl font-bold text-[var(--text-light)] mb-4 border-b border-[var(--glass-border)] pb-2">{t.headers.about}</h3>
-                                <p className="text-[var(--text-gray)] text-sm leading-relaxed">
-                                    {user.bio}
-                                </p>
-                            </div>
-                            <div className="bg-[var(--glass-bg)] p-6 rounded-xl border border-[var(--glass-border)]">
-                                <h3 className="text-xl font-bold text-[var(--text-light)] mb-4 border-b border-[var(--glass-border)] pb-2">{t.headers.skills}</h3>
-                                <div>{user.skills.map(skill => <span key={skill} className="skill-tag">{skill}</span>)}</div>
-                            </div>
-                        </div>
-
-                        {/* Right Column */}
-                        <div className="md:col-span-2 space-y-8">
-                            <div>
-                                <h3 className="text-2xl font-bold text-[var(--text-light)] mb-6">{t.headers.port}</h3>
-                                <div className="portfolio-grid">
-                                    {user.portfolio.map(item => (
-                                        <div key={item.id} className="portfolio-item">
-                                            <img src={item.img} alt={item.title} />
-                                            <div className="portfolio-overlay">
-                                                <span className="text-white font-bold">{item.title}</span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 className="text-2xl font-bold text-[var(--text-light)] mb-6">{t.headers.rev}</h3>
-                                {user.reviews.map(rev => (
-                                    <div key={rev.id} className="review-card">
-                                        <div className="flex justify-between mb-2">
-                                            <h4 className="font-bold text-[var(--text-light)]">{rev.client}</h4>
-                                            <div className="text-[var(--accent-gold)]">
-                                                {[...Array(rev.stars)].map((_, i) => <i key={i} className="fas fa-star"></i>)}
-                                            </div>
-                                        </div>
-                                        <p className="text-[var(--text-gray)] text-sm">"{rev.text}"</p>
-                                    </div>
+                        {/* Skills */}
+                        <div className="glass-panel p-6">
+                            <h3 className="text-lg font-bold text-white mb-4 border-b border-gray-700 pb-2">Skills</h3>
+                            <div className="flex flex-wrap gap-2 mb-4">
+                                {user.skills && user.skills.map((skill, idx) => (
+                                    <span key={idx} className="skill-badge group">
+                                        {skill}
+                                        {isEditing && (
+                                            <span onClick={() => handleRemoveSkill(skill)} className="skill-remove ml-2">
+                                                <i className="fas fa-times"></i>
+                                            </span>
+                                        )}
+                                    </span>
                                 ))}
                             </div>
+                            {isEditing && (
+                                <form onSubmit={handleAddSkill} className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        className="editable-input"
+                                        placeholder="Add skill..."
+                                        value={newSkill}
+                                        onChange={e => setNewSkill(e.target.value)}
+                                    />
+                                    <button type="submit" className="bg-[var(--primary-blue)] px-3 rounded text-white hover:bg-[var(--secondary-blue)]">
+                                        <i className="fas fa-plus"></i>
+                                    </button>
+                                </form>
+                            )}
                         </div>
                     </div>
-                )}
+
+                    {/* Right Column: Portfolio */}
+                    <div className="md:col-span-2 space-y-8">
+                        <div className="glass-panel p-6">
+                            <div className="flex justify-between items-center mb-6 border-b border-gray-700 pb-2">
+                                <h3 className="text-xl font-bold text-white">Portfolio</h3>
+                                {isEditing && (
+                                    <button onClick={() => setShowPortfolioModal(true)} className="text-sm text-[var(--secondary-blue)] hover:text-white">
+                                        <i className="fas fa-plus-circle mr-1"></i> Add Project
+                                    </button>
+                                )}
+                            </div>
+
+                            {(!user.portfolio || user.portfolio.length === 0) ? (
+                                <div className="text-center py-12 text-gray-500 bg-[rgba(0,0,0,0.2)] rounded-xl border border-dashed border-gray-700">
+                                    <i className="fas fa-images text-4xl mb-3"></i>
+                                    <p>No projects added yet.</p>
+                                </div>
+                            ) : (
+                                <div className="grid sm:grid-cols-2 gap-4">
+                                    {user.portfolio.map((item, idx) => (
+                                        <div key={idx} className="portfolio-card group cursor-pointer" onClick={() => window.open(item.link, '_blank')}>
+                                            <img src={item.image || 'https://via.placeholder.com/400x300/001f3f/ffffff?text=Project'} alt={item.title} />
+                                            <div className="portfolio-overlay">
+                                                <h4 className="text-white font-bold text-lg">{item.title}</h4>
+                                                <span className="text-[var(--accent-gold)] text-sm mt-1">View Project <i className="fas fa-external-link-alt ml-1"></i></span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <Footer t={t} />
+
+            {/* Portfolio Modal */}
+            {showPortfolioModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                    <div className="glass-panel w-full max-w-lg p-6 relative animate-fadeIn">
+                        <button onClick={() => setShowPortfolioModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-white">
+                            <i className="fas fa-times text-xl"></i>
+                        </button>
+                        <h2 className="text-2xl font-bold text-white mb-6">Add New Project</h2>
+                        <form onSubmit={handleAddPortfolio} className="space-y-4">
+                            <div>
+                                <label className="block text-sm text-[var(--secondary-blue)] mb-1">Project Title</label>
+                                <input
+                                    required
+                                    type="text"
+                                    className="w-full bg-[rgba(0,0,0,0.3)] border border-gray-600 rounded p-3 text-white focus:border-[var(--secondary-blue)] outline-none"
+                                    value={newPortfolio.title}
+                                    onChange={e => setNewPortfolio({ ...newPortfolio, title: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm text-gray-400 mb-1">Image URL</label>
+                                <input
+                                    required
+                                    type="url"
+                                    className="w-full bg-[rgba(0,0,0,0.3)] border border-gray-600 rounded p-3 text-white focus:border-[var(--secondary-blue)] outline-none"
+                                    value={newPortfolio.image}
+                                    onChange={e => setNewPortfolio({ ...newPortfolio, image: e.target.value })}
+                                    placeholder="https://..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm text-gray-400 mb-1">Project Link</label>
+                                <input
+                                    type="url"
+                                    className="w-full bg-[rgba(0,0,0,0.3)] border border-gray-600 rounded p-3 text-white focus:border-[var(--secondary-blue)] outline-none"
+                                    value={newPortfolio.link}
+                                    onChange={e => setNewPortfolio({ ...newPortfolio, link: e.target.value })}
+                                    placeholder="https://..."
+                                />
+                            </div>
+                            <button type="submit" className="cta-button w-full mt-4">Add Project</button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            <Toast show={toast.show} message={toast.message} />
         </div>
     );
 }
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<ProfileApp />);
